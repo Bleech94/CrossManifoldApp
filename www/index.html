@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+        Customize this policy to fit your own app's needs. For more guidance, see:
+            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+        Some notes:
+            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+                * Enable inline JS: add 'unsafe-inline' to default-src
+        -->
+    <!--
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
+    -->
+
+    <!-- Required meta tags-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+
+    <!-- Your app title -->
+    <title>Cross Manifold</title>
+
+    <!-- To support both iOS and material design themes, see the Framework7 Tutorial at the link below:
+        http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-themes-in-single-app.html -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="lib/font-awesome-4.6.3/css/font-awesome.min.css">
+</head>
+
+<body>
+    <!-- Status bar overlay for full screen mode (PhoneGap) -->
+    <div class="statusbar-overlay"></div>
+
+    <!-- Views -->
+    <div class="views">
+        <!-- Your main view, should have "view-main" class -->
+        <div class="view view-main">
+
+            <!-- Pages container, because we use fixed-through navbar and toolbar, it has additional appropriate classes-->
+            <div class="pages navbar-through toolbar-through">
+                <!-- Templeates loaded here? -->
+            </div>
+        </div>
+    </div>
+
+    <!-- TEMPLATES - These are initialized here and called in javascript -->
+    <!-- Main template -->
+    <script type="text/template7" id="main">
+      <!-- Dynamic Navbar for iOS theme-->
+      {{#if @global.ios}}
+        <div class="navbar">
+            <div class="navbar-inner">
+                <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
+                <div class="center sliding">Cross Manifold</div>
+                <div class="right sliding">
+                    <a href="#" class="link settings-link"><i class="fa fa-gear"></i><span>Settings</span></a>
+                </div>
+            </div>
+        </div>
+      {{/if}}
+
+        <!-- Page, "data-page" contains page name -->
+        <div data-page="index" class="page">
+          <!-- Fixed Navbar for Material theme -->
+          {{#if @global.material}}
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
+                    <div class="center">Cross Manifold</div>
+                    <div class="right">
+                        <a href="#" class="link icon-only"><i class="fa fa-gear"></i></a>
+                    </div>
+                </div>
+            </div>
+          {{/if}}
+
+            <!-- Scrollable page content -->
+            <div class="page-content">
+                <div class="content-block">
+                    <p>Page content goes here</p>
+                    <p class="buttons-row">
+                      <a href="#" class="button button-raised button-fill">-</a>
+                      <a class="button" id="desiredTemp">{{temperature}}&deg;</a>
+                      <a href="#" class="button button-raised button-fill">+</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <!-- Settings template -->
+    <script type="text/template7" id="settings">
+      <!-- Dynamic Navbar for iOS theme-->
+      {{#if @global.ios}}
+        <div class="navbar">
+            <div class="navbar-inner">
+                <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
+                <div class="left sliding">
+                    <a href="#" class="link back"><i class="icon icon-back"></i></a>
+                </div>
+                <div class="center sliding">Settings</div>
+            </div>
+        </div>
+      {{/if}}
+
+        <!-- Page, "data-page" contains page name -->
+        <div data-page="settings" class="page">
+          <!-- Fixed Navbar for Material theme -->
+          {{#if @global.material}}
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
+                    <div class="left">
+                        <a href="#" class="link back icon-only"><i class="icon icon-back">Back</i></a>
+                    </div>
+                    <div class="center">Settings</div>
+                </div>
+            </div>
+          {{/if}}
+
+            <!-- Scrollable page content -->
+            <div class="page-content">
+                <div class="content-block">
+                    <p>Page content goes here</p>
+                    <p class="buttons-row">
+                      <a href="#" class="button button-raised button-fill">-</a>
+                      <a class="button" id="desiredTemp6">77&deg;</a>
+                      <a href="#" class="button button-raised button-fill">+</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="lib/framework7/js/framework7.min.js"></script>
+    <!-- Add styles based on OS -->
+    <script>
+      (function () {
+        if (Framework7.prototype.device.android) {
+              Dom7('head').append(
+                  '<link rel="stylesheet" href="lib/framework7/css/framework7.material.min.css">' +
+                  '<link rel="stylesheet" href="lib/framework7/css/framework7.material.colors.min.css">'
+              );
+          }
+          else {
+              Dom7('head').append(
+                  '<link rel="stylesheet" href="lib/framework7/css/framework7.ios.min.css">' +
+                  '<link rel="stylesheet" href="lib/framework7/css/framework7.ios.colors.min.css">'
+              );
+          }
+      })();
+    </script>
+    <script type="text/javascript" src="js/my-app.js"></script>
+</body>
+
+</html>
