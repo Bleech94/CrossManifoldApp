@@ -39,15 +39,31 @@
     <div class="views">
         <!-- Your main view, should have "view-main" class -->
         <div class="view view-main">
-
+            <!-- Top Navbar-->
+            <div class="navbar">
+              <div class="navbar-inner" data-page="login">
+                <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
+                <div class="center sliding">Login</div>
+              </div>
+            </div>
             <!-- Pages container, because we use fixed-through navbar and toolbar, it has additional appropriate classes-->
-            <div class="pages navbar-through toolbar-through">
-                <!-- Templeates loaded here? -->
+            <div class="pages navbar-through">
+              <div data-page="login" class="page">
+                  <!-- Scrollable page content -->
+                  <div class="page-content">
+                      <form id="loginForm">
+                        <br>
+                        <input type="text" class="login-link" id="CMID">
+                        <br>
+                        <input type="submit" value="Connect" class="button">
+                      </form>
+                  </div>
+              </div>
             </div>
         </div>
     </div>
 
-    <!-- TEMPLATES - These are initialized here and called in javascript -->
+    <!-- TEMPLATES: Initialize here and navigate in my-app.js -->
     <!-- Main template -->
     <script type="text/template7" id="main">
       <!-- Dynamic Navbar for iOS theme-->
@@ -64,7 +80,7 @@
       {{/if}}
 
         <!-- Page, "data-page" contains page name -->
-        <div data-page="index" class="page">
+        <div data-page="main" class="page">
           <!-- Fixed Navbar for Material theme -->
           {{#if @global.material}}
             <div class="navbar">
@@ -72,7 +88,7 @@
                     <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
                     <div class="center">Cross Manifold</div>
                     <div class="right">
-                        <a href="#" class="link icon-only"><i class="fa fa-gear"></i></a>
+                        <a href="#" class="link icon-only settings-link"><i class="fa fa-gear"><span> Settings</span></i></a>
                     </div>
                 </div>
             </div>
@@ -81,14 +97,42 @@
             <!-- Scrollable page content -->
             <div class="page-content">
                 <div class="content-block">
-                    <p>Page content goes here</p>
-                    <p class="buttons-row">
-                      <a href="#" class="button button-raised button-fill">-</a>
-                      <a class="button" id="desiredTemp">{{temperature}}&deg;</a>
-                      <a href="#" class="button button-raised button-fill">+</a>
-                    </p>
+                      <form>
+                        <p class="buttons-row">
+                          <a href="#" class="button button-raised button-fill">-</a>
+                          <a class="button" id="">{{desiredTemp1}}&deg;</a>
+                          <a href="#" class="button button-raised button-fill">+</a>
+                        </p>
+                        <p class="buttons-row">
+                          <a href="#" class="button button-raised button-fill">-</a>
+                          <a class="button">{{desiredTemp2}}&deg;</a>
+                          <a href="#" class="button button-raised button-fill">+</a>
+                        </p>
+                        <p class="buttons-row">
+                          <a href="#" class="button button-raised button-fill">-</a>
+                          <a class="button">{{desiredTemp3}}&deg;</a>
+                          <a href="#" class="button button-raised button-fill">+</a>
+                        </p>
+                        <p class="buttons-row">
+                          <a href="#" class="button button-raised button-fill">-</a>
+                          <a class="button">{{desiredTemp4}}&deg;</a>
+                          <a href="#" class="button button-raised button-fill">+</a>
+                        </p>
+                        <p class="buttons-row">
+                          <a href="#" class="button button-raised button-fill">-</a>
+                          <a class="button">{{desiredTemp5}}&deg;</a>
+                          <a href="#" class="button button-raised button-fill">+</a>
+                        </p>
+                        <p class="buttons-row">
+                          <a href="#" class="button button-raised button-fill">-</a>
+                          <a class="button">{{desiredTemp6}}&deg;</a>
+                          <a href="#" class="button button-raised button-fill">+</a>
+                        </p>
+                        <a class="button button-fill color-green">Apply</a>
+                      </form>
                 </div>
             </div>
+
         </div>
     </script>
 
@@ -115,7 +159,7 @@
                 <div class="navbar-inner">
                     <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
                     <div class="left">
-                        <a href="#" class="link back icon-only"><i class="icon icon-back">Back</i></a>
+                        <a href="#" class="link back icon-only"><i class="fa fa-back"><span>Back</span></i></a>
                     </div>
                     <div class="center">Settings</div>
                 </div>
@@ -133,6 +177,7 @@
                     </p>
                 </div>
             </div>
+
         </div>
     </script>
 
@@ -155,6 +200,8 @@
           }
       })();
     </script>
+    <script src="https://cdn.pubnub.com/pubnub-dev.js"></script>
+    <script type="text/javascript" src="js/my-pubnub.js"></script>
     <script type="text/javascript" src="js/my-app.js"></script>
 </body>
 
