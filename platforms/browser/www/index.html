@@ -41,23 +41,20 @@
         <div class="view view-main">
             <!-- Top Navbar-->
             <div class="navbar">
-              <div class="navbar-inner" data-page="login">
+              <div class="navbar-inner" data-page="start">
                 <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
                 <div class="center sliding">Login</div>
               </div>
             </div>
             <!-- Pages container, because we use fixed-through navbar and toolbar, it has additional appropriate classes-->
             <div class="pages navbar-through">
-              <div data-page="login" class="page">
-                  <!-- Scrollable page content -->
-                  <div class="page-content">
-                      <form id="loginForm">
-                        <br>
-                        <input type="text" class="login-link" id="CMID">
-                        <br>
-                        <input type="submit" value="Connect" class="button">
-                      </form>
+              <div data-page="start" class="page">
+                <!-- Scrollable page content -->
+                <div class="page-content">
+                  <div class="content-block">
+                      <p>Checking for saved login info</p>
                   </div>
+                </div>
               </div>
             </div>
         </div>
@@ -73,7 +70,7 @@
                 <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
                 <div class="center sliding">Cross Manifold</div>
                 <div class="right sliding">
-                    <a href="#" class="link settings-link"><i class="fa fa-gear"></i><span>Settings</span></a>
+                    <a href="#" class="link settings-button"><i class="fa fa-gear"></i><span>Settings</span></a>
                 </div>
             </div>
         </div>
@@ -88,7 +85,7 @@
                     <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
                     <div class="center">Cross Manifold</div>
                     <div class="right">
-                        <a href="#" class="link icon-only settings-link"><i class="fa fa-gear"><span> Settings</span></i></a>
+                        <a href="#" class="link icon-only settings-button"><i class="fa fa-gear"><span> Settings</span></i></a>
                     </div>
                 </div>
             </div>
@@ -97,39 +94,41 @@
             <!-- Scrollable page content -->
             <div class="page-content">
                 <div class="content-block">
-                      <form>
-                        <p class="buttons-row">
-                          <a href="#" class="button button-raised button-fill">-</a>
-                          <a class="button" id="">{{desiredTemp1}}&deg;</a>
-                          <a href="#" class="button button-raised button-fill">+</a>
-                        </p>
-                        <p class="buttons-row">
-                          <a href="#" class="button button-raised button-fill">-</a>
-                          <a class="button">{{desiredTemp2}}&deg;</a>
-                          <a href="#" class="button button-raised button-fill">+</a>
-                        </p>
-                        <p class="buttons-row">
-                          <a href="#" class="button button-raised button-fill">-</a>
-                          <a class="button">{{desiredTemp3}}&deg;</a>
-                          <a href="#" class="button button-raised button-fill">+</a>
-                        </p>
-                        <p class="buttons-row">
-                          <a href="#" class="button button-raised button-fill">-</a>
-                          <a class="button">{{desiredTemp4}}&deg;</a>
-                          <a href="#" class="button button-raised button-fill">+</a>
-                        </p>
-                        <p class="buttons-row">
-                          <a href="#" class="button button-raised button-fill">-</a>
-                          <a class="button">{{desiredTemp5}}&deg;</a>
-                          <a href="#" class="button button-raised button-fill">+</a>
-                        </p>
-                        <p class="buttons-row">
-                          <a href="#" class="button button-raised button-fill">-</a>
-                          <a class="button">{{desiredTemp6}}&deg;</a>
-                          <a href="#" class="button button-raised button-fill">+</a>
-                        </p>
-                        <a class="button button-fill color-green">Apply</a>
-                      </form>
+
+                      <!-- Column Headers -->
+                      <div class="row">
+                        <div class="col-15">
+                          <h4>Zone:</h4>
+                        </div>
+                        <div class="col-35">
+                          <h4>Current<br />Temperature:</h4>
+                        </div>
+                        <div class="col-50">
+                          <h4>Desired<br />Temperature:</h4>
+                        </div>
+                      </div>
+
+                      <!-- Generate columns with thermostat info-->
+                      {{#each thermostatReading}}
+                        <div class="row">
+                          <div class="col-30">
+                            <p>Zone {{js "index++"}}</p>
+                          </div>
+                          <div class="col-20">
+                            <p style="text-align:center;">{{current}}</p>
+                          </div>
+                          <div class="col-50">
+                            <p class="buttons-row">
+                              <a href="#" class="button button-raised button-fill">-</a>
+                              <a class="button" id="">{{desired}}&deg;</a>
+                              <a href="#" class="button button-raised button-fill">+</a>
+                            </p>
+                          </div>
+                        </div>
+                      {{/each}}
+                      {{js "index=1"}}
+                    <a class="button button-fill color-green apply-button">Apply</a>
+
                 </div>
             </div>
 
@@ -169,12 +168,44 @@
             <!-- Scrollable page content -->
             <div class="page-content">
                 <div class="content-block">
-                    <p>Page content goes here</p>
-                    <p class="buttons-row">
-                      <a href="#" class="button button-raised button-fill">-</a>
-                      <a class="button" id="desiredTemp6">77&deg;</a>
-                      <a href="#" class="button button-raised button-fill">+</a>
-                    </p>
+                    <p>Things to include: Logout, rename zones, change # of zones?</p>
+                    <a href="#" class="button button-raised button-fill color-red logout-button">Logout</a>
+                </div>
+            </div>
+
+        </div>
+    </script>
+
+    <!-- Settings template -->
+    <script type="text/template7" id="login">
+      <!-- Dynamic Navbar for iOS theme-->
+      {{#if @global.ios}}
+        <div class="navbar">
+            <div class="navbar-inner">
+                <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
+                <div class="center sliding">Login</div>
+            </div>
+        </div>
+      {{/if}}
+
+        <!-- Page, "data-page" contains page name -->
+        <div data-page="login" class="page">
+          <!-- Fixed Navbar for Material theme -->
+          {{#if @global.material}}
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
+                    <div class="center">Login</div>
+                </div>
+            </div>
+          {{/if}}
+
+            <!-- Scrollable page content -->
+            <div class="page-content">
+                <div class="content-block">
+                  <input type="text" id="CMID-input">
+                  <br><br>
+                  <input type="submit" value="Connect" class="button login-button">
                 </div>
             </div>
 

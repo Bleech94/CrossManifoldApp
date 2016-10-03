@@ -6,6 +6,8 @@ var pubnubUpdateChannel = "CM_Update_" + CMID; // This channel is for updates fr
 var pubnubCommandChannel = "CM_Command_" + CMID; // This channel is for commands from the app to the Pi.
                                                  // The Pi will read from this channel and adjust the thermostats accordingly.
 
+var index = 1;
+
 // Accessible anywhere.
 Template7.global = {
     material: isMaterial,
@@ -30,34 +32,22 @@ var myApp = new Framework7({
 // Add view
 var mainView = myApp.addView('.view-main', {
     // Because we want to use dynamic navbar, we need to enable it for this view:
-    dynamicNavbar: true
+    dynamicNavbar: true,
+    domCche: true
 });
 
 // Handle Cordova Device Ready Event
 $$(document).on('deviceready', function() {
     console.log("Device is ready!");
+    mainView.router.load({
+      template: myApp.templates.login
+    })
 });
 
 /*
-* Begin Navigation
+* NAVIGATION
 */
-$$(document).on('click', '.page .login-link', function() {
-  mainView.router.load({
-    template: myApp.templates.main,
-    animatePages:true,
-    context: {
-      // TODO: desiredTemps should be read from last message sent to the 'update' pubnub channel.
-      desiredTemp1: 73,
-      desiredTemp2: 75,
-      desiredTemp3: 71,
-      desiredTemp4: 85,
-      desiredTemp5: 80,
-      desiredTemp6: 76
-    }
-  });
-});
-
-$$(document).on('click', '.navbar .settings-link', function() {
+$$(document).on('click', '.navbar .settings-button', function() {
   // var settings = JSON.parse(localStorage.getItem('settings')); // TODO
   mainView.router.load({
     template: myApp.templates.settings,
@@ -65,11 +55,19 @@ $$(document).on('click', '.navbar .settings-link', function() {
   });
 });
 
-/*
-* BEGIN PUBNUB STUFF
-*/
+$$(document).on('click', '.logout-button', function() {
+  mainView.router.load({
+    template: myApp.templates.login
+  })
+  CMID = "";
+  pubnubUpdateChannel = ""; // TODO: Need to reset channel names?
+  pubnubCommndChannel = "";
+})
 
-// TODO: Ensure this is only ever called once?
+/*
+* PUBNUB
+*/
+// TODO: Ensure this is only ever called once? Just need to make a global bool.
 var pubnub = PUBNUB.init({
     publish_key: 'pub-c-3082c989-10c9-4690-b759-2b7f56c733e7',
     subscribe_key: 'sub-c-88a5713a-8040-11e6-920d-02ee2ddab7fe',
@@ -80,13 +78,11 @@ var pubnub = PUBNUB.init({
 
 // Check if the channel is live by checking the update history.
 // If the Pi has ever sent an update to the channel that corresponds to the CMID then the user can "login" to this channel.
-// TODO: Use an if/else to either accept login and move to main page or decline.
-$$("form.login-link").click(function( event ) {
+$$(".login-button").click(function( event ) {
   pubnubLogin();
 })
 
-$$("form.apply-link").click(function( event ) {
+// TODO
+$$(".apply-button").click(function( event ) {
   pubnubPublishCommand();
 })
-
-pubnubSubscribeToUpdates(); // TODO: Put inside login?
