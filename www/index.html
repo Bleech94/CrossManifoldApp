@@ -119,15 +119,14 @@
                           </div>
                           <div class="col-50">
                             <p class="buttons-row">
-                              <a href="#" class="button button-raised button-fill">-</a>
-                              <a class="button" id="">{{desired}}&deg;</a>
-                              <a href="#" class="button button-raised button-fill">+</a>
+                              <input type="button" class="button button-raised button-fill decrement" value="-">
+                              <a class="button desired-temp" style="pointer-events: none">{{desired}}&deg;</a>
+                              <input type"button" class="button button-raised button-fill increment" value="+">
                             </p>
                           </div>
                         </div>
-                      {{/each}}
-                      {{js "index=1"}}
-                    <a class="button button-fill color-green apply-button">Apply</a>
+                      {{/each}} <!-- Reset index to 1? -->
+                    <input type="button" class="button button-fill color-green apply-button" value="Apply">
 
                 </div>
             </div>
@@ -169,7 +168,7 @@
             <div class="page-content">
                 <div class="content-block">
                     <p>Things to include: Logout, rename zones, change # of zones?</p>
-                    <a href="#" class="button button-raised button-fill color-red logout-button">Logout</a>
+                    <input type="button" href="#" class="button button-raised button-fill color-red logout-button" value="Logout">
                 </div>
             </div>
 
@@ -205,7 +204,7 @@
                 <div class="content-block">
                   <input type="text" id="CMID-input">
                   <br><br>
-                  <input type="submit" value="Connect" class="button login-button">
+                  <input type="button" value="Connect" class="button login-button">
                 </div>
             </div>
 

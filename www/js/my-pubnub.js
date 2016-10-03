@@ -20,17 +20,10 @@ function pubnubSubscribeToUpdates() {
   })
 }
 
-function pubnubPublishCommand(temp1, temp2, temp3, temp4, temp5, temp6) {
+function pubnubPublishCommand(tempArray) {
   pubnub.publish({
     channel: pubnubCommandChannel,
-    message: {
-        "desiredTemp1": temp1,  // TODO: Build message based on app readings when apply is pressed and put into proper JSON format.
-        "desiredTemp2": temp2,
-        "desiredTemp3": temp3,
-        "desiredTemp4": temp4,
-        "desiredTemp5": temp5,
-        "desiredTemp6": temp6
-    },
+    message: tempArray,
     callback: function(m){
         console.log(m)
     }
