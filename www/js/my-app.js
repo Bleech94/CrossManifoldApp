@@ -4,7 +4,9 @@ var isIos = Framework7.prototype.device.ios === true;
 var CMID = "Test"; // Cross Manifold ID. TODO get from login
 var pubnubUpdateChannel = "CM_Update_" + CMID; // This channel is for updates from the Pi that will be displayed on the app.
 var pubnubCommandChannel = "CM_Command_" + CMID; // This channel is for commands from the app to the Pi to change the thermostats.
+
 var index = 1;
+var zoneNameArray = [];
 
 // Accessible anywhere.
 Template7.global = {
@@ -52,9 +54,6 @@ if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry)/)) {
 
 function onDeviceReady() {
   console.log("Device is ready!");
-  mainView.router.load({
-    template: myApp.templates.login
-  })
 }
 /* remove after testing */
 
@@ -64,9 +63,11 @@ function onDeviceReady() {
 */
 $$(document).on('click', '.navbar .settings-button', function() {
   // var settings = JSON.parse(localStorage.getItem('settings')); // TODO
+  index = 1;
   mainView.router.load({
     template: myApp.templates.settings,
-    animatePages:true
+    animatePages:true,
+    context:lastUpdateJSON
   });
 });
 
@@ -92,6 +93,23 @@ $$(document).on('click', '.decrement', function() {
   $$(this).next().text(val + '°');
 })
 
+// Auto switch input box when full.
+$$(".CMID-input").keyup(function() {
+  console.log($$(this).val().length);
+  if($$(this).val().length == 4) {
+    $$(this).next().focus();
+  }
+})
+
+// Attempt login when enter is pushed. TOOD: Change this for mobile? Does it need to be a form?
+$$('.CMID-input').keydown(function (e){
+    if(e.keyCode == 13){
+        pubnubLogin();
+    }
+})
+
+
+
 /*
 * PUBNUB
 */
@@ -108,6 +126,7 @@ var pubnub = PUBNUB.init({
 // If the Pi has ever sent an update to the channel that corresponds to the CMID then the user can "login" to this channel.
 $$(document).on('click', '.login-button', function() {
   console.log("Login clicked");
+  index=1;
   pubnubLogin();
 })
 

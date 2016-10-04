@@ -43,7 +43,7 @@
             <div class="navbar">
               <div class="navbar-inner" data-page="start">
                 <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
-                <div class="center sliding">Login</div>
+                <div class="center sliding">Log In</div>
               </div>
             </div>
             <!-- Pages container, because we use fixed-through navbar and toolbar, it has additional appropriate classes-->
@@ -52,7 +52,22 @@
                 <!-- Scrollable page content -->
                 <div class="page-content">
                   <div class="content-block">
-                      <p>Checking for saved login info</p>
+                    <center><img src="/img/logoPlain.png" alt="Cross Manifold" width="60%"></center>
+                    <br><br>
+                    <div align="center">
+                      <p>Enter your 12-16 character Cross Manifold ID:</p>
+                      <input type="text" id="CMID-input1" placeholder="XXXX" size="1" maxlength="4" class="CMID-input">
+                      - <input type="text" id="CMID-input2" placeholder="XXXX" size="1" maxlength="4" class="CMID-input">
+                      - <input type="text" id="CMID-input3" placeholder="XXXX" size="1" maxlength="4" class="CMID-input">
+                      - <input type="text" id="CMID-input4" placeholder="XXXX" size="1" maxlength="4" class="CMID-input">
+                      <br><br><br>
+                    </div>
+                    <input type="button" value="Connect" class="button login-button button-fill color-custom">
+                    <br><br><br>
+                    <div id="footer">
+                      <p>TODO: Don't have one yet? Link to website.</p>
+                      <p style="font-size: 70%;">Copyright Stuff 2016 Cross Manifold TM</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -119,14 +134,14 @@
                           </div>
                           <div class="col-50">
                             <p class="buttons-row">
-                              <input type="button" class="button button-raised button-fill decrement" value="-">
-                              <a class="button desired-temp" style="pointer-events: none">{{desired}}&deg;</a>
-                              <input type"button" class="button button-raised button-fill increment" value="+">
+                              <input type="button" class="button button-raised button-fill color-custom decrement" value="-">
+                              <a class="button color-custom desired-temp" style="pointer-events: none">{{desired}}&deg;</a>
+                              <input type"button" class="button button-raised button-fill color-custom increment" value="+">
                             </p>
                           </div>
                         </div>
                       {{/each}} <!-- Reset index to 1? -->
-                    <input type="button" class="button button-fill color-green apply-button" value="Apply">
+                    <input type="button" class="button button-fill color-custom-green apply-button" value="Apply">
 
                 </div>
             </div>
@@ -167,22 +182,42 @@
             <!-- Scrollable page content -->
             <div class="page-content">
                 <div class="content-block">
-                    <p>Things to include: Logout, rename zones, change # of zones?</p>
-                    <input type="button" href="#" class="button button-raised button-fill color-red logout-button" value="Logout">
+                  <div class="row">
+                    <div class="col-33">
+
+                    </div>
+                    <div class="col-66">
+                      <h3>Name:</h3>
+                    </div>
+                  </div>
+
+                  {{#each thermostatReading}}
+                    <div class="row">
+                      <div class="col-33">
+                        <p>Zone {{js "index++"}}:</p>
+                      </div>
+                      <div class="col-66">
+                        <p><input type="text" value=""></p>
+                      </div>
+                    </div>
+                  {{/each}}
+
+                  <p>Things to include: Logout, rename zones, change # of zones?</p>
+                  <input type="button" href="#" class="button button-raised button-fill color-custom-red logout-button" value="Logout">
                 </div>
             </div>
 
         </div>
     </script>
 
-    <!-- Settings template -->
+    <!-- Login template -->
     <script type="text/template7" id="login">
       <!-- Dynamic Navbar for iOS theme-->
       {{#if @global.ios}}
         <div class="navbar">
             <div class="navbar-inner">
                 <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
-                <div class="center sliding">Login</div>
+                <div class="center sliding">Log in</div>
             </div>
         </div>
       {{/if}}
@@ -194,7 +229,7 @@
             <div class="navbar">
                 <div class="navbar-inner">
                     <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
-                    <div class="center">Login</div>
+                    <div class="center">Log In</div>
                 </div>
             </div>
           {{/if}}
@@ -202,9 +237,22 @@
             <!-- Scrollable page content -->
             <div class="page-content">
                 <div class="content-block">
-                  <input type="text" id="CMID-input">
+                  <center><img src="/img/logoPlain.png" alt="Cross Manifold" width="60%"></center>
                   <br><br>
-                  <input type="button" value="Connect" class="button login-button">
+                  <div align="center">
+                    <p>Enter your 12-16 character Cross Manifold ID:</p>
+                    <input type="text" id="CMID-input1" placeholder="XXXX" size="1" maxlength="4" class="CMID-input">
+                    - <input type="text" id="CMID-input2" placeholder="XXXX" size="1" maxlength="4" class="CMID-input">
+                    - <input type="text" id="CMID-input3" placeholder="XXXX" size="1" maxlength="4" class="CMID-input">
+                    - <input type="text" id="CMID-input4" placeholder="XXXX" size="1" maxlength="4" class="CMID-input">
+                    <br><br><br>
+                  </div>
+                  <input type="button" value="Connect" class="button login-button button-fill color-custom">
+                  <br><br><br>
+                  <div id="footer">
+                    <p>TODO: Don't have one yet? Link to website.</p>
+                    <p style="font-size: 70%;">Copyright Stuff 2016 Cross Manifold TM</p>
+                  </div>
                 </div>
             </div>
 
@@ -213,6 +261,7 @@
 
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="lib/framework7/js/framework7.min.js"></script>
+
     <!-- Add styles based on OS -->
     <script>
       (function () {
@@ -230,6 +279,7 @@
           }
       })();
     </script>
+
     <script src="https://cdn.pubnub.com/pubnub-dev.js"></script>
     <script type="text/javascript" src="js/my-pubnub.js"></script>
     <script type="text/javascript" src="js/my-app.js"></script>

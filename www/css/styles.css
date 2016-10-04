@@ -17,3 +17,45 @@
 h4 {
   text-align: center;
 }
+
+.navbar-inner {
+  color:white;
+  background: #00a7cf; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#00a7cf, #0085ad); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#00a7cf, #0085ad); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#00a7cf, #0085ad); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#00a7cf, #0085ad); /* Standard syntax */
+}
+
+.link {
+  color:white;
+}
+
+.page-content {
+  background: white;
+}
+
+.button.color-custom {
+  border-color: #00a7cf;
+  border-width:1px;
+  color: #00a7cf;
+  background: white;
+}
+
+.button.button-fill.color-custom {
+  color: white;
+  background: #00a7cf;
+}
+
+.button.button-fill.color-custom-green {
+  background: #00d368;
+}
+
+.button.button-fill.color-custom-red {
+  background: #cf2800;
+}
+
+#footer {
+    position:fixed;
+    bottom:0;
+}
