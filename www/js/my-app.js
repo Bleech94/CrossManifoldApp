@@ -43,9 +43,6 @@ var mainView = myApp.addView('.view-main', {
 // Handle Cordova Device Ready Event
 /*$$(document).on('deviceready', function() {
     console.log("Device is ready!");
-    mainView.router.load({
-      template: myApp.templates.login
-    })
 });*/
 
 /* TODO: remove after testing */
@@ -88,14 +85,16 @@ $$(document).on('click', '.navbar .settings-button', function() {
   mainView.router.load({
     template: myApp.templates.settings,
     animatePages:true,
-    context:lastUpdateJSON
+    context:lastUpdateJSON,
+    ignoreCache: true
   });
 });
 
 // Logout
 $$(document).on('click', '.logout-button', function() {
+  $$( ".current-temp, .desired-temp" ).remove();
   mainView.router.load({
-    template: myApp.templates.login
+    pageName: 'login'
   })
   CMID = "";
   pubnubUpdateChannel = ""; // TODO: Need to reset channel names?

@@ -25,8 +25,7 @@ function pubnubLogin() {
           mainView.router.load({
             template: myApp.templates.main,
             animatePages:true,
-            context: lastUpdateJSON,
-            reload: true
+            context: lastUpdateJSON
           });
         } else {
           alert("The Cross Manifold ID you entered did not match any active Cross Manifolds. Please try again."); // TODO: Add more information.
