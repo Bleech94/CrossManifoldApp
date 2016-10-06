@@ -9,7 +9,7 @@ var pubnubUpdateChannel = "CM_Update_" + CMID; // This channel is for updates fr
 var pubnubCommandChannel = "CM_Command_" + CMID; // This channel is for commands from the app to the Pi to change the thermostats.
 
 var index = 1;
-var zoneNameArray = [];
+var zoneNameArray = ["test", "test", "test","test"];
 
 // Accessible anywhere.
 Template7.global = {
@@ -85,8 +85,7 @@ $$(document).on('click', '.navbar .settings-button', function() {
   mainView.router.load({
     template: myApp.templates.settings,
     animatePages:true,
-    context:lastUpdateJSON,
-    ignoreCache: true
+    context:lastUpdateJSON
   });
 });
 
@@ -106,6 +105,20 @@ $$(document).on('click', '.logout-button', function() {
 /*
 * CONTROL
 */
+// Auto switch input box when full.
+$$(".CMID-input").keyup(function() {
+  if($$(this).val().length == 4) {
+    $$(this).next().focus();
+  }
+})
+
+// Attempt login when enter is pushed. TOOD: Change this for mobile? Does it need to be a form?
+$$('.CMID-input').keydown(function (e){
+    if(e.keyCode == 13){
+        pubnubLogin();
+    }
+})
+
 // Send command to the Pi with the desired temperatures.
 $$(document).on('click', '.apply-button', function() {
   console.log("Apply clicked.");
@@ -143,16 +156,15 @@ $$(document).on('click', '.decrement', function() {
   $$(this).next().text(val + '°');
 })
 
-// Auto switch input box when full.
-$$(".CMID-input").keyup(function() {
-  if($$(this).val().length == 4) {
-    $$(this).next().focus();
-  }
-})
-
-// Attempt login when enter is pushed. TOOD: Change this for mobile? Does it need to be a form?
-$$('.CMID-input').keydown(function (e){
-    if(e.keyCode == 13){
-        pubnubLogin();
-    }
+// Save new zone names
+$$(document).on('click', '.rename-button', function() {
+  zoneNameArray = []; // TODO: Save locally
+  $$(".zone-name").each(function() {
+    zoneNameArray.push($$(this).val());
+  });
+  mainView.router.load({
+    template: myApp.templates.main,
+    animatePages:true,
+    context:lastUpdateJSON
+  });
 })

@@ -125,7 +125,7 @@
                       {{#each thermostatReading}}
                         <div {{#js_compare "index%2 === 0"}}class="row" {{else}}class="row odd" {{/js_compare}}>
                           <div class="col-25">
-                            <p style="margin-top: 19px; padding-left:5px;">Zone {{js "index++"}}</p>
+                            <p style="margin-top: 19px; padding-left:5px;">Zone {{js "index++"}}: {{#js_compare "zoneNameArray[index-2]"}}{{js "zoneNameArray[index-2]"}} {{else}} {{/js_compare}}</p>
                           </div>
                           <div class="col-25">
                             <h5 class="current-temp" style="margin-top: 19px;">{{current}}&deg;</h5>
@@ -177,34 +177,37 @@
             </div>
           {{/if}}
 
-            <!-- Scrollable page content -->
-            <div class="page-content">
-                <div class="content-block">
-                  <div class="row">
-                    <div class="col-50">
-
-                    </div>
-                    <div class="col-50">
-                      <h5>Name:</h5>
-                    </div>
-                  </div>
-
-                  <!-- Generate Zone rename fields for each zone -->
-                  {{#each thermostatReading}}
-                    <div class="row">
-                      <div class="col-33">
-                        <p>Zone {{js "index++"}}:</p>
-                      </div>
-                      <div class="col-66">
-                        <p><input type="text" value=""></p>
-                      </div>
-                    </div>
-                  {{/each}}
-
-                  <p>Things to include: Logout, rename zones, change # of zones?</p>
-                  <input type="button" href="#" class="button button-raised button-fill color-custom-red logout-button" value="Logout">
-                </div>
+          <!-- Scrollable page content -->
+          <div class="page-content">
+            <div class="list-block">
+              <!-- First group-->
+              <div class="list-group">
+                <ul>
+                  <li class="list-group-title">Rename Zones</li>
+                    <!-- Generate Zone rename fields for each zone -->
+                    {{#each thermostatReading}}
+                      <li class="item-content">
+                        <div class="item-inner">
+                          <div class="item-title label zone-name">Zone {{js "index++"}}</div>
+                          <div class="item-input">
+                            <input type="text" placeholder="Name">
+                          </div>
+                        </div>
+                      </li>
+                   {{/each}}
+                </ul>
+              </div>
             </div>
+            <div class="content-block">
+              <input type="button" class="button button-fill color-custom-green rename-button" value="Apply">
+            </div>
+              <div class="list-block">
+                <div class="list-group"><ul><li class="list-group-title">Change CMID</li></ul></div>
+              </div>
+            <div class="content-block">
+              <input type="button" href="#" class="button button-raised button-fill color-custom-red logout-button" value="Logout">
+            </div>
+          </div>
         </div>
     </script>
 
