@@ -14,7 +14,7 @@
     background: #000000;
 }
 
-h4 {
+h5 {
   text-align: center;
 }
 
@@ -31,13 +31,26 @@ h4 {
   color:white;
 }
 
+/* This changes the color of the back arrow on iOS */
+i.icon.icon-back {
+  filter: brightness(0) invert(1);
+}
+
+.content-block {
+  margin-top: 20px !important;
+}
+
 .page-content {
   background: white;
 }
 
+.odd {
+  background-color:rgba(0,167,207,0.1);
+}
+
 .button.color-custom {
   border-color: #00a7cf;
-  border-width:1px;
+  border-width: 1px;
   color: #00a7cf;
   background: white;
 }
