@@ -156,12 +156,14 @@ $$(document).on('click', '.decrement', function() {
   $$(this).next().text(val + '°');
 })
 
-// Save new zone names
+// Apply new zone names TODO: broken
 $$(document).on('click', '.rename-button', function() {
   zoneNameArray = []; // TODO: Save locally
+  $$( ".current-temp, .desired-temp" ).remove();
   $$(".zone-name").each(function() {
     zoneNameArray.push($$(this).val());
   });
+  index = 1;
   mainView.router.load({
     template: myApp.templates.main,
     animatePages:true,

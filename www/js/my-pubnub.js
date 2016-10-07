@@ -45,6 +45,7 @@ function pubnubSubscribeToUpdates() {
   pubnub.subscribe({
     channel: pubnubUpdateChannel,
     message: function(m) {
+      index = 1;
       lastUpdateJSON = m; // m is the message we received.
       console.log(JSON.stringify(lastUpdateJSON));
       mainView.router.load({

@@ -36,8 +36,8 @@ i.icon.icon-back {
   filter: brightness(0) invert(1);
 }
 
-.content-block {
-  margin-top: 20px !important;
+.content-block.no-gap {
+  margin-top: 0 !important;
 }
 
 .page-content {
