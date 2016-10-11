@@ -31,7 +31,7 @@ h5 {
   color:white;
 }
 
-/* This changes the color of the back arrow on iOS */
+/* This changes the color of the back arrow on iOS from the default blue */
 i.icon.icon-back {
   filter: brightness(0) invert(1);
 }
@@ -45,9 +45,10 @@ i.icon.icon-back {
 }
 
 .odd {
-  background-color:rgba(0,167,207,0.1);
+  background-color:whitesmoke;
 }
 
+/* This is for the Desired Temperature unclickable center buttons */
 .button.color-custom {
   border-color: #00a7cf;
   border-width: 1px;
@@ -59,13 +60,22 @@ i.icon.icon-back {
   color: white;
   background: #00a7cf;
 }
+.button.button-fill.color-custom.active-state {
+  background: #00749C;
+}
 
 .button.button-fill.color-custom-green {
   background: #00d368;
 }
+.button.button-fill.color-custom-green.active-state {
+  background: #00A035;
+}
 
 .button.button-fill.color-custom-red {
   background: #cf2800;
+}
+.button.button-fill.color-custom-red.active-state {
+  background: #9C0000;
 }
 
 #footer {

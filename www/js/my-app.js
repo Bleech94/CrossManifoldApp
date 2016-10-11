@@ -21,7 +21,7 @@ var $$ = Dom7; // Custom DOM library, almost the exact same as jQuery
 
 // Rearrange some div classes to match android and iOS. TODO: Check if working.
 if (!isIos) {
-    $$('.pages.navbar-through').removeClass('navbar-through').addClass('navbar-fixed'); // Change class
+    $$('.view.navbar-through').removeClass('navbar-through').addClass('navbar-fixed'); // Change class
     $$('.view .navbar').prependTo('.view .page'); // And move Navbar into Page
 }
 
@@ -69,7 +69,7 @@ var pubnub = PUBNUB.init({
 
 
 /*
-* NAVIGATION
+* PAGE NAVIGATION
 */
 // Login: Check if the channel is live by checking the update history. If there is a message than the corresponding Pi is active.
 $$(document).on('click', '.login-button', function() {
@@ -100,10 +100,39 @@ $$(document).on('click', '.logout-button', function() {
   pubnubCommndChannel = "";
 })
 
+// Zone Settings
+$$(document).on('click', '.zone-settings-button', function() {
+  // var settings = JSON.parse(localStorage.getItem('settings')); // TODO
+  index = 1;
+  mainView.router.load({
+    template: myApp.templates.zonesettings,
+    animatePages:true
+  });
+});
+
+// Done (adjusting zone settings)
+$$(document).on('click', '.done-button', function() {
+  // var settings = JSON.parse(localStorage.getItem('settings')); // TODO
+  index = 1;
+  applySettings();
+  mainView.router.back({
+    animatePages:true
+  });
+});
+
 
 
 /*
-* CONTROL
+* FUNCTIONS
+*/
+function applySettings() {
+  console.log("TODO: applySettings()")
+}
+
+
+
+/*
+* SIMPLE CONTROLS
 */
 // Auto switch input box when full.
 $$(".CMID-input").keyup(function() {
@@ -121,8 +150,6 @@ $$('.CMID-input').keydown(function (e){
 
 // Send command to the Pi with the desired temperatures.
 $$(document).on('click', '.apply-button', function() {
-  console.log("Apply clicked.");
-
   // Loop through all desired temps and push the cleaned numbers to an array.
   var desiredTempArray = [];
   $$(".desired-temp").each(function() {
@@ -154,19 +181,4 @@ $$(document).on('click', '.increment', function() {
 $$(document).on('click', '.decrement', function() {
   var val = parseInt($$(this).next().text().replace("°", "")) - 1;
   $$(this).next().text(val + '°');
-})
-
-// Apply new zone names TODO: broken
-$$(document).on('click', '.rename-button', function() {
-  zoneNameArray = []; // TODO: Save locally
-  $$( ".current-temp, .desired-temp" ).remove();
-  $$(".zone-name").each(function() {
-    zoneNameArray.push($$(this).val());
-  });
-  index = 1;
-  mainView.router.load({
-    template: myApp.templates.main,
-    animatePages:true,
-    context:lastUpdateJSON
-  });
 })
