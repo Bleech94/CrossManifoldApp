@@ -47,7 +47,7 @@
                 <div class="right sliding"></div>
               </div>
             </div>
-            <!-- Pages container, because we use fixed-through navbar and toolbar, it has additional appropriate classes -->
+            <!-- Pages container, because we use fixed-through navbar, it has additional appropriate classes -->
             <div class="pages">
               <!-- Login page. TODO: How to handle if login info is saved?-->
               <div data-page="login" class="page">
@@ -124,28 +124,69 @@
                       </div>
 
                       <!-- Generate columns with thermostat info-->
-                      {{#each thermostatReading}}
-                        <div {{#js_compare "index%2 === 0"}}class="row" {{else}}class="row odd" {{/js_compare}}>
+                      {{#each thermostatDetails}}
+                        <div {{#js_compare "index%2 === 0"}}class='row' {{else}}class='row odd' {{/js_compare}}>
                           <div class="col-25">
-                            <p style="margin-top: 19px; padding-left:5px;">Zone {{js "index++"}}</p>
+                            <p style="margin-top: 19px; padding-left:5px;">Zone {{js "index++"}}: {{js "return nameArray[index-2]"}}</p>
                           </div>
                           <div class="col-25">
                             <h5 class="current-temp" style="margin-top: 19px;">{{current}}&deg;</h5>
                           </div>
-                          <div class="col-50">
+                          <div class="col-50 button-parent">
+                            {{#js_compare "this.mode != 'Schedule'"}}
                             <p class="buttons-row" style="padding-right:5px;">
                               <input type="button" class="button button-raised button-fill color-custom decrement" value="-">
                               <a class="button color-custom desired-temp" style="pointer-events: none">{{desired}}&deg;</a>
                               <input type"button" class="button button-raised button-fill color-custom increment" value="+">
                             </p>
+                            {{else}}
+                            <p style="padding-right:5px;"><input type="button" class='button button-raised button-fill color-custom schedule-button zone-{{js "return index-1"}}' value="Select Schedule"></p>
+                            {{/js_compare}}
                           </div>
                         </div>
                       {{/each}}
                       <br>
                     <input type="button" class="button button-fill color-custom-green apply-button" value="Apply">
-
                 </div>
             </div>
+        </div>
+    </script>
+
+    <!-- Schedule template -->
+    <script type="text/template7" id="schedule">
+      <!-- Dynamic Navbar for iOS theme-->
+      {{#if @global.ios}}
+        <div class="navbar">
+            <div class="navbar-inner">
+                <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
+                <div class="left sliding">
+                    <a href="#" class="link back-button icon-only"><i class="icon icon-back"></i></a>
+                </div>
+                <div class="center sliding">Zone {{zone}} Schedule</div>
+                <div class="right sliding"></div>
+            </div>
+        </div>
+      {{/if}}
+
+        <!-- Page, "data-page" contains page name -->
+        <div data-page="schedule" class="page">
+          <!-- Fixed Navbar for Material theme -->
+          {{#if @global.material}}
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
+                    <div class="left">
+                        <a href="#" class="link back-button icon-only"><i class="icon icon-back"></i></a>
+                    </div>
+                    <div class="center">Zone {{zone}} Schedule</div>
+                </div>
+            </div>
+          {{/if}}
+
+          <!-- Scrollable page content -->
+          <div class="page-content">
+            <p>Hey</p>
+          </div>
         </div>
     </script>
 
@@ -157,9 +198,10 @@
             <div class="navbar-inner">
                 <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
                 <div class="left sliding">
-                    <a href="#" class="link back icon-only"><i class="icon icon-back"></i></a>
+                    <a href="#" class="link back-button icon-only"><i class="icon icon-back"></i></a>
                 </div>
                 <div class="center sliding">Settings</div>
+                <div class="right sliding"></div>
             </div>
         </div>
       {{/if}}
@@ -172,7 +214,7 @@
                 <div class="navbar-inner">
                     <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
                     <div class="left">
-                        <a href="#" class="link back icon-only"><i class="icon icon-back"></i></a>
+                        <a href="#" class="link back-button icon-only"><i class="icon icon-back"></i></a>
                     </div>
                     <div class="center">Settings</div>
                 </div>
@@ -185,11 +227,11 @@
                 <ul>
                   <li class="list-group-title">Zone Settings</li>
                     <!-- Generate buttons for each zone -->
-                    {{#each currentTempArray}}
+                    {{#each names}}
                     <li>
                       <a href="#" class="item-link item-content zone-settings-button">
                         <div class="item-inner">
-                          <div class="item-title">Zone {{js "index++"}}</div>
+                          <div class="item-title">Zone {{js "index++"}}: {{name}}</div>
                         </div>
                       </a>
                     </li>
@@ -267,35 +309,34 @@
               <!-- TODO: When settings are applied, use mainView.router.back -->
               <div class="list-block">
                 <ul>
+                  <li>
+                    <div class="item-content name">
+                      <div class="item-inner">
+                        <div class="item-title label">Name</div>
+                        <div class="item-input">
+                          <input type="text" placeholder="Zone name" value="{{name}}">
+                        </div>
+                      </div>
+                    </div>
+                  </li>
                   <!-- Smart Select Item -->
                   <li>
                     <!-- Additional "smart-select" class -->
                     <a href="#" class="item-link smart-select" data-form-theme="gray" data-navbar-theme="red">
                       <!-- select -->
                       <select name="mode">
-                        <option value="regular" selected>Regular</option>
+                        <option value="regular">Regular</option>
                         <option value="schedule">Schedule</option>
                         <option value="disabled">Disable Thermostat</option>
                       </select>
-                      <div class="item-content">
+                      <div class="item-content mode">
                         <div class="item-inner">
                           <!-- Select label -->
                           <div class="item-title">Mode</div>
-                          <!-- Selected value, not required
-                          <div class="item-after">Apple</div>-->
+                          <div class="item-after smart-select-value">{{mode}}</div>
                         </div>
                       </div>
                     </a>
-                  </li>
-                  <li>
-                    <div class="item-content">
-                      <div class="item-inner">
-                        <div class="item-title label">Name</div>
-                        <div class="item-input">
-                          <input type="text" placeholder="Zone name">
-                        </div>
-                      </div>
-                    </div>
                   </li>
                 </ul>
             </div>

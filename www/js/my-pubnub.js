@@ -9,13 +9,11 @@ function parseMessage(msg) {
   desiredTempArray = msg.desiredTemp;
   modeArray = msg.mode;
   nameArray = msg.name;
-  ignoreThermostatArray = msg.ignoreThermostat;
   ignoreNotificationsBool = msg.ignoreNotifications;
   /*console.log("currentTempArray: " + currentTempArray);
   console.log("desiredTempArray: " + desiredTempArray);
   console.log("modeArray: " + modeArray);
   console.log("nameArray: " + nameArray);
-  console.log("ignoreThermostatArray: " + ignoreThermostatArray);
   console.log("ignoreNotificationsBool: " + ignoreNotificationsBool);*/
 }
 
@@ -38,7 +36,7 @@ function pubnubLogin() {
         if(m[0][0]) { // If there is any history in pubnubUpdateChannel this value is true.
           parseMessage(m[0][0]);
           pubnubSubscribeToUpdates();
-          loadMainTemplate(false);
+          loadMainTemplate();
         } else {
           alert("The Cross Manifold ID you entered did not match any active Cross Manifolds. Please try again."); // TODO: Add more information.
           // TODO: Do we want this?
@@ -58,7 +56,7 @@ function pubnubSubscribeToUpdates() {
     channel: pubnubUpdateChannel,
     message: function(m) {
       parseMessage(m);
-      loadMainTemplate(true);
+      loadMainTemplate();
     },
     connect: function(m) {console.log("Connected: " + m)},
     disconnect: function(m) {console.log("Disconnected: " + m)},
@@ -78,7 +76,6 @@ function pubnubPublishUpdate() {
     "desiredTemp":desiredTempArray,
     "mode":modeArray,
     "name":nameArray,
-    "ignoreThermostat":ignoreThermostatArray,
     "ignoreNotifications":ignoreNotificationsBool
   };
 
