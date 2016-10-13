@@ -51,7 +51,7 @@ i.icon.icon-back {
 /* This is for the Desired Temperature unclickable center buttons */
 .button.color-custom {
   border-color: #00a7cf;
-  border-width: 1px;
+  border-width: 1px !important;
   color: #00a7cf;
   background: white;
 }
@@ -76,6 +76,10 @@ i.icon.icon-back {
 }
 .button.button-fill.color-custom-red.active-state {
   background: #9C0000;
+}
+
+.toolbar-inner{
+  background-color:#00a7cf;
 }
 
 #footer {

@@ -4,12 +4,21 @@
 var isMaterial = Framework7.prototype.device.ios === false;
 var isIos = Framework7.prototype.device.ios === true;
 
-var CMID = ""; // Cross Manifold ID.
+var CMID = ""; // Cross Manifold ID. TODO: Store locally.
 var pubnubUpdateChannel = "CM_Update_" + CMID; // This channel is for updates from the Pi that will be displayed on the app.
 var pubnubCommandChannel = "CM_Command_" + CMID; // This channel is for commands from the app to the Pi to change the thermostats.
 
+// Arrays to store thermostat info and settings found within each message.
+// TODO: Grab these values from the subscribed messages.
+var currentTempArray = [];
+var desiredTempArray = [];
+var modeArray = [];
+var nameArray = [];
+var ignoreThermostatArray = [];
+var ignoreNotificationsBool;
+
+var currentZoneNumber;
 var index = 1;
-var zoneNameArray = ["test", "test", "test","test"];
 
 // Accessible anywhere.
 Template7.global = {
@@ -29,13 +38,13 @@ if (!isIos) {
 var myApp = new Framework7({
     material: isMaterial ? true : false,
     precompileTemplates: true,
-    template7Pages: true // TODO: Is this used?
+    template7Pages: true,
+    smartSelectOpenIn: 'picker'
 });
 
 // Add view
 var mainView = myApp.addView('.view-main', {
-    // Because we want to use dynamic navbar, we need to enable it for this view:
-    dynamicNavbar: true,
+    dynamicNavbar: true, // Only used in iOS
     domCache: true // TODO: Is this used?
 });
 
@@ -44,14 +53,12 @@ var mainView = myApp.addView('.view-main', {
 /*$$(document).on('deviceready', function() {
     console.log("Device is ready!");
 });*/
-
 /* TODO: remove after testing */
 if (navigator.userAgent.match(/(iPhone|Android)/)) {
     document.addEventListener("deviceready", onDeviceReady, false);
 } else {
     onDeviceReady();
 }
-
 function onDeviceReady() {
   console.log("Device is ready!");
 }
@@ -71,50 +78,94 @@ var pubnub = PUBNUB.init({
 /*
 * PAGE NAVIGATION
 */
+function loadLoginPage() {
+  index = 1;
+  mainView.router.load({
+    pageName: 'login'
+  })
+}
+
+function loadMainTemplate(reload) {
+  index = 1;
+
+  var thermostatArray = [];
+  // Push all readings into the array
+  for(var i = 0; i < currentTempArray.length; i++) {
+    var reading = {
+      "current":currentTempArray[i],
+      "desired":desiredTempArray[i]
+    }
+    thermostatArray.push(reading);
+  }
+
+  var context = {
+    "thermostatReading":thermostatArray
+  }
+
+  mainView.router.load({
+    template: myApp.templates.main,
+    animatePages:true,
+    context: context,
+    reload: reload
+  });
+}
+
+function loadSettingsTemplate() {
+  index = 1;
+
+  mainView.router.load({
+    template: myApp.templates.settings,
+    animatePages:true,
+    context: {"currentTempArray":currentTempArray}
+  });
+}
+
+function loadZoneSettingsTemplate() {
+  index = 1;
+  mainView.router.load({
+    template: myApp.templates.zonesettings,
+    animatePages:true,
+    context: {"zoneNumber":currentZoneNumber} // TODO
+  });
+}
+
 // Login: Check if the channel is live by checking the update history. If there is a message than the corresponding Pi is active.
 $$(document).on('click', '.login-button', function() {
-  console.log("Login clicked");
-  index=1;
   pubnubLogin();
 })
 
 // Settings
 $$(document).on('click', '.navbar .settings-button', function() {
-  // var settings = JSON.parse(localStorage.getItem('settings')); // TODO
-  index = 1;
-  mainView.router.load({
-    template: myApp.templates.settings,
-    animatePages:true,
-    context:lastUpdateJSON
-  });
+  loadSettingsTemplate();
 });
 
 // Logout
 $$(document).on('click', '.logout-button', function() {
+  // Remove old thermostat reading divs otherwise they grow exponentially
   $$( ".current-temp, .desired-temp" ).remove();
-  mainView.router.load({
-    pageName: 'login'
+
+  // Unsubscribe from channel
+  pubnub.unsubscribe({
+    channel: pubnubUpdateChannel
   })
+
   CMID = "";
-  pubnubUpdateChannel = ""; // TODO: Need to reset channel names?
+  pubnubUpdateChannel = "";
   pubnubCommndChannel = "";
+
+  loadLoginPage();
 })
 
 // Zone Settings
 $$(document).on('click', '.zone-settings-button', function() {
-  // var settings = JSON.parse(localStorage.getItem('settings')); // TODO
-  index = 1;
-  mainView.router.load({
-    template: myApp.templates.zonesettings,
-    animatePages:true
-  });
+  currentZoneNumber = parseInt($$(this).text().replace("Zone ", ""));
+  loadZoneSettingsTemplate();
 });
 
-// Done (adjusting zone settings)
+// Done adjusting zone Settings
+// TODO: Save settings from this page to the corresponding arrays.
 $$(document).on('click', '.done-button', function() {
-  // var settings = JSON.parse(localStorage.getItem('settings')); // TODO
-  index = 1;
-  applySettings();
+  // How to use click event or currentZoneNumberto read all settings from the template?
   mainView.router.back({
     animatePages:true
   });
@@ -125,15 +176,54 @@ $$(document).on('click', '.done-button', function() {
 /*
 * FUNCTIONS
 */
-function applySettings() {
-  console.log("TODO: applySettings()")
+/* TESTING PAYLOAD SIZE */
+// Calculating a PubNub Message Payload Size.
+function calculate_payload_size( channel, message ) {
+    return encodeURIComponent(
+        channel + JSON.stringify(message)
+    ).length + 100;
 }
+// Estimate of final JSON message in order to get an idea of max size. (Pubnub max is 32KB)
+var testMessage = {
+  "thermostatReading":[
+    {"current":70,"desired":75,"mode":"Regular","name":"test","ignore":false},
+    {"current":70,"desired":70,"mode":"Regular","name":"test","ignore":false},
+    {"current":73,"desired":71,"mode":"Regular","name":"test","ignore":false},
+    {"current":93,"desired":72,"mode":"Regular","name":"test","ignore":false},
+    {"current":90,"desired":70,"mode":"Regular","name":"test","ignore":false},
+    {"current":70,"desired":74,"mode":"Regular","name":"test","ignore":false},
+    {"current":70,"desired":75,"mode":"Regular","name":"test","ignore":false},
+    {"current":70,"desired":70,"mode":"Regular","name":"test","ignore":false},
+    {"current":73,"desired":71,"mode":"Regular","name":"test","ignore":false},
+    {"current":93,"desired":72,"mode":"Regular","name":"test","ignore":false},
+    {"current":90,"desired":70,"mode":"Regular","name":"test","ignore":false},
+    {"current":70,"desired":74,"mode":"Regular","name":"test","ignore":false},
+  ],
+  "settings":{
+    "away":true,
+    "awayDate":"01-01-2017 12:00",
+    "ignoreSuggestions":false // TODO: This should be local if its phone specific.
+  }
+}
+console.log(calculate_payload_size(pubnubUpdateChannel, testMessage));
 
 
 
 /*
 * SIMPLE CONTROLS
 */
+// Send command to the Pi with the desired temperatures.
+$$(document).on('click', '.apply-button', function() {
+  // Wipe the array, loop through all desired temps and push the cleaned numbers to an array.
+  desiredTempArray  = [];
+  $$(".desired-temp").each(function() {
+    desiredTempArray.push(parseInt($$(this).text().replace("°", "")));
+  });
+
+  pubnubPublishCommand();
+  pubnubPublishUpdate();
+})
+
 // Auto switch input box when full.
 $$(".CMID-input").keyup(function() {
   if($$(this).val().length == 4) {
@@ -142,33 +232,10 @@ $$(".CMID-input").keyup(function() {
 })
 
 // Attempt login when enter is pushed. TOOD: Change this for mobile? Does it need to be a form?
-$$('.CMID-input').keydown(function (e){
+$$('.CMID-input').keydown(function (e) {
     if(e.keyCode == 13){
         pubnubLogin();
     }
-})
-
-// Send command to the Pi with the desired temperatures.
-$$(document).on('click', '.apply-button', function() {
-  // Loop through all desired temps and push the cleaned numbers to an array.
-  var desiredTempArray = [];
-  $$(".desired-temp").each(function() {
-    desiredTempArray.push(parseInt($$(this).text().replace("°", "")));
-  });
-
-  pubnubPublishCommand(desiredTempArray);
-  console.log("Command sent.");
-
-  index = 1;
-
-  // Loop through all desired temps and push the cleaned numbers to an array.
-  var currentTempArray = [];
-  $$(".current-temp").each(function() {
-    console.log(".current-temp");
-    currentTempArray.push(parseInt($$(this).text().replace("°", "")));
-  });
-  pubnubPublishUpdate(currentTempArray, desiredTempArray);
-  console.log("Update sent.");
 })
 
 // Increment corresponding desired temperature.
