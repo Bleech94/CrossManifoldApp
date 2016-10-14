@@ -5,16 +5,20 @@ var lastUpdateJSON;
 */
 // Read a message from the update channel and store its contents.
 function parseMessage(msg) {
+  nameArray = msg.name;
   currentTempArray = msg.currentTemp;
   desiredTempArray = msg.desiredTemp;
   modeArray = msg.mode;
-  nameArray = msg.name;
-  ignoreNotificationsBool = msg.ignoreNotifications;
-  /*console.log("currentTempArray: " + currentTempArray);
+  scheduleNameArray = msg.scheduleName;
+  scheduleArray = msg.schedule;
+
+  console.log("nameArray: " + nameArray);
+  console.log("currentTempArray: " + currentTempArray);
   console.log("desiredTempArray: " + desiredTempArray);
   console.log("modeArray: " + modeArray);
-  console.log("nameArray: " + nameArray);
-  console.log("ignoreNotificationsBool: " + ignoreNotificationsBool);*/
+  console.log("scheduleNameArray: " + scheduleNameArray);
+  console.log("scheduleArray[0] time on monday: " + scheduleArray[0].monday[0].time + ", temp on monday: " + scheduleArray[0].monday[0].temp);
+
 }
 
 // "Logging in" is just subscribing to an active Pubnub channel. Each Pi automatically connects to a unique channel.
@@ -25,7 +29,6 @@ function pubnubLogin() {
   // Get CMID from input fields and set channel names.
   CMID = $$('#CMID-input1').val() + $$('#CMID-input2').val() + $$('#CMID-input3').val() + $$('#CMID-input4').val();
   pubnubUpdateChannel = "CM_Update_" + CMID;
-  pubnubCommandChannel = "CM_Command_" + CMID;
 
   // Check if history is empty. If it is, alert() steps to try and fix it, otherwise login to main page.
   pubnub.history({
@@ -36,10 +39,9 @@ function pubnubLogin() {
         if(m[0][0]) { // If there is any history in pubnubUpdateChannel this value is true.
           parseMessage(m[0][0]);
           pubnubSubscribeToUpdates();
-          loadMainTemplate();
+          loadMainTemplate(true, true);
         } else {
           alert("The Cross Manifold ID you entered did not match any active Cross Manifolds. Please try again."); // TODO: Add more information.
-          // TODO: Do we want this?
           $$('#CMID-input1').val("");
           $$('#CMID-input2').val("");
           $$('#CMID-input3').val("");
@@ -56,7 +58,7 @@ function pubnubSubscribeToUpdates() {
     channel: pubnubUpdateChannel,
     message: function(m) {
       parseMessage(m);
-      loadMainTemplate();
+      loadMainTemplate(true, false);
     },
     connect: function(m) {console.log("Connected: " + m)},
     disconnect: function(m) {console.log("Disconnected: " + m)},
@@ -66,17 +68,17 @@ function pubnubSubscribeToUpdates() {
   })
 }
 
-// TODO: Format into new JSON
 // This function is only used when Apply is pressed. It keeps all devices sync'd.
 function pubnubPublishUpdate() {
 
   // Construct message
   var newUpdate = {
+    "name":nameArray,
     "currentTemp":currentTempArray,
     "desiredTemp":desiredTempArray,
     "mode":modeArray,
-    "name":nameArray,
-    "ignoreNotifications":ignoreNotificationsBool
+    "scheduleName":scheduleNameArray,
+    "schedule":scheduleArray
   };
 
   pubnub.publish({
@@ -84,18 +86,6 @@ function pubnubPublishUpdate() {
     message: newUpdate,
     callback: function(m) {
         console.log(m)
-    }
-  })
-}
-
-// TODO: Must include settings in the command.
-function pubnubPublishCommand() {
-  // Publish the array of desired temperatures selected to the channel that the Pi is subscribed to.
-  pubnub.publish({
-    channel: pubnubCommandChannel,
-    message: desiredTempArray,
-    callback: function(m){
-        console.log(m);
     }
   })
 }

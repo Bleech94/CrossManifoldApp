@@ -6,15 +6,14 @@ var isIos = Framework7.prototype.device.ios === true;
 
 var CMID = ""; // Cross Manifold ID. TODO: Store locally.
 var pubnubUpdateChannel = "CM_Update_" + CMID; // This channel is for updates from the Pi that will be displayed on the app.
-var pubnubCommandChannel = "CM_Command_" + CMID; // This channel is for commands from the app to the Pi to change the thermostats.
 
 // Arrays to store thermostat info and settings found within each message.
-// TODO: Grab these values from the subscribed messages.
-var currentTempArray = [];
-var desiredTempArray = [];
-var modeArray = [];
-var nameArray = [];
-var ignoreNotificationsBool;
+var nameArray = []; // Zone names
+var currentTempArray = []; // Current temperature of each thermostat
+var desiredTempArray = []; // Desired temperature of each thermostat
+var modeArray = []; // Mode that each thermostat is set to
+var scheduleNameArray = []; // Schedule name for each thermostat references a template (Only used if in schedule mode).
+var scheduleArray = [] // Schedule templates define time+temp pairs. A thermostat can use a template with name in scheduleNameArray[].
 
 var currentZoneNumber;
 var index = 1;
@@ -44,7 +43,7 @@ var myApp = new Framework7({
 // Add view
 var mainView = myApp.addView('.view-main', {
     dynamicNavbar: true, // Only used in iOS
-    domCache: true // TODO: Is this used?
+    domCache: true
 });
 
 // TODO: Switch back to 'deviceready' event after testing
@@ -63,7 +62,7 @@ function onDeviceReady() {
 }
 /* remove after testing */
 
-// Initialize Pubnub TODO: Ensure this is only ever called once?
+// Initialize Pubnub
 var pubnub = PUBNUB.init({
     publish_key: 'pub-c-3082c989-10c9-4690-b759-2b7f56c733e7',
     subscribe_key: 'sub-c-88a5713a-8040-11e6-920d-02ee2ddab7fe',
@@ -84,10 +83,14 @@ function loadLoginPage() {
   })
 }
 
-function loadMainTemplate() {
-  index = 1;
+// Load the main page
+function loadMainTemplate(isForward, isAnimated) {
+  // Remove old thermostat reading divs otherwise they grow exponentially
+  $$( ".current-temp, .desired-temp" ).remove();
 
+  index = 1;
   var thermostatArray = [];
+
   // Push all readings into the array
   for(var i = 0; i < currentTempArray.length; i++) {
     var reading = {
@@ -99,54 +102,86 @@ function loadMainTemplate() {
     thermostatArray.push(reading);
   }
 
-  var context = {
+  var html = myApp.templates.main({
     "thermostatDetails":thermostatArray
-  }
-
-  mainView.router.load({
-    template: myApp.templates.main,
-    animatePages:true,
-    context: context,
-    reload: true
-  });
-}
-
-function loadZoneScheduleTemplate() {
-  index = 1;
-  var context = {
-    "zone": currentZoneNumber
-  }
-  mainView.router.load({
-    template:myApp.templates.schedule,
-    context:context
   })
+
+  if(isForward) {
+    mainView.router.load({
+      content: html,
+      animatePages:isAnimated
+    });
+  } else {
+    mainView.router.back({ // Back button pressed to reach this page.
+      content: html,
+      force:true
+    });
+  }
 }
 
-function loadSettingsTemplate() {
+function loadSettingsTemplate(isForward) {
   index = 1;
   var nameObjectArray = [];
-  for(var i = 0; i < nameArray.length; i++) { // TODO: There must be a better way of doing this.
+
+  for(var i = 0; i < nameArray.length; i++) {
     var nameObject = {"name":nameArray[i]};
     nameObjectArray.push(nameObject);
   }
 
+  var html = myApp.templates.settings({
+    "names":nameObjectArray
+  })
+
+  if(isForward) {
+    mainView.router.load({
+      content: html
+    });
+  } else {
+    mainView.router.back({ // Back button pressed to reach this page.
+      content: html,
+      force:true
+    });
+  }
+}
+
+function loadManageSchedulesTemplate(isForward) {
+  var html = myApp.templates.manageschedules({
+    "schedule":scheduleArray
+  })
+
+  if(isForward) {
+    mainView.router.load({
+      content: html
+    });
+  } else {
+    mainView.router.back({ // Back button pressed to reach this page.
+      content: html,
+      force:true
+    });
+  }
+}
+
+function loadEditScheduleTemplate() {
+  var html = myApp.templates.editschedule({
+
+  })
+
   mainView.router.load({
-    template: myApp.templates.settings,
-    animatePages:true,
-    context: {"names":nameObjectArray}
-  });
+    content: html
+  })
 }
 
 function loadZoneSettingsTemplate() {
   index = 1;
+
+  var html = myApp.templates.zonesettings({
+    "zoneNumber":currentZoneNumber,
+    "mode":modeArray[currentZoneNumber-1],
+    "name":nameArray[currentZoneNumber-1]
+  })
+
   mainView.router.load({
-    template: myApp.templates.zonesettings,
-    animatePages:true,
-    context: {
-      "zoneNumber":currentZoneNumber,
-      "mode":modeArray[currentZoneNumber-1],
-      "name":nameArray[currentZoneNumber-1]
-    }
+    content: html
   });
 }
 
@@ -155,23 +190,57 @@ $$(document).on('click', '.login-button', function() {
   pubnubLogin();
 })
 
-$$(document).on('click', '.schedule-button', function() {
+$$(document).on('click', '.select-schedule-button', function() {
   // Get the corrsponding zone number
   var theClass = $$(this).attr("class");
   var regex = /zone-([0-9])/;
   var match = regex.exec(theClass);
   currentZoneNumber = parseInt(match[1]);
-  loadZoneScheduleTemplate();
 })
 
 // Settings
 $$(document).on('click', '.navbar .settings-button', function() {
-  loadSettingsTemplate();
+  loadSettingsTemplate(true);
 });
 
-// Back
-$$(document).on('click', '.navbar .back-button', function() {
-  loadMainTemplate(); // TODO: figure out how to add back transition (see my question on framework7 forum Oct. 13 /16)
+// Back to main
+$$(document).on('click', '.navbar .back-to-main-button', function() {
+  loadMainTemplate(false,true);
+});
+
+
+// Manage Schedules
+$$(document).on('click', '.manage-schedules-button', function() {
+  loadManageSchedulesTemplate(true);
+})
+
+$$(document).on('click', '.edit-schedule-button', function() {
+  loadEditScheduleTemplate();
+})
+
+$$(document).on('click', '.back-to-manage-schedules-button', function() {
+  loadManageSchedulesTemplate(false);
+})
+
+// Zone Settings
+$$(document).on('click', '.zone-settings-button', function() {
+  currentZoneNumber = parseInt($$(this).text().replace("Zone ", ""));
+  loadZoneSettingsTemplate();
+});
+
+// Back to settings and save new settings TODO: Change this so it doesn't send updates after every change?
+$$(document).on('click', '.navbar .back-to-settings-save-button', function() {
+  console.log("back to settings");
+  nameArray[currentZoneNumber-1] = $$('.name input').val();
+  modeArray[currentZoneNumber-1] = $$('.mode .item-after').text();
+  pubnubPublishUpdate();
+  loadSettingsTemplate(false);
+});
+
+
+// Back to settings
+$$(document).on('click', '.navbar .back-to-settings-button', function() {
+  loadSettingsTemplate(false);
 });
 
 // Logout
@@ -191,23 +260,6 @@ $$(document).on('click', '.logout-button', function() {
   loadLoginPage();
 })
 
-// Zone Settings
-$$(document).on('click', '.zone-settings-button', function() {
-  currentZoneNumber = parseInt($$(this).text().replace("Zone ", ""));
-  loadZoneSettingsTemplate();
-});
-
-// Done adjusting zone Settings
-// TODO: Save settings from this page to the corresponding arrays.
-$$(document).on('click', '.done-button', function() {
-  modeArray[currentZoneNumber-1] = $$('.mode .item-after').text();
-  nameArray[currentZoneNumber-1] = $$('.name input').val();
-
-  mainView.router.back({
-    animatePages:true
-  });
-});
-
 
 
 /*
@@ -222,463 +274,871 @@ function calculate_payload_size( channel, message ) {
 }
 // Estimate of final JSON message in order to get an idea of max size. (Pubnub max is 32KB)
 // CTRL + ALT + F to manually fold selected text
-  var testMessage = [
+var testMessage = {
+
+"name":["Living Room","Master Bedroom","Basement","Tommy's Bedroom","Attic","Kids Room"],
+
+"currentTemp":[70,72,69,71,72,75],
+
+"desiredTemp":[73,72,70,69,72,74],
+
+"mode":["Schedule","Schedule","Schedule","Regular","Schedule","Regular"],
+
+"scheduleName":["Schedule 1","Schedule 2","Schedule 2","","Schedule 1",""],
+
+"schedule": [
+
 {
-  "name":"schedule-1",
-  "monday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "tuesday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "wednesday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "thursday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "friday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "saturday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "sunday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ]
-},
-{
-  "name":"schedule-2",
-  "monday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "tuesday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "wednesday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "thursday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "friday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "saturday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "sunday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ]
-},
-{
-  "name":"schedule-3",
-  "monday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "tuesday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "wednesday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "thursday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "friday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "saturday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "sunday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ]
-},
-{
-  "name":"schedule-4",
-  "monday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "tuesday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "wednesday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "thursday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "friday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "saturday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "sunday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ]
-},
-{
-  "name":"schedule-5",
-  "monday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "tuesday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "wednesday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "thursday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "friday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "saturday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "sunday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ]
-},
-{
-  "name":"schedule-6",
-  "monday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "tuesday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "wednesday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "thursday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "friday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "saturday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ],
-  "sunday":[
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70},
-    {"time":"06:00", "temp":75},
-    {"time":"10:00", "temp":70},
-    {"time":"16:00", "temp":78},
-    {"time":"20:00", "temp":70}
-  ]
-}
+
+"name":"schedule-1",
+
+"monday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"tuesday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"wednesday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"thursday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"friday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"saturday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"sunday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
 ]
 
-console.log(calculate_payload_size(pubnubUpdateChannel, testMessage));
+},
+{
+
+"name":"schedule-1",
+
+"monday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"tuesday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"wednesday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"thursday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"friday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"saturday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"sunday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+]
+
+},
+{
+
+"name":"schedule-1",
+
+"monday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"tuesday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"wednesday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"thursday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"friday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"saturday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"sunday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+]
+
+},
+{
+
+"name":"schedule-1",
+
+"monday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"tuesday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"wednesday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"thursday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"friday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"saturday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"sunday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+]
+
+},
+{
+
+"name":"schedule-1",
+
+"monday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"tuesday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"wednesday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"thursday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"friday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"saturday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"sunday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+]
+
+},
+{
+
+"name":"schedule-1",
+
+"monday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"tuesday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"wednesday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"thursday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"friday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"saturday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+],
+
+"sunday":[
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70},
+
+{"time":"06:00", "temp":75},
+
+{"time":"10:00", "temp":70},
+
+{"time":"16:00", "temp":78},
+
+{"time":"20:00", "temp":70}
+]
+
+}
+
+]
+
+}
+//console.log(calculate_payload_size(pubnubUpdateChannel, testMessage));
 
 
 
 /*
 * SIMPLE CONTROLS
 */
-// Send command to the Pi with the desired temperatures.
+// Send update to all connected devices
 $$(document).on('click', '.apply-button', function() {
   // Wipe the array, loop through all desired temps and push the cleaned numbers to an array.
   desiredTempArray  = [];
   $$(".desired-temp").each(function() {
-    desiredTempArray.push(parseInt($$(this).text().replace("°", "")));
+    var desiredTemp = parseInt($$(this).text().replace("°", ""));
+    if(desiredTemp) {
+      desiredTempArray.push(desiredTemp);
+    } else {
+      desiredTempArray.push(70);
+    }
   });
-
-  pubnubPublishCommand();
   pubnubPublishUpdate();
 })
 

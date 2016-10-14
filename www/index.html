@@ -49,7 +49,6 @@
             </div>
             <!-- Pages container, because we use fixed-through navbar, it has additional appropriate classes -->
             <div class="pages">
-              <!-- Login page. TODO: How to handle if login info is saved?-->
               <div data-page="login" class="page">
                 <!-- Scrollable page content -->
                 <div class="page-content">
@@ -140,7 +139,7 @@
                               <input type"button" class="button button-raised button-fill color-custom increment" value="+">
                             </p>
                             {{else}}
-                            <p style="padding-right:5px;"><input type="button" class='button button-raised button-fill color-custom schedule-button zone-{{js "return index-1"}}' value="Select Schedule"></p>
+                            <p style="padding-right:5px;"><input type="button" class='button button-raised button-fill color-custom select-schedule-button zone-{{js "return index-1"}} desired-temp' value="Select Schedule"></p>
                             {{/js_compare}}
                           </div>
                         </div>
@@ -152,44 +151,6 @@
         </div>
     </script>
 
-    <!-- Schedule template -->
-    <script type="text/template7" id="schedule">
-      <!-- Dynamic Navbar for iOS theme-->
-      {{#if @global.ios}}
-        <div class="navbar">
-            <div class="navbar-inner">
-                <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
-                <div class="left sliding">
-                    <a href="#" class="link back-button icon-only"><i class="icon icon-back"></i></a>
-                </div>
-                <div class="center sliding">Zone {{zone}} Schedule</div>
-                <div class="right sliding"></div>
-            </div>
-        </div>
-      {{/if}}
-
-        <!-- Page, "data-page" contains page name -->
-        <div data-page="schedule" class="page">
-          <!-- Fixed Navbar for Material theme -->
-          {{#if @global.material}}
-            <div class="navbar">
-                <div class="navbar-inner">
-                    <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
-                    <div class="left">
-                        <a href="#" class="link back-button icon-only"><i class="icon icon-back"></i></a>
-                    </div>
-                    <div class="center">Zone {{zone}} Schedule</div>
-                </div>
-            </div>
-          {{/if}}
-
-          <!-- Scrollable page content -->
-          <div class="page-content">
-            <p>Hey</p>
-          </div>
-        </div>
-    </script>
-
     <!-- Settings template -->
     <script type="text/template7" id="settings">
       <!-- Dynamic Navbar for iOS theme-->
@@ -198,7 +159,7 @@
             <div class="navbar-inner">
                 <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
                 <div class="left sliding">
-                    <a href="#" class="link back-button icon-only"><i class="icon icon-back"></i></a>
+                    <a href="#" class="link back-to-main-button icon-only"><i class="icon icon-back"></i></a>
                 </div>
                 <div class="center sliding">Settings</div>
                 <div class="right sliding"></div>
@@ -214,7 +175,7 @@
                 <div class="navbar-inner">
                     <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
                     <div class="left">
-                        <a href="#" class="link back-button icon-only"><i class="icon icon-back"></i></a>
+                        <a href="#" class="link back-to-main-button icon-only"><i class="icon icon-back"></i></a>
                     </div>
                     <div class="center">Settings</div>
                 </div>
@@ -223,7 +184,11 @@
 
           <!-- Scrollable page content -->
           <div class="page-content">
+            <div class="content-block">
+              <input type="button" href="#" class="button button-raised button-fill color-custom manage-schedules-button" value="Manage Schedules">
+            </div>
             <div class="list-block">
+              <div class="list-group">
                 <ul>
                   <li class="list-group-title">Zone Settings</li>
                     <!-- Generate buttons for each zone -->
@@ -237,15 +202,14 @@
                     </li>
                    {{/each}}
                 </ul>
-            </div>
-            <div class="list-block">
+              </div>
               <div class="list-group">
                 <ul>
                   <li class="list-group-title">Notifications</li>
                   <li>
                     <div class="item-content">
                       <div class="item-inner">
-                        <div class="item-title label">Ignore All</div>
+                        <div class="item-title label">Ignore All</div> <!-- TODO: Make this a local setting to ignore push notifications -->
                         <div class="item-input">
                           <label class="label-switch">
                             <input type="checkbox">
@@ -258,12 +222,109 @@
                 </ul>
               </div>
             </div>
-            <div class="list-block">
-              <div class="list-group"><ul><li class="list-group-title">Change CMID</li></ul></div>
-            </div>
             <div class="content-block">
               <input type="button" href="#" class="button button-raised button-fill color-custom-red logout-button" value="Logout">
             </div>
+          </div>
+        </div>
+    </script>
+
+    <!-- Manage Schedules template -->
+    <script type="text/template7" id="manageschedules">
+      <!-- Dynamic Navbar for iOS theme-->
+      {{#if @global.ios}}
+        <div class="navbar">
+            <div class="navbar-inner">
+                <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
+                <div class="left sliding">
+                    <a href="#" class="link back-to-settings-button icon-only"><i class="icon icon-back"></i></a>
+                </div>
+                <div class="center sliding">Manage Schedules</div>
+                <div class="right sliding">
+                    <a href="#" class="link garbage-button icon-only"><i class="fa fa-trash-o"></i></a>
+                </div>
+            </div>
+        </div>
+      {{/if}}
+
+        <!-- Page, "data-page" contains page name -->
+        <div data-page="manageschedules" class="page">
+          <!-- Fixed Navbar for Material theme -->
+          {{#if @global.material}}
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
+                    <div class="left">
+                        <a href="#" class="link back-to-settings-button icon-only"><i class="icon icon-back"></i></a>
+                    </div>
+                    <div class="center">Manage Schedules</div>
+                    <div class="right">
+                        <a href="#" class="link garbage-button icon-only"><i class="fa fa-trash-o"></i></a>
+                    </div>
+                </div>
+            </div>
+          {{/if}}
+
+          <!-- Scrollable page content -->
+          <div class="page-content">
+            <div class="list-block">
+              <div class="list-group">
+                <ul>
+                  <li class="list-group-title">Schedules</li>
+                    <!-- Generate buttons for each zone -->
+                    {{#each schedule}}
+                    <li>
+                      <a href="#" class="item-link item-content edit-schedule-button">
+                        <div class="item-inner">
+                          <div class="item-title">{{this.name}}</div>
+                        </div>
+                      </a>
+                    </li>
+                   {{/each}}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+    </script>
+
+    <!-- Edit Schedule template -->
+    <script type="text/template7" id="editschedule">
+      <!-- Dynamic Navbar for iOS theme-->
+      {{#if @global.ios}}
+        <div class="navbar">
+            <div class="navbar-inner">
+                <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
+                <div class="left sliding">
+                    <a href="#" class="link back-to-manage-schedules-button icon-only"><i class="icon icon-back"></i></a>
+                </div>
+                <div class="center sliding">Edit Schedule</div>
+                <div class="right sliding">
+                </div>
+            </div>
+        </div>
+      {{/if}}
+
+        <!-- Page, "data-page" contains page name -->
+        <div data-page="editschedule" class="page">
+          <!-- Fixed Navbar for Material theme -->
+          {{#if @global.material}}
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
+                    <div class="left">
+                        <a href="#" class="link back-to-manage-schedules-button icon-only"><i class="icon icon-back"></i></a>
+                    </div>
+                    <div class="center">Edit Schedule</div>
+                    <div class="right">
+                    </div>
+                </div>
+            </div>
+          {{/if}}
+
+          <!-- Scrollable page content -->
+          <div class="page-content">
+
           </div>
         </div>
     </script>
@@ -276,12 +337,10 @@
             <div class="navbar-inner">
                 <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
                 <div class="left sliding">
-                    <a href="#" class="link back icon-only"><i class="icon icon-back"></i></a>
+                    <a href="#" class="link back-to-settings-save-button icon-only"><i class="icon icon-back"></i></a>
                 </div>
                 <div class="center sliding">Zone {{zoneNumber}} Settings</div>
-                <div class="right sliding">
-                  <a href="#" class="link done-button">Done</a>
-                </div>
+                <div class="right sliding"></div>
             </div>
         </div>
       {{/if}}
@@ -294,19 +353,16 @@
                 <div class="navbar-inner">
                     <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
                     <div class="left">
-                        <a href="#" class="link back icon-only"><i class="icon icon-back"></i></a>
+                        <a href="#" class="link back-to-settings-save-button icon-only"><i class="icon icon-back"></i></a>
                     </div>
                     <div class="center">Zone {{zoneNumber}} Settings</div>
-                    <div class="right">
-                      <a href="#" class="link done-button">Done</a>
-                    </div>
+                    <div class="right"></div>
                 </div>
             </div>
           {{/if}}
 
           <!-- Scrollable page content -->
           <div class="page-content">
-              <!-- TODO: When settings are applied, use mainView.router.back -->
               <div class="list-block">
                 <ul>
                   <li>
