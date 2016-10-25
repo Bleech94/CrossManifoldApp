@@ -12,16 +12,20 @@ var nameArray = []; // Zone names
 var currentTempArray = []; // Current temperature of each thermostat
 var desiredTempArray = []; // Desired temperature of each thermostat
 var modeArray = []; // Mode that each thermostat is set to
-var scheduleNameArray = []; // Schedule name for each thermostat references a template (Only used if in schedule mode).
+var scheduleNameArray = []; // Schedule name for each thermostat references a schedule (Only used if in schedule mode).
 var scheduleArray = [] // Schedule templates define time+temp pairs. A thermostat can use a template with name in scheduleNameArray[].
 
 var currentZoneNumber;
+var currentScheduleNumber;
 var index = 1;
+var groupNumber = 0; // Used to number the buttons in the Edit Schedule page
+var pairNumber = 0; // Used to number the buttons in the Edit Schedule page
 
 // Accessible anywhere.
 Template7.global = {
     material: isMaterial,
-    ios: isIos
+    ios: isIos,
+    dayArray: ['M', 'T', 'W', 'Th', 'F', 'Sa', 'Su']
 };
 
 var $$ = Dom7; // Custom DOM library, almost the exact same as jQuery
@@ -145,6 +149,7 @@ function loadSettingsTemplate(isForward) {
 }
 
 function loadManageSchedulesTemplate(isForward) {
+  index = 1;
   var html = myApp.templates.manageschedules({
     "schedule":scheduleArray
   })
@@ -162,8 +167,14 @@ function loadManageSchedulesTemplate(isForward) {
 }
 
 function loadEditScheduleTemplate() {
-  var html = myApp.templates.editschedule({
+  index = 0;
+  pairNumber = 0;
+  groupNumber = 0;
 
+
+  var html = myApp.templates.editschedule({
+    "name":scheduleArray[currentScheduleNumber].name,
+    "groups":scheduleArray[currentScheduleNumber].groups
   })
 
   mainView.router.load({
@@ -215,6 +226,12 @@ $$(document).on('click', '.manage-schedules-button', function() {
 })
 
 $$(document).on('click', '.edit-schedule-button', function() {
+  // Get the corresponding schedule number (so we know which elements of our array to change.)
+  var theClass = $$(this).attr("class");
+  var regex = /schedule-([0-9])/;
+  var match = regex.exec(theClass);
+  currentScheduleNumber = parseInt(match[1]) - 1;
+
   loadEditScheduleTemplate();
 })
 
@@ -255,7 +272,6 @@ $$(document).on('click', '.logout-button', function() {
 
   CMID = "";
   pubnubUpdateChannel = "";
-  pubnubCommndChannel = "";
 
   loadLoginPage();
 })
@@ -275,859 +291,173 @@ function calculate_payload_size( channel, message ) {
 // Estimate of final JSON message in order to get an idea of max size. (Pubnub max is 32KB)
 // CTRL + ALT + F to manually fold selected text
 var testMessage = {
-
-"name":["Living Room","Master Bedroom","Basement","Tommy's Bedroom","Attic","Kids Room"],
-
-"currentTemp":[70,72,69,71,72,75],
-
-"desiredTemp":[73,72,70,69,72,74],
-
-"mode":["Schedule","Schedule","Schedule","Regular","Schedule","Regular"],
-
-"scheduleName":["Schedule 1","Schedule 2","Schedule 2","","Schedule 1",""],
-
-"schedule": [
-
-{
-
-"name":"schedule-1",
-
-"monday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"tuesday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"wednesday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"thursday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"friday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"saturday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"sunday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-]
-
-},
-{
-
-"name":"schedule-1",
-
-"monday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"tuesday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"wednesday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"thursday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"friday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"saturday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"sunday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-]
-
-},
-{
-
-"name":"schedule-1",
-
-"monday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"tuesday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"wednesday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"thursday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"friday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"saturday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"sunday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-]
-
-},
-{
-
-"name":"schedule-1",
-
-"monday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"tuesday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"wednesday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"thursday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"friday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"saturday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"sunday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-]
-
-},
-{
-
-"name":"schedule-1",
-
-"monday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"tuesday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"wednesday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"thursday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"friday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"saturday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"sunday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-]
-
-},
-{
-
-"name":"schedule-1",
-
-"monday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"tuesday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"wednesday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"thursday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"friday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"saturday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-],
-
-"sunday":[
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70},
-
-{"time":"06:00", "temp":75},
-
-{"time":"10:00", "temp":70},
-
-{"time":"16:00", "temp":78},
-
-{"time":"20:00", "temp":70}
-]
-
-}
-
-]
-
-}
-//console.log(calculate_payload_size(pubnubUpdateChannel, testMessage));
+    "name": [
+      "Main Room",
+      "Master Bedroom",
+      "Basement",
+      "Tommy's Bedroom",
+      "Attic",
+      "Kids Room"
+    ],
+    "currentTemp": [
+      70,
+      72,
+      69,
+      71,
+      72,
+      75
+    ],
+    "desiredTemp": [
+      70,
+      77,
+      70,
+      70,
+      74,
+      73
+    ],
+    "mode": [
+      "Disable Thermostat",
+      "Regular",
+      "Schedule",
+      "Schedule",
+      "Regular",
+      "Regular"
+    ],
+    "scheduleName": [
+      "Schedule 1",
+      "Schedule 2",
+      "Schedule 2",
+      "",
+      "Schedule 1",
+      ""
+    ],
+    "schedules": [
+    {
+      "name":"Schedule-1",
+      "groups":[
+        {"days":["monday","tuesday","wednesday","thursday","friday"],
+         "pairs":[
+            {"time":"06:00", "temp":75},
+            {"time":"10:00", "temp":70},
+            {"time":"16:00", "temp":78},
+            {"time":"20:00", "temp":70},
+            {"time":"06:00", "temp":75},
+            {"time":"10:00", "temp":70},
+            {"time":"16:00", "temp":78},
+            {"time":"20:00", "temp":70}
+          ]
+        },
+        {"days":["saturday","sunday"],
+         "pairs":[
+            {"time":"06:00", "temp":75},
+            {"time":"10:00", "temp":70},
+            {"time":"16:00", "temp":78},
+            {"time":"20:00", "temp":70},
+            {"time":"06:00", "temp":75},
+            {"time":"10:00", "temp":70},
+            {"time":"16:00", "temp":78},
+            {"time":"20:00", "temp":70}
+          ]
+        }
+      ]
+    },
+    {
+      "name":"Schedule-2",
+      "groups":[
+        {"days":["monday","tuesday","wednesday","thursday","friday"],
+         "pairs":[
+            {"time":"06:00", "temp":75},
+            {"time":"10:00", "temp":70},
+            {"time":"16:00", "temp":78},
+            {"time":"20:00", "temp":70},
+            {"time":"06:00", "temp":75},
+            {"time":"10:00", "temp":70},
+            {"time":"16:00", "temp":78},
+            {"time":"20:00", "temp":70}
+          ]
+        },
+        {"days":["saturday","sunday"],
+         "pairs":[
+            {"time":"06:00", "temp":75},
+            {"time":"10:00", "temp":70},
+            {"time":"16:00", "temp":78},
+            {"time":"20:00", "temp":70},
+            {"time":"06:00", "temp":75},
+            {"time":"10:00", "temp":70},
+            {"time":"16:00", "temp":78},
+            {"time":"20:00", "temp":70}
+          ]
+        }
+      ]
+    },
+    {
+      "name":"Schedule-3",
+      "groups":[
+        {"days":["monday","tuesday","wednesday","thursday","friday"],
+         "pairs":[
+            {"time":"06:00", "temp":75},
+            {"time":"10:00", "temp":70},
+            {"time":"16:00", "temp":78},
+            {"time":"20:00", "temp":70},
+            {"time":"06:00", "temp":75},
+            {"time":"10:00", "temp":70},
+            {"time":"16:00", "temp":78},
+            {"time":"20:00", "temp":70}
+          ]
+        },
+        {"days":["saturday","sunday"],
+         "pairs":[
+            {"time":"06:00", "temp":75},
+            {"time":"10:00", "temp":70},
+            {"time":"16:00", "temp":78},
+            {"time":"20:00", "temp":70},
+            {"time":"06:00", "temp":75},
+            {"time":"10:00", "temp":70},
+            {"time":"16:00", "temp":78},
+            {"time":"20:00", "temp":70}
+          ]
+        }
+      ]
+    },
+    {
+      "name":"Schedule-4",
+      "groups":[
+        {"days":["monday","tuesday","wednesday","thursday","friday"],
+         "pairs":[
+            {"time":"06:00", "temp":75},
+            {"time":"10:00", "temp":70},
+            {"time":"16:00", "temp":78},
+            {"time":"20:00", "temp":70},
+            {"time":"06:00", "temp":75},
+            {"time":"10:00", "temp":70},
+            {"time":"16:00", "temp":78},
+            {"time":"20:00", "temp":70}
+          ]
+        },
+        {"days":["saturday","sunday"],
+         "pairs":[
+            {"time":"06:00", "temp":75},
+            {"time":"10:00", "temp":70},
+            {"time":"16:00", "temp":78},
+            {"time":"20:00", "temp":70},
+            {"time":"06:00", "temp":75},
+            {"time":"10:00", "temp":70},
+            {"time":"16:00", "temp":78},
+            {"time":"20:00", "temp":70}
+          ]
+        }
+      ]
+    }
+   ]
+  }
+console.log(calculate_payload_size(pubnubUpdateChannel, testMessage));
 
 
 
 /*
 * SIMPLE CONTROLS
 */
-// Send update to all connected devices
+// When apply is clicked send update to all connected devices
 $$(document).on('click', '.apply-button', function() {
   // Wipe the array, loop through all desired temps and push the cleaned numbers to an array.
   desiredTempArray  = [];

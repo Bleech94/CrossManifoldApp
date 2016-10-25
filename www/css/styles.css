@@ -65,7 +65,7 @@ i.icon.icon-back {
 }
 
 .button.button-fill.color-custom-green {
-  background: #00d368;
+  background: #1ab741;
 }
 .button.button-fill.color-custom-green.active-state {
   background: #00A035;
@@ -85,4 +85,85 @@ i.icon.icon-back {
 #footer {
     position:fixed;
     bottom:0;
+}
+
+/* Edit Schedule Weekday Selector */
+.weekdays-selector input {
+  display: none!important;
+}
+
+.weekdays-selector{
+  text-align:justify;
+  width:90%;
+  margin: auto;
+}
+
+ .weekdays-selector [type="radio"] + span {
+  display: inline-block;
+  width:12%;
+  border-radius: 6px;
+  background: #dddddd;
+  color: #ffffff;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.weekdays-selector [type="radio"]:checked + span {
+  background: #00a7cf;
+  color: #ffffff;
+}
+
+.stretch {
+    width: 100%;
+    display: inline-block;
+    font-size: 0;
+    line-height: 0
+}
+
+.time-temp-container {
+  text-align:center;
+  width: 98%;
+  margin: auto;
+}
+
+.time-temp {
+  background:rgba(26,209,255,0.18);
+  display: inline-block;
+  text-align:center;
+  margin: 8px 4px;
+  width: 45%;
+  height: 40px;
+  min-width:80px;
+  line-height:40px;
+  border-radius: 6px;
+}
+
+.edit-time-temp {
+  line-height: 36px;
+  height: 36px;
+  width:40px;
+  float:right;
+  font-family: inherit;
+  cursor: pointer;
+  color: #00a7cf;
+  background: white;
+  border: 2px solid rgba(26,209,255,0.18);
+  border-radius: 6px;
+  display: block-inline;
+  position: relative;
+  text-align: middle;
+}
+
+.edit-time-temp:active {
+  background:gray;
+}
+
+.item-input-field.not-empty-state:after {
+  background: #00a7cf !important;
+}
+
+.list-block .focus-state .label {
+  color: #00a7cf !important;
 }

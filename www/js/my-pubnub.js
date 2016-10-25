@@ -5,19 +5,19 @@ var lastUpdateJSON;
 */
 // Read a message from the update channel and store its contents.
 function parseMessage(msg) {
-  nameArray = msg.name;
-  currentTempArray = msg.currentTemp;
-  desiredTempArray = msg.desiredTemp;
-  modeArray = msg.mode;
-  scheduleNameArray = msg.scheduleName;
-  scheduleArray = msg.schedule;
+  nameArray = msg.names;
+  currentTempArray = msg.currentTemps;
+  desiredTempArray = msg.desiredTemps;
+  modeArray = msg.modes;
+  scheduleNameArray = msg.scheduleNames;
+  scheduleArray = msg.schedules;
 
   console.log("nameArray: " + nameArray);
   console.log("currentTempArray: " + currentTempArray);
   console.log("desiredTempArray: " + desiredTempArray);
   console.log("modeArray: " + modeArray);
   console.log("scheduleNameArray: " + scheduleNameArray);
-  console.log("scheduleArray[0] time on monday: " + scheduleArray[0].monday[0].time + ", temp on monday: " + scheduleArray[0].monday[0].temp);
+  console.log("scheduleArray[0] name: " + scheduleArray[0].name + ", first day in first group: " + scheduleArray[0].groups[0].days[0] + ", first time and temp on that day: " + scheduleArray[0].groups[0].pairs[0].time + ", " + scheduleArray[0].groups[0].pairs[0].temp);
 
 }
 
@@ -73,12 +73,12 @@ function pubnubPublishUpdate() {
 
   // Construct message
   var newUpdate = {
-    "name":nameArray,
-    "currentTemp":currentTempArray,
-    "desiredTemp":desiredTempArray,
-    "mode":modeArray,
-    "scheduleName":scheduleNameArray,
-    "schedule":scheduleArray
+    "names":nameArray,
+    "currentTemps":currentTempArray,
+    "desiredTemps":desiredTempArray,
+    "modes":modeArray,
+    "scheduleNames":scheduleNameArray,
+    "schedules":scheduleArray
   };
 
   pubnub.publish({
