@@ -9,12 +9,11 @@
 
    See https://github.com/apache/cordova-plugin-statusbar
 */
-
 .statusbar-overlay {
     background: #000000;
 }
 
-h5 {
+h4, h5 {
   text-align: center;
 }
 
@@ -48,12 +47,18 @@ i.icon.icon-back {
   background-color:whitesmoke;
 }
 
+.button.color-custom.button-fill.increment, .button.color-custom.button-fill.decrement {
+  font-size: 20px;
+}
+
 /* This is for the Desired Temperature unclickable center buttons */
 .button.color-custom {
   border-color: #00a7cf;
   border-width: 1px !important;
   color: #00a7cf;
   background: white;
+  height: 44px;
+  line-height:44px;
 }
 
 .button.button-fill.color-custom {
@@ -66,6 +71,8 @@ i.icon.icon-back {
 
 .button.button-fill.color-custom-green {
   background: #1ab741;
+  height: 44px;
+  line-height:44px;
 }
 .button.button-fill.color-custom-green.active-state {
   background: #00A035;
@@ -73,6 +80,8 @@ i.icon.icon-back {
 
 .button.button-fill.color-custom-red {
   background: #cf2800;
+  height: 44px;
+  line-height:44px;
 }
 .button.button-fill.color-custom-red.active-state {
   background: #9C0000;
@@ -87,6 +96,18 @@ i.icon.icon-back {
     bottom:0;
 }
 
+.item-input-field.not-empty-state:after {
+  background: #00a7cf !important;
+}
+
+.list-block .focus-state .label {
+  color: #00a7cf !important;
+}
+
+.list-block .item-divider {
+  line-height: 2.6;
+}
+
 /* Edit Schedule Weekday Selector */
 .weekdays-selector input {
   display: none!important;
@@ -94,7 +115,7 @@ i.icon.icon-back {
 
 .weekdays-selector{
   text-align:justify;
-  width:90%;
+  width:98%;
   margin: auto;
 }
 
@@ -104,8 +125,8 @@ i.icon.icon-back {
   border-radius: 6px;
   background: #dddddd;
   color: #ffffff;
-  height: 40px;
-  line-height: 40px;
+  height: 44px;
+  line-height: 44px;
   text-align: center;
   cursor: pointer;
 }
@@ -122,6 +143,22 @@ i.icon.icon-back {
     line-height: 0
 }
 
+
+.delete-group-button {
+  opacity:0;
+  right:20px;
+  color:white;
+  background:#cf2800;
+  height:44px;
+  width:44px;
+  border-radius:10px;
+  position:absolute;
+  text-align:center;
+  z-index:1;
+
+  transition:opacity 1s ease;
+}
+
 .time-temp-container {
   text-align:center;
   width: 98%;
@@ -134,16 +171,16 @@ i.icon.icon-back {
   text-align:center;
   margin: 8px 4px;
   width: 45%;
-  height: 40px;
+  height: 44px;
   min-width:80px;
-  line-height:40px;
+  line-height:44px;
   border-radius: 6px;
 }
 
 .edit-time-temp {
-  line-height: 36px;
-  height: 36px;
-  width:40px;
+  line-height: 44px;
+  height: 40px;
+  width: 44px;
   float:right;
   font-family: inherit;
   cursor: pointer;
@@ -156,14 +193,22 @@ i.icon.icon-back {
   text-align: middle;
 }
 
+.delete-time-temp {
+  line-height: 44px;
+  height: 40px;
+  width: 44px;
+  float:right;
+  font-family: inherit;
+  cursor: pointer;
+  color: #cf2800;
+  background: white;
+  border: 2px solid rgba(26,209,255,0.18);
+  border-radius: 6px;
+  display: block-inline;
+  position: relative;
+  text-align: middle;
+}
+
 .edit-time-temp:active {
   background:gray;
-}
-
-.item-input-field.not-empty-state:after {
-  background: #00a7cf !important;
-}
-
-.list-block .focus-state .label {
-  color: #00a7cf !important;
 }

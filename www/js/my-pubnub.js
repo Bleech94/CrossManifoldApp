@@ -58,7 +58,7 @@ function pubnubSubscribeToUpdates() {
     channel: pubnubUpdateChannel,
     message: function(m) {
       parseMessage(m);
-      loadMainTemplate(true, false);
+      refreshPage();
     },
     connect: function(m) {console.log("Connected: " + m)},
     disconnect: function(m) {console.log("Disconnected: " + m)},
@@ -80,6 +80,8 @@ function pubnubPublishUpdate() {
     "scheduleNames":scheduleNameArray,
     "schedules":scheduleArray
   };
+
+  console.log(newUpdate);
 
   pubnub.publish({
     channel: pubnubUpdateChannel,

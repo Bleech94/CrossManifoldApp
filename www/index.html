@@ -129,7 +129,7 @@
                             <p style="margin-top: 19px; padding-left:5px;">Zone {{js "index++"}}: {{js "return nameArray[index-2]"}}</p>
                           </div>
                           <div class="col-25">
-                            <h5 class="current-temp" style="margin-top: 19px;">{{current}}&deg;</h5>
+                            <h4 class="current-temp" style="margin-top: 26.5px;">{{current}}&deg;</h4>
                           </div>
                           <div class="col-50 button-parent">
                             {{#js_compare "this.mode != 'Schedule'"}}
@@ -241,7 +241,7 @@
                 </div>
                 <div class="center sliding">Manage Schedules</div>
                 <div class="right sliding">
-                    <a href="#" class="link garbage-button icon-only"><i class="fa fa-trash-o"></i></a>
+                    <a href="#" class="link manage-garbage-button icon-only"><i class="fa fa-trash-o"></i></a>
                 </div>
             </div>
         </div>
@@ -308,6 +308,7 @@
                 </div>
                 <div class="center sliding">Edit Schedule</div>
                 <div class="right sliding">
+                    <a href="#" class="link edit-garbage-button icon-only"><i class="fa fa-trash-o"></i></a>
                 </div>
             </div>
         </div>
@@ -333,7 +334,6 @@
           <!-- Scrollable page content -->
           <div class="page-content">
             <div class="list-block">
-              <div class="list-group">
                 <ul>
                   <li>
                     <div class="item-content name">
@@ -347,6 +347,8 @@
                   </li>
                   <br>
                   {{#each groups}}
+                  <li class="item-divider">Group {{js "return groupNumber+1;"}}<a class="icon-only delete-group-button"><i class="fa fa-times fa-lg"></i></a></li>
+                    <br>
                     <li>
                       <div class="weekdays-selector">
                         {{#each days}}
@@ -361,17 +363,19 @@
                     <li>
                       <div class="time-temp-container">
                         {{#each pairs}}
-                          <div class="time-temp"><label><span>{{this.time}} - {{this.temp}}&deg;</span></label><a class="icon-only edit-time-temp edit-{{js "return groupNumber"}}-{{js "return pairNumber++"}}"><i class="fa fa-pencil edit-icon"></i></a></div>
+                          <div class="time-temp"><label><span>{{this.time}} - {{this.temp}}&deg;</span></label><a class="icon-only edit-time-temp edit-{{js "return groupNumber"}}"><i class="fa fa-pencil edit-icon"></i></a></div>
                         {{/each}}
                       </div>
                     </li>
-                    <hr>
-                    {{js "groupNumber++; pairNumber=0; return''"}}
+                    {{js "groupNumber++; return''"}}
+                    <br>
                   {{/each}}
                 </ul>
-              </div>
             </div>
+
             <div class="content-block">
+              <input type="button" href="#" class="button button-raised button-fill color-custom-green add-group-button" value="+ Add New">
+              <br>
               <input type="button" href="#" class="button button-raised button-fill color-custom-green" value="Apply">
             </div>
             <br>
