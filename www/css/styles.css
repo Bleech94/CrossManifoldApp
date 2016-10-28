@@ -47,10 +47,6 @@ i.icon.icon-back {
   background-color:whitesmoke;
 }
 
-.button.color-custom.button-fill.increment, .button.color-custom.button-fill.decrement {
-  font-size: 20px;
-}
-
 /* This is for the Desired Temperature unclickable center buttons */
 .button.color-custom {
   border-color: #00a7cf;
@@ -143,7 +139,6 @@ i.icon.icon-back {
     line-height: 0
 }
 
-
 .delete-group-button {
   opacity:0;
   right:20px;
@@ -156,7 +151,7 @@ i.icon.icon-back {
   text-align:center;
   z-index:1;
 
-  transition:opacity 1s ease;
+  transition:opacity .5s ease;
 }
 
 .time-temp-container {
@@ -191,6 +186,7 @@ i.icon.icon-back {
   display: block-inline;
   position: relative;
   text-align: middle;
+  transition: all .5s ease;
 }
 
 .delete-time-temp {
@@ -207,6 +203,7 @@ i.icon.icon-back {
   display: block-inline;
   position: relative;
   text-align: middle;
+  transition: all .5s ease;
 }
 
 .edit-time-temp:active {

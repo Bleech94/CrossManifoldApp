@@ -284,7 +284,6 @@ $$(document).on('click', '.zone-settings-button', function() {
 
 // Back to settings and save new settings TODO: Change this so it doesn't send updates after every change?
 $$(document).on('click', '.navbar .back-to-settings-save-button', function() {
-  console.log("back to settings");
   nameArray[currentZoneNumber-1] = $$('.name input').val();
   modeArray[currentZoneNumber-1] = $$('.mode .item-after').text();
   pubnubPublishUpdate();
@@ -490,7 +489,7 @@ function parseTimeTemp(text) {
   var min = match[2];
   var temp = match[3];
 
-  console.log("timeTemp = " + hour + ' ' + min + ' ' + temp);
+  //console.log("timeTemp = " + hour + ' ' + min + ' ' + temp);
   return [hour, min, temp];
 }
 
@@ -517,7 +516,6 @@ $$(document).on('click', '.apply-button', function() {
 // Edit Schedule Page - Open modal for edit-time-temp
 $$(document).on('click', '.edit-time-temp', function() {
   var target = $$(this).prev().children("span");
-  console.log(target.text());
   var targetValues = parseTimeTemp(target.text());
 
   var picker = myApp.picker({
@@ -603,40 +601,51 @@ $$(document).on('click', '.add-group-button', function() {
   pubnubPublishUpdate();
 })
 
-// Garbage button on Edit Schedule page - enter delete mode
-$$(document).on('click', '.edit-garbage-button', function(index) {
+// Edit Schedule - garbage/Done icon
+$$(document).on('click', '.edit-garbage-button', function(event) {
+
+if($$('.delete-group-button').eq(0).css('opacity') == 0) { // Garbage button on Edit Schedule page - enter delete mode
   // Show X for each group
   $$('.delete-group-button').each(function() {
     $$(this).css('opacity', 1);
   })
 
-  // Change the garbage can button to done and adjust classes
-  $$('.edit-garbage-button').removeClass('edit-garbage-button').addClass('edit-done-button');
-  $$('.edit-done-button').children('i').removeClass('fa-trash-o').text('Done');
+  // Change the garbage can button to Done
+  $$('.edit-garbage-button').children('i').removeClass('fa-trash-o').text('Done');
 
   // Change edit button to delete for each time-temp pair
   $$('.edit-time-temp').each(function() {
     $$(this).removeClass('edit-time-temp').addClass('delete-time-temp').children('i').removeClass('fa-pencil').addClass('fa-times');
   })
-});
+} else { // Done button on Edit Schedule page - exit delete mode
 
-// Done button on Edit Schedule page - exit delete mode
-$$(document).on('click', '.edit-done-button', function(index) {
-  console.log("edit-done clicked");
-  // Show X for each group
+  // Hide X for each group
   $$('.delete-group-button').each(function() {
-    $$(this).css('opacity', 0); // TODO - still clickable
+    $$(this).css('opacity', 0); // TODO - make unclickable
   })
 
-  // Change the garbage can button to done and adjust classes
-  $$('.edit-garbage-button').addClass('edit-garbage-button').removeClass('edit-done-button');
-  $$('.edit-done-button').children('i').addClass('fa-trash-o').text('');
+  // Change Done to the garbage can button
+  $$('.edit-garbage-button').children('i').addClass('fa-trash-o').text('');
 
-  // Change edit button to delete for each time-temp pair
-  $$('.edit-time-temp').each(function() {
+  // Change delete button to edit for each time-temp
+  $$('.delete-time-temp').each(function() {
     $$(this).addClass('edit-time-temp').removeClass('delete-time-temp').children('i').addClass('fa-pencil').removeClass('fa-times');
   })
+}
 });
+
+// Edit Schedule - Delete group
+$$(document).on('click', '.delete-group-button', function(event) {
+  var theParent = $$(this).parent().text();
+  var regex = /Group ([0-9])/;
+  var match = regex.exec(theParent);
+  var selectedGroupIndex = parseInt(match[1]) - 1;
+
+  scheduleArray[currentScheduleNumber].groups.splice(selectedGroupIndex, 1);
+
+  pubnubPublishUpdate();
+  $$('.edit-garbage-button').click();
+})
 
 // Auto switch input box when full.
 $$(".CMID-input").keyup(function() {

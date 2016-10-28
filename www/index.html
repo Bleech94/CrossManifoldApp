@@ -134,9 +134,9 @@
                           <div class="col-50 button-parent">
                             {{#js_compare "this.mode != 'Schedule'"}}
                             <p class="buttons-row" style="padding-right:5px;">
-                              <input type="button" class="button button-raised button-fill color-custom decrement" value="-">
-                              <a class="button color-custom desired-temp" style="pointer-events: none">{{desired}}&deg;</a>
-                              <input type"button" class="button button-raised button-fill color-custom increment" value="+">
+                              <button class="button button-fill color-custom decrement" style="border-radius:2px 0 0 2px;"><i class="fa fa-minus"></i></button>
+                              <a class="button color-custom desired-temp" style="pointer-events: none; border:solid; border-radius: 0;">{{desired}}&deg;</a>
+                              <button class="button button-fill color-custom increment" style="border-radius:0 2px 2px 0;"><i class="fa fa-plus"></i></button>
                             </p>
                             {{else}}
                             <p style="padding-right:5px;"><input type="button" class='button button-raised button-fill color-custom select-schedule-button zone-{{js "return index-1"}} desired-temp' value="Select Schedule"></p>
@@ -267,8 +267,8 @@
 
           <!-- Scrollable page content -->
           <div class="page-content">
-            <br>
-            <div class="content-block">
+            <br><br>
+            <div class="content-block no-gap">
               <a class="button button-raised button-fill color-custom-green">
                 <i class="fa fa-plus"></i>
                 <span>Add New</span>
@@ -325,7 +325,8 @@
                         <a href="#" class="link back-to-manage-schedules-button icon-only"><i class="icon icon-back"></i></a>
                     </div>
                     <div class="center">Edit Schedule</div>
-                    <div class="right">
+                    <div class="right sliding">
+                        <a href="#" class="link edit-garbage-button icon-only"><i class="fa fa-trash-o"></i></a>
                     </div>
                 </div>
             </div>
