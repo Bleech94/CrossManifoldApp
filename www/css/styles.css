@@ -9,6 +9,7 @@
 
    See https://github.com/apache/cordova-plugin-statusbar
 */
+
 .statusbar-overlay {
     background: #000000;
 }
@@ -20,10 +21,10 @@ h4, h5 {
 .navbar-inner {
   color:white;
   background: #00a7cf; /* For browsers that do not support gradients */
-    background: -webkit-linear-gradient(#00a7cf, #0085ad); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(#00a7cf, #0085ad); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(#00a7cf, #0085ad); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(#00a7cf, #0085ad); /* Standard syntax */
+  background: -webkit-linear-gradient(#00a7cf, #0085ad); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(#00a7cf, #0085ad); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(#00a7cf, #0085ad); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(#00a7cf, #0085ad); /* Standard syntax */
 }
 
 .link {
@@ -44,10 +45,10 @@ i.icon.icon-back {
 }
 
 .odd {
-  background-color:whitesmoke;
+  background-color: whitesmoke;
 }
 
-/* This is for the Desired Temperature unclickable center buttons */
+/* For the Desired Temperature unclickable center buttons */
 .button.color-custom {
   border-color: #00a7cf;
   border-width: 1px !important;
@@ -57,6 +58,7 @@ i.icon.icon-back {
   line-height:44px;
 }
 
+/* Blue buttons */
 .button.button-fill.color-custom {
   color: white;
   background: #00a7cf;
@@ -88,11 +90,12 @@ i.icon.icon-back {
 }
 
 #footer {
-    position:fixed;
-    bottom:0;
+  position:fixed;
+  bottom:0;
 }
 
-.item-input-field.not-empty-state:after {
+/* Change some of the default colors */
+.item-input-field.not-empty-state:after, .label-switch input[type=checkbox]:checked+.checkbox:after {
   background: #00a7cf !important;
 }
 
@@ -100,22 +103,26 @@ i.icon.icon-back {
   color: #00a7cf !important;
 }
 
+.label-switch input[type=checkbox]:checked+.checkbox {
+  background: rgba(0,167,207,0.3) !important;
+}
+
 .list-block .item-divider {
   line-height: 2.6;
 }
 
-/* Edit Schedule Weekday Selector */
+/* Edit Schedule - Weekday Selector */
 .weekdays-selector input {
-  display: none!important;
+  display: none !important;
 }
 
-.weekdays-selector{
+.weekdays-selector {
   text-align:justify;
   width:98%;
   margin: auto;
 }
 
- .weekdays-selector [type="radio"] + span {
+.weekdays-selector [type="radio"] + span {
   display: inline-block;
   width:12%;
   border-radius: 6px;
@@ -132,6 +139,7 @@ i.icon.icon-back {
   color: #ffffff;
 }
 
+/* To line up the weekday selector on one line evenly spread */
 .stretch {
     width: 100%;
     display: inline-block;
@@ -150,8 +158,7 @@ i.icon.icon-back {
   position:absolute;
   text-align:center;
   z-index:1;
-
-  transition:opacity .5s ease;
+  transition:opacity .5s ease; /* TODO add alternatives for other browsers */
 }
 
 .time-temp-container {

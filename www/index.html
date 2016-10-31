@@ -354,7 +354,7 @@
                       <div class="weekdays-selector">
                         {{#each days}}
                         <label>
-                          <input type="radio" name='{{@global.dayArray[index%7]}}' {{#if this}} checked {{/if}} />
+                          <input type="radio" name='{{@global.dayArray[index%7]}}' class='group-{{js "return groupNumber"}}' {{#if this}} checked {{/if}} />
                           <span>{{@global.dayArray[index++%7]}}</span>
                         </label>
                         {{/each}}
@@ -364,8 +364,9 @@
                     <li>
                       <div class="time-temp-container">
                         {{#each pairs}}
-                          <div class="time-temp"><label><span>{{this.time}} - {{this.temp}}&deg;</span></label><a class="icon-only edit-time-temp edit-{{js "return groupNumber"}}"><i class="fa fa-pencil edit-icon"></i></a></div>
+                          <div class="time-temp"><label><span class="group-{{js "return groupNumber"}} pair-{{js "pairNumber++"}}">{{this.time}} - {{this.temp}}&deg;</span></label><a class="icon-only edit-time-temp"><i class="fa fa-pencil edit-icon"></i></a></div>
                         {{/each}}
+                        {{js "pairNumber = 0; return''"}}
                       </div>
                     </li>
                     {{js "groupNumber++; return''"}}
@@ -377,7 +378,7 @@
             <div class="content-block">
               <input type="button" href="#" class="button button-raised button-fill color-custom-green add-group-button" value="+ Add New">
               <br>
-              <input type="button" href="#" class="button button-raised button-fill color-custom-green" value="Apply">
+              <input type="button" href="#" class="button button-raised button-fill color-custom-green apply-schedule-button" value="Apply">
             </div>
             <br>
           </div>

@@ -12,29 +12,6 @@ function isJSONEqual(a1,a2) {
     return JSON.stringify(a1)==JSON.stringify(a2);
 }
 
-// Determine which arrays have changed in the update
-function getChanges(msg) {
-  /*
-  console.log("nameArray is changed: " + !isJSONEqual(nameArray, msg.names));
-  console.log("currentTemps is changed: " + !isJSONEqual(currentTempArray, msg.currentTemps));
-  console.log("desiredTempArray is changed: " + !isJSONEqual(desiredTempArray, msg.desiredTemps));
-  console.log("modeArray is changed: " + !isJSONEqual(modeArray, msg.modes));
-  console.log("scheduleNameArray is changed: " + !isJSONEqual(scheduleNameArray, msg.scheduleNames));
-  console.log("scheduleArray is changed: " + !isJSONEqual(scheduleArray, msg.schedules));
-  */
-
-  // TODO: Use these to determine which pages will need to refresh.
-  haveArraysChanged = [
-    !isJSONEqual(nameArray, msg.names),
-    !isJSONEqual(currentTempArray, msg.currentTemps),
-    !isJSONEqual(desiredTempArray, msg.desiredTemps),
-    !isJSONEqual(modeArray, msg.modes),
-    !isJSONEqual(scheduleNameArray, msg.scheduleNames),
-    !isJSONEqual(scheduleArray, msg.schedules)
-  ]
-  console.log("have arrays changed? - " + haveArraysChanged);
-}
-
 // Read a message from the update channel and store its contents.
 function parseMessage(msg) {
   nameArray = msg.names;
@@ -44,12 +21,41 @@ function parseMessage(msg) {
   scheduleNameArray = msg.scheduleNames;
   scheduleArray = msg.schedules;
 
+  // If these arrays are equal then no schedules are currently being editted.
+  if(isJSONEqual(scheduleArray, tempScheduleArray)) {
+    tempScheduleArray = JSON.parse(JSON.stringify(scheduleArray));
+  }
+  /*
   console.log("nameArray: " + nameArray);
   console.log("currentTempArray: " + currentTempArray);
   console.log("desiredTempArray: " + desiredTempArray);
   console.log("modeArray: " + modeArray);
   console.log("scheduleNameArray: " + scheduleNameArray);
   console.log("scheduleArray[0] name: " + scheduleArray[0].name + ", first day in first group: " + scheduleArray[0].groups[0].days[0] + ", first time and temp on that day: " + scheduleArray[0].groups[0].pairs[0].time + ", " + scheduleArray[0].groups[0].pairs[0].temp);
+  */
+}
+
+// Determine which arrays have changed in the update - used to determine when a page refresh is needed.
+function getChanges(msg) {
+  haveArraysChanged = [
+    !isJSONEqual(nameArray, msg.names),
+    !isJSONEqual(currentTempArray, msg.currentTemps),
+    !isJSONEqual(desiredTempArray, msg.desiredTemps),
+    !isJSONEqual(modeArray, msg.modes),
+    !isJSONEqual(scheduleNameArray, msg.scheduleNames),
+    !isJSONEqual(scheduleArray, msg.schedules) && isJSONEqual(scheduleArray, tempScheduleArray) // Have the arrays changed AND scheduleArray == temp? If not then we don't want to refresh the page.
+  ]
+  console.log("have arrays changed? - " + haveArraysChanged);
+}
+
+// Check if any of the arrays used for the current page have changed.
+function doesNeedRefresh() {
+  for(var i = 0; i < haveArraysChanged.length; i++) {
+    if(haveArraysChanged[i] && arraysUsedObj[currentPage][i]) {
+      return true;
+    }
+  }
+  return false;
 }
 
 // "Logging in" is just subscribing to an active Pubnub channel. Each Pi automatically connects to a unique channel.
@@ -67,6 +73,7 @@ function pubnubLogin() {
         // m[0] is a message array, m[0][0] is the single message we requested as a JSON object.
         if(m[0][0]) { // If there is any history in pubnubUpdateChannel this value is true.
           parseMessage(m[0][0]);
+          tempScheduleArray = JSON.parse(JSON.stringify(scheduleArray));
           pubnubSubscribeToUpdates();
           loadMainTemplate(true, true);
         } else {
@@ -88,7 +95,9 @@ function pubnubSubscribeToUpdates() {
     message: function(m) {
       getChanges(m);
       parseMessage(m);
-      refreshPage();
+      if(doesNeedRefresh()) {
+        refreshPage();
+      }
     },
     connect: function(m) {console.log("Connected: " + m)},
     disconnect: function(m) {console.log("Disconnected: " + m)},
