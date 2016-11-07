@@ -25,6 +25,8 @@ var arraysUsedObj = {
     "manage":[false,false,false,false,true,false]
 }
 
+var deleteMode = false;
+
 var currentPage = "main"; // Options are main, settings, manage, edit. I've implemented my own navigation to have better control of transitions.
 var currentZoneNumber;
 var currentScheduleNumber = 0;
@@ -91,10 +93,12 @@ var pubnub = PUBNUB.init({
 /*
 * PAGE NAVIGATION
 */
+// TODO: Logout is broken unless I use domCache = true (which breaks scrollTop())
 function loadLoginPage() {
+    console.log("Loading login page");
     index = 1;
     mainView.router.load({
-        pageName: 'login'
+        template: myApp.templates.login
     })
     currentPage = "main";
 }
@@ -225,6 +229,16 @@ function loadManageSchedulesTemplate(isForward, isAnimated) {
         });
     }
     currentPage = "manage";
+
+    if(deleteMode) {
+        // Change the garbage can button to Done
+        $$('.manage-garbage-button').children('i').removeClass('fa-trash-o').text('Done');
+
+        // Change the button classes from edit to delete, hide the arrows and add garbage cans
+        $$('.edit-schedule-button').each(function() {
+            $$(this).addClass('delete-schedule-button').removeClass('edit-schedule-button').children('.item-inner').css('background-size', '0 0').children('.item-after').children('i').addClass('fa-times');
+        })
+    }
 }
 
 function loadEditScheduleTemplate(isAnimated) {
@@ -246,6 +260,22 @@ function loadEditScheduleTemplate(isAnimated) {
 
     // Scroll back to current position when page loads (only used when the page is refreshed).
     $$('.page-content').scrollTop($$('.page-content').offset().top, 0);
+
+    // Make the page look
+    if(deleteMode) {
+        // Show X for each group
+        $$('.delete-group-button').each(function() {
+            $$(this).css('opacity', 1).css('pointer-events', 'auto');
+        })
+
+        // Change the garbage can button to Done
+        $$('.edit-garbage-button').children('i').removeClass('fa-trash-o').text('Done');
+
+        // Change edit button to delete for each time-temp pair
+        $$('.edit-time-temp-button').each(function() {
+            $$(this).removeClass('edit-time-temp-button').addClass('delete-time-temp-button').children('i').removeClass('fa-pencil').addClass('fa-times');
+        })
+    }
 }
 
 function loadZoneSettingsTemplate() {
@@ -286,6 +316,7 @@ $$(document).on('click', '.manage-schedules-button', function() {
 
 // Back to Settings
 $$(document).on('click', '.navbar .back-to-settings-button', function() {
+    deleteMode = false;
     loadSettingsTemplate(false, true);
 });
 
@@ -302,6 +333,7 @@ $$(document).on('click', '.edit-schedule-button', function() {
 
 // Back to Manage Schedules
 $$(document).on('click', '.back-to-manage-schedules-button', function() {
+    deleteMode = false;
     tempScheduleArray = JSON.parse(JSON.stringify(scheduleArray)); // Any changes not applied should be scrapped.
     loadManageSchedulesTemplate(false, true);
 })
@@ -314,11 +346,17 @@ $$(document).on('click', '.zone-settings-button', function() {
 
 // Back to Settings and save new settings TODO: Change this so there is a name page and a mode page instead of a page for each zone?
 $$(document).on('click', '.navbar .back-to-settings-save-button', function() {
-    // If the name/zone have changed then publish update.
+    // If the name or mode have changed then publish update.
     if(!(isJSONEqual(nameArray[currentZoneNumber-1], $$('.name input').val()) &&
     isJSONEqual(modeArray[currentZoneNumber-1], $$('.mode .item-after').text()))) {
         nameArray[currentZoneNumber-1] = $$('.name input').val();
-        modeArray[currentZoneNumber-1] = $$('.mode .item-after').text();
+
+        // Make Disable Thermostat shorter.
+        if($$('.mode .item-after').text() == "Disable Theromstat") {
+            modeArray[currentZoneNumber-1] = "Disable";
+        } else {
+            modeArray[currentZoneNumber-1] = $$('.mode .item-after').text();
+        }
         pubnubPublishUpdate();
     }
     loadSettingsTemplate(false, true);
@@ -418,6 +456,8 @@ $$(document).on('click', '.add-schedule-button', function() {
 // Manage Schedules Page - Garbage/Done button
 $$(document).on('click', '.manage-garbage-button', function(event) {
     if($$(this).text() == '') {
+        deleteMode = true;
+
         // Change the garbage can button to Done
         $$('.manage-garbage-button').children('i').removeClass('fa-trash-o').text('Done');
 
@@ -426,6 +466,8 @@ $$(document).on('click', '.manage-garbage-button', function(event) {
             $$(this).addClass('delete-schedule-button').removeClass('edit-schedule-button').children('.item-inner').css('background-size', '0 0').children('.item-after').children('i').addClass('fa-times');
         })
     } else {
+        deleteMode = false;
+
         // Change the garbage can button to Done
         $$('.manage-garbage-button').children('i').addClass('fa-trash-o').text('');
 
@@ -569,8 +611,12 @@ $$(document).on('click','.delete-time-temp-button',function(){
     var pairNum = parseInt(match[1]);
     var groupNum = getGroupNumber($$(this));
 
-    tempScheduleArray[currentScheduleNumber].groups[groupNum].pairs.splice(pairNum, 1);
-    refreshPage();
+    if(tempScheduleArray[currentScheduleNumber].groups[groupNum].pairs.length > 2) {
+        tempScheduleArray[currentScheduleNumber].groups[groupNum].pairs.splice(pairNum, 1);
+        refreshPage();
+    } else {
+        myApp.alert("You must have at least 2 time-temperature pairs per group.", "Cannot Delete Pair")
+    }
 })
 
 // Edit Schedule Page - Add new group.
@@ -608,6 +654,8 @@ $$(document).on('click', '.add-group-button', function() {
 // Edit Schedule Page - garbage/Done icon
 $$(document).on('click', '.edit-garbage-button', function(event) {
     if($$('.delete-group-button').eq(0).css('opacity') == 0) { // Garbage button on Edit Schedule page - enter delete mode
+        deleteMode = true;
+
         // Show X for each group
         $$('.delete-group-button').each(function() {
             $$(this).css('opacity', 1).css('pointer-events', 'auto');
@@ -621,6 +669,7 @@ $$(document).on('click', '.edit-garbage-button', function(event) {
             $$(this).removeClass('edit-time-temp-button').addClass('delete-time-temp-button').children('i').removeClass('fa-pencil').addClass('fa-times');
         })
     } else { // Done button on Edit Schedule page - exit delete mode
+        deleteMode = false;
 
         // Hide X for each group
         $$('.delete-group-button').each(function() {
@@ -706,18 +755,18 @@ $$(document).on('click', '.apply-schedule-button', function() {
 })
 
 // Auto switch input box when full.
-$$(".CMID-input").keyup(function() {
+$$(document).on("keyup", ".CMID-input", function() {
     if($$(this).val().length == 4) {
         $$(this).next().focus();
     }
 })
 
 // Attempt login when enter is pushed. TOOD: Change this for mobile? Does it need to be a form?
-$$('.CMID-input').keydown(function (e) {
+$$(document).on('keydown', '.CMID-input', function (e) {
     if(e.keyCode == 13){
         pubnubLogin();
     }
-})
+});
 
 // Increment corresponding desired temperature.
 $$(document).on('click', '.increment', function() {

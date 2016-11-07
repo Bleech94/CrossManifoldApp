@@ -63,7 +63,7 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
                                 - <input type="text" id="CMID-input4" placeholder="XXXX" size="1" maxlength="4" class="CMID-input">
                                 <br><br><br>
                             </div>
-                            <input type="button" value="Connect" class="button login-button button-fill color-custom">
+                            <a href="#" class="button login-button button-fill color-custom">Connect</a>
                             <div id="footer">
                                 <p>Don't have a Cross Manifold yet? Buy Now! TODO: link</p>
                                 <p style="font-size: 70%;">&copy; 2016 Cross Manifold.</p>
@@ -76,6 +76,57 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
     </div>
 
     <!-- TEMPLATES: Initialize here and navigate in my-app.js -->
+    <!-- Main template -->
+    <!-- Login template -->
+    <script type="text/template7" id="login">
+        <!-- Added login template as well as original page to fix issue with domCache. -->
+        <!-- Dynamic Navbar for iOS theme-->
+        {{#if @global.ios}}
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="left sliding"></div>
+                <div class="center sliding">Login</div>
+                <div class="right sliding"></div>
+            </div>
+        </div>
+        {{/if}}
+
+        <!-- Page, "data-page" contains page name -->
+        <div data-page="login" class="page">
+            <!-- Fixed Navbar for Material theme -->
+            {{#if @global.material}}
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <div class="left"></div>
+                    <div class="center">Login</div>
+                    <div class="right"></div>
+                </div>
+            </div>
+            {{/if}}
+
+            <!-- Scrollable page content -->
+            <div class="page-content">
+                <div class="content-block">
+                    <center><img src="/img/logoPlain.png" alt="Cross Manifold" width="60%"></center>
+                    <br><br><br><br><br>
+                    <div align="center">
+                        <p>Enter your 12-16 character Cross Manifold ID:</p>
+                        <input type="text" id="CMID-input1" placeholder="XXXX" size="1" maxlength="4" class="CMID-input">
+                        - <input type="text" id="CMID-input2" placeholder="XXXX" size="1" maxlength="4" class="CMID-input">
+                        - <input type="text" id="CMID-input3" placeholder="XXXX" size="1" maxlength="4" class="CMID-input">
+                        - <input type="text" id="CMID-input4" placeholder="XXXX" size="1" maxlength="4" class="CMID-input">
+                        <br><br><br>
+                    </div>
+                    <a href="#" class="button login-button button-fill color-custom">Connect</a>
+                    <div id="footer">
+                        <p>Don't have a Cross Manifold yet? Buy Now! TODO: link</p>
+                        <p style="font-size: 70%;">&copy; 2016 Cross Manifold.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
     <!-- Main template -->
     <script type="text/template7" id="main">
         <!-- Dynamic Navbar for iOS theme -->
@@ -134,19 +185,19 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
                         <div class="col-50 button-parent">
                             {{#js_compare "this.mode != 'Schedule'"}}
                             <p class="buttons-row" style="padding-right:5px;">
-                                <button class="button button-fill color-custom decrement" style="border-radius:2px 0 0 2px;"><i class="fa fa-minus"></i></button>
+                                <a href="#" class="button button-fill color-custom decrement" style="border-radius:2px 0 0 2px;"><i class="fa fa-minus"></i></a>
                                 <a class="button color-custom desired-temp" style="pointer-events: none; border:solid; border-radius: 0;">{{desired}}&deg;</a>
-                                <button class="button button-fill color-custom increment" style="border-radius:0 2px 2px 0;"><i class="fa fa-plus"></i></button>
+                                <a href="#" class="button button-fill color-custom increment" style="border-radius:0 2px 2px 0;"><i class="fa fa-plus"></i></a>
                             </p>
                             {{else}}
-                            <p style="padding-right:5px;"><input type="button" class='button button-raised button-fill color-custom list-schedules-button zone-{{js "return index-1"}} desired-temp' value="Select Schedule"></p>
+                            <p style="padding-right:5px;"><a href="#" class='button button-raised button-fill color-custom list-schedules-button zone-{{js "return index-1"}} desired-temp'>Select Schedule</a></p>
                             <p style="text-align:center;">{{this.schedule}}</p>
                             {{/js_compare}}
                         </div>
                     </div>
                     {{/each}}
                     <br>
-                    <input type="button" class="button button-fill color-custom-green apply-button" value="Apply">
+                    <a href="#" class="button button-fill color-custom-green apply-button">Apply</a>
                 </div>
             </div>
         </div>
@@ -235,7 +286,7 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
             <!-- Scrollable page content -->
             <div class="page-content">
                 <div class="content-block">
-                    <input type="button" href="#" class="button button-raised button-fill color-custom manage-schedules-button" value="Manage Schedules">
+                    <a href="#" class="button button-raised button-fill color-custom manage-schedules-button">Manage Schedules</a>
                 </div>
                 <div class="list-block">
                     <div class="list-group">
@@ -273,7 +324,7 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
                     </div>
                 </div>
                 <div class="content-block">
-                    <input type="button" href="#" class="button button-raised button-fill color-custom-red logout-button" value="Logout">
+                    <a href="#" class="button button-raised button-fill color-custom-red logout-button">Logout</a>
                 </div>
             </div>
         </div>
@@ -309,7 +360,7 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
                     </div>
                     <div class="center">Manage Schedules</div>
                     <div class="right">
-                        <a href="#" class="link garbage-button icon-only"><i class="fa fa-trash-o"></i></a>
+                        <a href="#" class="link manage-garbage-button icon-only"><i class="fa fa-trash-o"></i></a>
                     </div>
                 </div>
             </div>
@@ -424,7 +475,7 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
                             <div class="row" style="width:95%;">
                                 <div class="col-50"></div>
                                 <div class="col-50">
-                                    <button class='button button-fill color-custom-green add-time-temp-button group-{{js "return groupNumber"}}' style="float:right; width:44px;"><i class="fa fa-plus"></i></button>
+                                    <button class='button button-fill color-custom-green add-time-temp-button group-{{js "return groupNumber"}}' style="float:right; width:44px; min-width:44px;"><i class="fa fa-plus"></i></button>
                                 </div>
                             </div>
                         </li>
@@ -435,9 +486,9 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
                 </div>
 
                 <div class="content-block">
-                    <input type="button" href="#" class="button button-raised button-fill color-custom-green add-group-button" value="+ Add Group">
+                    <a href="#" class="button button-raised button-fill color-custom-green add-group-button"><i class="fa fa-plus"></i> Add Group</a>
                     <br>
-                    <input type="button" href="#" class="button button-raised button-fill color-custom-green apply-schedule-button" value="Apply">
+                    <a href="#" class="button button-raised button-fill color-custom-green apply-schedule-button">Apply</a>
                 </div>
                 <br>
             </div>

@@ -82,6 +82,9 @@ function pubnubLogin() {
                 $$('#CMID-input4').val("");
                 $$('#CMID-input1').focus();
             }
+        },
+        error: function(e) {
+            myApp.alert("Unable to login.", "No Internet Connection") // TODO: Other potential errors?
         }
     });
 }
