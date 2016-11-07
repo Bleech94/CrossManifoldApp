@@ -58,7 +58,7 @@ var myApp = new Framework7({
 // Add view
 var mainView = myApp.addView('.view-main', {
     dynamicNavbar: true, // Only used in iOS
-    domCache: true
+    domCache: false
 });
 
 // TODO: Switch back to 'deviceready' event after testing
@@ -100,7 +100,7 @@ function loadLoginPage() {
 }
 
 // Reload the current page when an update is recieved. inAnimated should be false (no transition)
-function refreshPage(scrollTarget) {
+function refreshPage() {
     switch(currentPage) {
         case "main":
             loadMainTemplate(true, false);
@@ -112,7 +112,7 @@ function refreshPage(scrollTarget) {
             loadManageSchedulesTemplate(true, false);
             break;
         case "edit":
-            loadEditScheduleTemplate(false, scrollTarget);
+            loadEditScheduleTemplate(false);
             break;
         default:
             loadMainTemplate(true, false);
@@ -227,12 +227,7 @@ function loadManageSchedulesTemplate(isForward, isAnimated) {
     currentPage = "manage";
 }
 
-function loadEditScheduleTemplate(isAnimated, scrollTarget) {
-    // Set where the page schould scroll to, the default is the top of the page.
-    scrollTarget = scrollTarget || '.page-content';
-    console.log("scrollTarget = " + scrollTarget);
-
-
+function loadEditScheduleTemplate(isAnimated) {
     index = 0;
     groupNumber = 0;
 
@@ -249,17 +244,8 @@ function loadEditScheduleTemplate(isAnimated, scrollTarget) {
     })
     currentPage = "edit";
 
-    var container = $$('.page-content');
-    //console.log(scrollTarget.offset().top + " " + container.offset().top + " " + container.scrollTop());
-    console.log($$('.page').height());
-
-    if(scrollTarget != "bottom") {
-        scrollTarget = $$(scrollTarget); // TODO fix somehow?
-        container.scrollTop(scrollTarget.offset().top - container.offset().top + container.scrollTop(), 0);
-    } else {
-        container.scrollTop($$('.page').height(), 0);
-    }
-
+    // Scroll back to current position when page loads (only used when the page is refreshed).
+    $$('.page-content').scrollTop($$('.page-content').offset().top, 0);
 }
 
 function loadZoneSettingsTemplate() {
@@ -378,6 +364,10 @@ $$(document).on('click', '.select-schedule-button', function() {
 
 // Main Page - When apply is clicked send update to all connected devices
 $$(document).on('click', '.apply-button', function() {
+    myApp.showIndicator();
+    setTimeout(function () {
+        myApp.hideIndicator();
+    }, 1000);
     // Wipe the array, loop through all desired temps and push the cleaned numbers to an array.
     desiredTempArray  = [];
     $$(".desired-temp").each(function() {
@@ -570,7 +560,6 @@ $$(document).on('click', '.add-time-temp-button', function() {
 
     // Add the time-temp to the temp Schedule
     tempScheduleArray[currentScheduleNumber].groups[groupNum].pairs.push(timeTemp);
-    // TODO: ScrollTarget
     refreshPage();
 })
 
@@ -581,7 +570,6 @@ $$(document).on('click','.delete-time-temp-button',function(){
     var groupNum = getGroupNumber($$(this));
 
     tempScheduleArray[currentScheduleNumber].groups[groupNum].pairs.splice(pairNum, 1);
-    // TODO: ScrollTarget
     refreshPage();
 })
 
@@ -611,7 +599,6 @@ $$(document).on('click', '.add-group-button', function() {
         }
         tempScheduleArray[currentScheduleNumber].groups.push(newGroup);
         parseWeekdaySelectors();
-        // TODO: ScrollTarget
         refreshPage();
     } else {
         myApp.alert("You can only have 1 group per day.", "Cannot Add Group");
@@ -651,7 +638,6 @@ $$(document).on('click', '.edit-garbage-button', function(event) {
 });
 
 // Edit Schedule Page - Delete group
-// TODO: When you delete a group, all of its weekday selectors should go to group 1.
 $$(document).on('click', '.delete-group-button', function(event) {
     if(tempScheduleArray[currentScheduleNumber].groups.length > 1) {
         var theParent = $$(this).parent().text();
@@ -672,7 +658,6 @@ $$(document).on('click', '.delete-group-button', function(event) {
         // Delete the group
         tempScheduleArray[currentScheduleNumber].groups.splice(selectedGroupIndex, 1);
 
-        // TODO: ScrollTarget
         refreshPage();
         //$$('.edit-garbage-button').click(); // TODO: Find a way to deal with this - even with delay doesn't work consistently.
     } else {
@@ -680,9 +665,12 @@ $$(document).on('click', '.delete-group-button', function(event) {
     }
 })
 
-
 // Edit Schedule Page - Apply changes
 $$(document).on('click', '.apply-schedule-button', function() {
+    myApp.showIndicator();
+    setTimeout(function () {
+        myApp.hideIndicator();
+    }, 1200);
     // Prevent duplicate names.
     if(!isNameAvailable($$('.name input').val()) &&
      $$('.name input').val() != scheduleArray[currentScheduleNumber].name) {
@@ -714,8 +702,7 @@ $$(document).on('click', '.apply-schedule-button', function() {
     scheduleArray = JSON.parse(JSON.stringify(tempScheduleArray));
 
     pubnubPublishUpdate();
-    // TODO: ScrollTarget // Doesn't work if apply is clicked twice
-    refreshPage("bottom");
+    refreshPage();
 })
 
 // Auto switch input box when full.

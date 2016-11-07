@@ -31,11 +31,6 @@ h4, h5 {
     color:white;
 }
 
-/* This changes the color of the back arrow on iOS from the default blue */
-i.icon.icon-back {
-    filter: brightness(0) invert(1);
-}
-
 .content-block.no-gap {
     margin-top: 0 !important;
 }
@@ -73,7 +68,7 @@ i.icon.icon-back {
     line-height:44px;
 }
 .button.button-fill.color-custom-green.active-state {
-    background: #00A035;
+    background: #127d2d;
 }
 
 .button.button-fill.color-custom-red {
@@ -82,10 +77,10 @@ i.icon.icon-back {
     line-height:44px;
 }
 .button.button-fill.color-custom-red.active-state {
-    background: #9C0000;
+    background:#990000;
 }
 
-.toolbar-inner{
+.toolbar-inner {
     background-color:#00a7cf;
 }
 
@@ -95,6 +90,11 @@ i.icon.icon-back {
 }
 
 /* Change some of the default colors */
+/* This changes the color of the back arrow on iOS from the default blue */
+i.icon.icon-back {
+    filter: brightness(0) invert(1);
+}
+
 .item-input-field.not-empty-state:after, .label-switch input[type=checkbox]:checked+.checkbox:after {
     background: #00a7cf !important;
 }
@@ -107,13 +107,17 @@ i.icon.icon-back {
     background: rgba(0,167,207,0.3) !important;
 }
 
+.modal-button.modal-button-bold {
+    color: #00a7cf;
+}
+/* End default color changes */
+
 .list-block .item-divider {
     line-height: 2.6;
 }
 
-
 .edit-schedule-button {
-    transition:background-size .5s ease; /* TODO add alternatives for other browsers */
+    transition:background-size .5s ease; /* TODO add alternatives for other browsers? */
 }
 
 /* Edit Schedule - Weekday Selector */
@@ -201,6 +205,9 @@ i.icon.icon-back {
     text-align: middle;
     transition: all .5s ease;
 }
+.edit-time-temp-button:active {
+    background:whitesmoke;
+}
 
 .delete-time-temp-button {
     line-height: 44px;
@@ -217,8 +224,4 @@ i.icon.icon-back {
     position: relative;
     text-align: middle;
     transition: all .5s ease;
-}
-
-.edit-time-temp-button:active {
-    background:gray;
 }
