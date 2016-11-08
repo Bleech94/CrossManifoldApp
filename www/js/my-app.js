@@ -356,7 +356,7 @@ $$(document).on('click', '.back-to-manage-schedules-button', function() {
                             return;
                         }
 
-                        // Update the nameArray
+                        // Update the nameArray 
                         for(var i = 0; i < scheduleNameArray.length; i ++) {
                             if(scheduleNameArray[i] == tempScheduleArray[currentScheduleNumber].name) {
                                 scheduleNameArray[i] = $$('.name input').val();
