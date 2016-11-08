@@ -7,9 +7,6 @@
         "files": {}
     },
     "installed_plugins": {
-        "cordova-plugin-console": {
-            "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
-        },
         "cordova-plugin-statusbar": {
             "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
         },
@@ -19,13 +16,19 @@
         "cordova-plugin-compat": {
             "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
         },
-        "cordova-plugin-file": {
-            "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
-        },
-        "cordova-plugin-media": {
-            "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
-        },
         "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
+        },
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
+        },
+        "cordova-plugin-network-information": {
+            "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
+        },
+        "cordova-plugin-nativestorage": {
+            "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
+        },
+        "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
         }
     },
