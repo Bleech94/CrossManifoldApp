@@ -1,19 +1,227 @@
 /*
-   statusbar-overlay sets the background color for the overlay. Black text is the default when the statusbar plugin is not added. When the
-   statusbar plugin is added, it also adds default setting to make the content white via:
+statusbar-overlay sets the background color for the overlay. Black text is the default when the statusbar plugin is not added. When the
+statusbar plugin is added, it also adds default setting to make the content white via:
 
-       <preference name="StatusBarStyle" value="lightcontent"/>
+<preference name="StatusBarStyle" value="lightcontent"/>
 
-   Setting the background color to black will allow the default light content (white text/icons) to show on it. The statusbar plugin is included
-   in the config.xml file and will be added by the CLI when you build locally.
+Setting the background color to black will allow the default light content (white text/icons) to show on it. The statusbar plugin is included
+in the config.xml file and will be added by the CLI when you build locally.
 
-   See https://github.com/apache/cordova-plugin-statusbar
+See https://github.com/apache/cordova-plugin-statusbar
 */
 
 .statusbar-overlay {
     background: #000000;
 }
 
-h4 {
-  text-align: center;
+h4, h5 {
+    text-align: center;
+}
+
+.navbar-inner {
+    color:white;
+    background: #00a7cf; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#00a7cf, #0085ad); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#00a7cf, #0085ad); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#00a7cf, #0085ad); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#00a7cf, #0085ad); /* Standard syntax */
+}
+
+.link {
+    color:white;
+}
+
+.content-block.no-gap {
+    margin-top: 0 !important;
+}
+
+.page-content {
+    background: white;
+}
+
+.odd {
+    background-color: whitesmoke;
+}
+
+/* For the Desired Temperature unclickable center buttons */
+.button.color-custom {
+    border-color: #00a7cf;
+    border-width: 1px !important;
+    color: #00a7cf;
+    background: white;
+    height: 44px;
+    line-height:44px;
+}
+
+/* Custom buttons */
+.button.button-fill.color-custom {
+    color: white;
+    background: #00a7cf;
+}
+.button.button-fill.color-custom.active-state {
+    background: #00749C;
+}
+
+.button.button-fill.color-custom-green {
+    background: #1ab741;
+    height: 44px;
+    line-height:44px;
+}
+.button.button-fill.color-custom-green.active-state {
+    background: #127d2d;
+}
+
+.button.button-fill.color-custom-red {
+    background: #cf2800;
+    height: 44px;
+    line-height:44px;
+}
+.button.button-fill.color-custom-red.active-state {
+    background:#990000;
+}
+
+.toolbar-inner {
+    background-color:#00a7cf;
+}
+
+#footer {
+    position:absolute;
+    bottom:0;
+}
+
+/* Change some of the default colors */
+/* This changes the color of the back arrow on iOS from the default blue */
+i.icon.icon-back {
+    filter: brightness(0) invert(1);
+}
+
+.item-input-field.not-empty-state:after, .label-switch input[type=checkbox]:checked+.checkbox:after {
+    background: #00a7cf !important;
+}
+
+.list-block .focus-state .label {
+    color: #00a7cf !important;
+}
+
+.label-switch input[type=checkbox]:checked+.checkbox {
+    background: rgba(0,167,207,0.3) !important;
+}
+
+span.modal-button, .modal-button.modal-button-bold {
+    color: #00a7cf;
+}
+/* End default color changes */
+
+.list-block .item-divider {
+    line-height: 2.6;
+}
+
+.edit-schedule-button {
+    transition:background-size .5s ease; /* TODO add alternatives for other browsers? */
+}
+
+/* Edit Schedule - Weekday Selector */
+.weekdays-selector input {
+    display: none !important;
+}
+
+.weekdays-selector {
+    text-align:justify;
+    width:98%;
+    margin: auto;
+}
+
+.weekdays-selector [type="radio"] + span {
+    display: inline-block;
+    width:12%;
+    border-radius: 6px;
+    background: #dddddd;
+    color: #ffffff;
+    height: 44px;
+    line-height: 44px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.weekdays-selector [type="radio"]:checked + span {
+    background: #00a7cf;
+    color: #ffffff;
+}
+
+/* To line up the weekday selector on one line evenly spread */
+.stretch {
+    width: 100%;
+    display: inline-block;
+    font-size: 0;
+    line-height: 0
+}
+
+.delete-group-button {
+    opacity:0;
+    pointer-events:none;
+    right:20px;
+    color:white;
+    background:#cf2800;
+    height:44px;
+    width:44px;
+    border-radius:10px;
+    position:absolute;
+    text-align:center;
+    z-index:1;
+    transition:opacity .5s ease; /* TODO add alternatives for other browsers */
+}
+
+.time-temp-container {
+    text-align:center;
+    width: 98%;
+    margin: auto;
+}
+
+.time-temp {
+    background:rgba(26,209,255,0.18);
+    display: inline-block;
+    text-align:center;
+    margin: 8px 4px;
+    width: 45%;
+    height: 44px;
+    min-width:80px;
+    line-height:44px;
+    border-radius: 6px;
+}
+
+.edit-time-temp-button {
+    line-height: 44px;
+    height: 40px;
+    width: 44px;
+    float:right;
+    font-family: inherit;
+    cursor: pointer;
+    color: #00a7cf;
+    background: white;
+    border: 2px solid rgba(26,209,255,0.18);
+    border-radius: 6px;
+    display: block-inline;
+    position: relative;
+    text-align: middle;
+    transition: all .5s ease;
+}
+.edit-time-temp-button:active {
+    background:whitesmoke;
+}
+
+.delete-time-temp-button {
+    line-height: 44px;
+    height: 40px;
+    width: 44px;
+    float:right;
+    font-family: inherit;
+    cursor: pointer;
+    color: #cf2800;
+    background: white;
+    border: 2px solid rgba(26,209,255,0.18);
+    border-radius: 6px;
+    display: block-inline;
+    position: relative;
+    text-align: middle;
+    transition: all .5s ease;
 }

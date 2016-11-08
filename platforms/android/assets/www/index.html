@@ -2,33 +2,32 @@
 <html>
 <head>
     <!--
-        Customize this policy to fit your own app's needs. For more guidance, see:
-            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
-        Some notes:
-            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
-            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
-            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
-                * Enable inline JS: add 'unsafe-inline' to default-src
-        -->
-    <!--
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
-    -->
+    Customize this policy to fit your own app's needs. For more guidance, see:
+    https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+    Some notes:
+    * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+    * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+    * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+    * Enable inline JS: add 'unsafe-inline' to default-src
+-->
+<!--
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
+-->
 
-    <!-- Required meta tags-->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="format-detection" content="telephone=no">
-    <meta name="msapplication-tap-highlight" content="no">
+<!-- Required meta tags-->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<meta name="msapplication-tap-highlight" content="no">
 
-    <!-- Your app title -->
-    <title>Cross Manifold</title>
+<title>Cross Manifold</title>
 
-    <!-- To support both iOS and material design themes, see the Framework7 Tutorial at the link below:
-        http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-themes-in-single-app.html -->
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="lib/font-awesome-4.6.3/css/font-awesome.min.css">
+<!-- To support both iOS and material design themes, see the Framework7 Tutorial at the link below:
+http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-themes-in-single-app.html -->
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="lib/font-awesome-4.6.3/css/font-awesome.min.css">
 </head>
 
 <body>
@@ -38,33 +37,100 @@
     <!-- Views -->
     <div class="views">
         <!-- Your main view, should have "view-main" class -->
-        <div class="view view-main">
-            <!-- Top Navbar-->
+        <div class="view view-main navbar-through">
+            <!-- Top Navbar -->
             <div class="navbar">
-              <div class="navbar-inner" data-page="start">
-                <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
-                <div class="center sliding">Login</div>
-              </div>
-            </div>
-            <!-- Pages container, because we use fixed-through navbar and toolbar, it has additional appropriate classes-->
-            <div class="pages navbar-through">
-              <div data-page="start" class="page">
-                <!-- Scrollable page content -->
-                <div class="page-content">
-                  <div class="content-block">
-                      <p>Checking for saved login info</p>
-                  </div>
+                <div class="navbar-inner" data-page="login">
+                    <div class="left sliding"></div>
+                    <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
+                    <div class="center sliding" style="left:1px">Log In</div>
+                    <div class="right sliding"></div>
                 </div>
-              </div>
+            </div>
+            <!-- Pages container, because we use fixed-through navbar, it has additional appropriate classes -->
+            <div class="pages">
+                <div data-page="login" class="page">
+                    <!-- Scrollable page content -->
+                    <div class="page-content">
+                        <div class="content-block">
+                            <center><img src="../www/img/logoPlain.png" alt="Cross Manifold" width="60%"></center>
+                            <br><br><br><br><br>
+                            <div align="center">
+                                <p>Enter your 12-16 character Cross Manifold ID:</p>
+                                <input type="text" id="CMID-input1" placeholder="XXXX" size="1" maxlength="4" class="CMID-input">
+                                - <input type="text" id="CMID-input2" placeholder="XXXX" size="1" maxlength="4" class="CMID-input">
+                                - <input type="text" id="CMID-input3" placeholder="XXXX" size="1" maxlength="4" class="CMID-input">
+                                - <input type="text" id="CMID-input4" placeholder="XXXX" size="1" maxlength="4" class="CMID-input">
+                                <br><br><br>
+                            </div>
+                            <a href="#" class="button login-button button-fill color-custom">Connect</a>
+                            <div id="footer">
+                                <p>Don't have a Cross Manifold yet? Buy Now! TODO: link</p>
+                                <p style="font-size: 70%;">&copy; 2016 Cross Manifold.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- TEMPLATES: Initialize here and navigate in my-app.js -->
     <!-- Main template -->
+    <!-- Login template -->
+    <script type="text/template7" id="login">
+        <!-- Added login template as well as original page to fix issue with domCache. -->
+        <!-- Dynamic Navbar for iOS theme-->
+        {{#if @global.ios}}
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="left sliding"></div>
+                <div class="center sliding">Login</div>
+                <div class="right sliding"></div>
+            </div>
+        </div>
+        {{/if}}
+
+        <!-- Page, "data-page" contains page name -->
+        <div data-page="login" class="page">
+            <!-- Fixed Navbar for Material theme -->
+            {{#if @global.material}}
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <div class="left"></div>
+                    <div class="center">Login</div>
+                    <div class="right"></div>
+                </div>
+            </div>
+            {{/if}}
+
+            <!-- Scrollable page content -->
+            <div class="page-content">
+                <div class="content-block">
+                    <center><img src="../www/img/logoPlain.png" alt="Cross Manifold" width="60%"></center>
+                    <br><br><br><br><br>
+                    <div align="center">
+                        <p>Enter your 12-16 character Cross Manifold ID:</p>
+                        <input type="text" id="CMID-input1" placeholder="XXXX" size="1" maxlength="4" class="CMID-input">
+                        - <input type="text" id="CMID-input2" placeholder="XXXX" size="1" maxlength="4" class="CMID-input">
+                        - <input type="text" id="CMID-input3" placeholder="XXXX" size="1" maxlength="4" class="CMID-input">
+                        - <input type="text" id="CMID-input4" placeholder="XXXX" size="1" maxlength="4" class="CMID-input">
+                        <br><br><br>
+                    </div>
+                    <a href="#" class="button login-button button-fill color-custom">Connect</a>
+                    <div id="footer">
+                        <p>Don't have a Cross Manifold yet? Buy Now! TODO: link</p>
+                        <p style="font-size: 70%;">&copy; 2016 Cross Manifold.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <!-- Main template -->
     <script type="text/template7" id="main">
-      <!-- Dynamic Navbar for iOS theme-->
-      {{#if @global.ios}}
+        <!-- Dynamic Navbar for iOS theme -->
+        {{#if @global.ios}}
         <div class="navbar">
             <div class="navbar-inner">
                 <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
@@ -74,12 +140,12 @@
                 </div>
             </div>
         </div>
-      {{/if}}
+        {{/if}}
 
         <!-- Page, "data-page" contains page name -->
         <div data-page="main" class="page">
-          <!-- Fixed Navbar for Material theme -->
-          {{#if @global.material}}
+            <!-- Fixed Navbar for Material theme -->
+            {{#if @global.material}}
             <div class="navbar">
                 <div class="navbar-inner">
                     <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
@@ -89,148 +155,438 @@
                     </div>
                 </div>
             </div>
-          {{/if}}
+            {{/if}}
 
             <!-- Scrollable page content -->
             <div class="page-content">
-                <div class="content-block">
+                <div class="content-block no-gap">
 
-                      <!-- Column Headers -->
-                      <div class="row">
-                        <div class="col-15">
-                          <h4>Zone:</h4>
+                    <!-- Column Headers -->
+                    <div class="row">
+                        <div class="col-25">
                         </div>
-                        <div class="col-35">
-                          <h4>Current<br />Temperature:</h4>
+                        <div class="col-25">
+                            <h5>Current<br>Temperature:</h5>
                         </div>
                         <div class="col-50">
-                          <h4>Desired<br />Temperature:</h4>
+                            <h5>Desired<br>Temperature:</h5>
                         </div>
-                      </div>
+                    </div>
 
-                      <!-- Generate columns with thermostat info-->
-                      {{#each thermostatReading}}
-                        <div class="row">
-                          <div class="col-30">
-                            <p>Zone {{js "index++"}}</p>
-                          </div>
-                          <div class="col-20">
-                            <p style="text-align:center;">{{current}}</p>
-                          </div>
-                          <div class="col-50">
-                            <p class="buttons-row">
-                              <a href="#" class="button button-raised button-fill">-</a>
-                              <a class="button" id="">{{desired}}&deg;</a>
-                              <a href="#" class="button button-raised button-fill">+</a>
+                    <!-- Generate columns with thermostat info-->
+                    {{#each thermostatDetails}}
+                    <div {{#js_compare "index%2 === 0"}}class='row' {{else}}class='row odd' {{/js_compare}}>
+                        <div class="col-25">
+                            <p style="margin-top: 19px; padding-left:5px;">Zone {{js "index++"}}: {{js "return nameArray[index-2]"}}</p>
+                        </div>
+                        <div class="col-25">
+                            <h4 class="current-temp" style="margin-top: 26.5px;">{{current}}&deg;</h4>
+                        </div>
+                        <div class="col-50 button-parent">
+                            {{#js_compare "this.mode != 'Schedule'"}}
+                            <p class="buttons-row" style="padding-right:5px;">
+                                <a href="#" class="button button-fill color-custom decrement" style="border-radius:2px 0 0 2px;"><i class="fa fa-minus"></i></a>
+                                <a class="button color-custom desired-temp" style="pointer-events: none; border:solid; border-radius: 0;">{{desired}}&deg;</a>
+                                <a href="#" class="button button-fill color-custom increment" style="border-radius:0 2px 2px 0;"><i class="fa fa-plus"></i></a>
                             </p>
-                          </div>
+                            {{else}}
+                            <p style="padding-right:5px;"><a href="#" class='button button-raised button-fill color-custom list-schedules-button zone-{{js "return index-1"}} desired-temp'>Select Schedule</a></p>
+                            <p style="text-align:center;">{{this.schedule}}</p>
+                            {{/js_compare}}
                         </div>
-                      {{/each}}
-                      {{js "index=1"}}
-                    <a class="button button-fill color-green apply-button">Apply</a>
-
+                    </div>
+                    {{/each}}
+                    <br>
+                    <a href="#" class="button button-fill color-custom-green apply-button">Apply</a>
                 </div>
             </div>
+        </div>
+    </script>
 
+    <!-- Select schedule template -->
+    <script type="text/template7" id="select">
+        <!-- Dynamic Navbar for iOS theme-->
+        {{#if @global.ios}}
+        <div class="navbar">
+            <div class="navbar-inner">
+                <div class="left sliding">
+                    <a href="#" class="link back-to-main-button icon-only"><i class="icon icon-back"></i></a>
+                </div>
+                <div class="center sliding">Select Schedule</div>
+                <div class="right sliding"></div>
+            </div>
+        </div>
+        {{/if}}
+
+        <!-- Page, "data-page" contains page name -->
+        <div data-page="select" class="page">
+            <!-- Fixed Navbar for Material theme -->
+            {{#if @global.material}}
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <div class="left">
+                        <a href="#" class="link back-to-main-button icon-only"><i class="icon icon-back"></i></a>
+                    </div>
+                    <div class="center">Select Schedule</div>
+                    <div class="right"></div>
+                </div>
+            </div>
+            {{/if}}
+
+            <!-- Scrollable page content -->
+            <div class="page-content">
+                <div class="list-block">
+                    <ul>
+                        {{#each names}}
+                        <li>
+                            <a href="#" class="item-link item-content select-schedule-button">
+                                <div class="item-inner" style="background-image:none !important;">
+                                    <div class="item-title">{{this}}</div>
+                                </div>
+                            </a>
+                        </li>
+                        {{/each}}
+                    </ul>
+                </div>
+            </div>
         </div>
     </script>
 
     <!-- Settings template -->
     <script type="text/template7" id="settings">
-      <!-- Dynamic Navbar for iOS theme-->
-      {{#if @global.ios}}
+        <!-- Dynamic Navbar for iOS theme-->
+        {{#if @global.ios}}
         <div class="navbar">
             <div class="navbar-inner">
                 <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
                 <div class="left sliding">
-                    <a href="#" class="link back"><i class="icon icon-back"></i></a>
+                    <a href="#" class="link back-to-main-button icon-only"><i class="icon icon-back"></i></a>
                 </div>
                 <div class="center sliding">Settings</div>
+                <div class="right sliding"></div>
             </div>
         </div>
-      {{/if}}
+        {{/if}}
 
         <!-- Page, "data-page" contains page name -->
         <div data-page="settings" class="page">
-          <!-- Fixed Navbar for Material theme -->
-          {{#if @global.material}}
+            <!-- Fixed Navbar for Material theme -->
+            {{#if @global.material}}
             <div class="navbar">
                 <div class="navbar-inner">
                     <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
                     <div class="left">
-                        <a href="#" class="link back icon-only"><i class="fa fa-back"><span>Back</span></i></a>
+                        <a href="#" class="link back-to-main-button icon-only"><i class="icon icon-back"></i></a>
                     </div>
                     <div class="center">Settings</div>
                 </div>
             </div>
-          {{/if}}
+            {{/if}}
 
             <!-- Scrollable page content -->
             <div class="page-content">
                 <div class="content-block">
-                    <p>Things to include: Logout, rename zones, change # of zones?</p>
-                    <a href="#" class="button button-raised button-fill color-red logout-button">Logout</a>
+                    <a href="#" class="button button-raised button-fill color-custom manage-schedules-button">Manage Schedules</a>
+                </div>
+                <div class="list-block">
+                    <div class="list-group">
+                        <ul>
+                            <li class="list-group-title">Zone Settings</li>
+                            <!-- Generate buttons for each zone -->
+                            {{#each names}}
+                            <li>
+                                <a href="#" class="item-link item-content zone-settings-button">
+                                    <div class="item-inner">
+                                        <div class="item-title">Zone {{js "index++"}}: {{name}}</div>
+                                    </div>
+                                </a>
+                            </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                    <div class="list-group">
+                        <ul>
+                            <li class="list-group-title">Notifications</li>
+                            <li>
+                                <div class="item-content">
+                                    <div class="item-inner">
+                                        <div class="item-title label">Ignore All</div> <!-- TODO: Make this a local setting to ignore push notifications -->
+                                        <div class="item-input">
+                                            <label class="label-switch">
+                                                <input type="checkbox">
+                                                <div class="checkbox"></div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="content-block">
+                    <a href="#" class="button button-raised button-fill color-custom-red logout-button">Logout</a>
                 </div>
             </div>
-
         </div>
     </script>
 
-    <!-- Settings template -->
-    <script type="text/template7" id="login">
-      <!-- Dynamic Navbar for iOS theme-->
-      {{#if @global.ios}}
+    <!-- Manage Schedules template -->
+    <script type="text/template7" id="manageschedules">
+        <!-- Dynamic Navbar for iOS theme-->
+        {{#if @global.ios}}
         <div class="navbar">
             <div class="navbar-inner">
                 <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
-                <div class="center sliding">Login</div>
+                <div class="left sliding">
+                    <a href="#" class="link back-to-settings-button icon-only"><i class="icon icon-back"></i></a>
+                </div>
+                <div class="center sliding">Manage Schedules</div>
+                <div class="right sliding">
+                    <a href="#" class="link manage-garbage-button icon-only"><i class="fa fa-trash-o"></i></a>
+                </div>
             </div>
         </div>
-      {{/if}}
+        {{/if}}
 
         <!-- Page, "data-page" contains page name -->
-        <div data-page="login" class="page">
-          <!-- Fixed Navbar for Material theme -->
-          {{#if @global.material}}
+        <div data-page="manageschedules" class="page">
+            <!-- Fixed Navbar for Material theme -->
+            {{#if @global.material}}
             <div class="navbar">
                 <div class="navbar-inner">
                     <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
-                    <div class="center">Login</div>
+                    <div class="left">
+                        <a href="#" class="link back-to-settings-button icon-only"><i class="icon icon-back"></i></a>
+                    </div>
+                    <div class="center">Manage Schedules</div>
+                    <div class="right">
+                        <a href="#" class="link manage-garbage-button icon-only"><i class="fa fa-trash-o"></i></a>
+                    </div>
                 </div>
             </div>
-          {{/if}}
+            {{/if}}
 
             <!-- Scrollable page content -->
             <div class="page-content">
-                <div class="content-block">
-                  <input type="text" id="CMID-input">
-                  <br><br>
-                  <input type="submit" value="Connect" class="button login-button">
+                <br><br>
+                <div class="content-block no-gap">
+                    <a class="button button-raised button-fill color-custom-green add-schedule-button">
+                        <i class="fa fa-plus"></i>
+                        <span>Add Schedule</span>
+                    </a>
+                </div>
+                <div class="list-block">
+                    <div class="list-group">
+                        <ul>
+                            <li class="list-group-title">Schedules</li>
+                            <!-- Generate buttons for each zone -->
+                            {{#each schedule}}
+                            <li>
+                                <a href="#" class="item-link item-content edit-schedule-button schedule-{{js "index++"}}">
+                                    <div class="item-inner">
+                                        <div class="item-title">{{this.name}}</div>
+                                        <div class="item-after"><i class="fa" style="color:#cf2800;"></i></div>
+                                    </div>
+                                </a>
+                            </li>
+                            {{/each}}
+                        </ul>
+                        <br>
+                    </div>
                 </div>
             </div>
+        </div>
+    </script>
 
+    <!-- Edit Schedule template -->
+    <script type="text/template7" id="editschedule">
+        <!-- Dynamic Navbar for iOS theme-->
+        {{#if @global.ios}}
+        <div class="navbar">
+            <div class="navbar-inner">
+                <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
+                <div class="left sliding">
+                    <a href="#" class="link back-to-manage-schedules-button icon-only"><i class="icon icon-back"></i></a>
+                </div>
+                <div class="center sliding">Edit Schedule</div>
+                <div class="right sliding">
+                    <a href="#" class="link edit-garbage-button icon-only"><i class="fa fa-trash-o"></i></a>
+                </div>
+            </div>
+        </div>
+        {{/if}}
+
+        <!-- Page, "data-page" contains page name -->
+        <div data-page="editschedule" class="page">
+            <!-- Fixed Navbar for Material theme -->
+            {{#if @global.material}}
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
+                    <div class="left">
+                        <a href="#" class="link back-to-manage-schedules-button icon-only"><i class="icon icon-back"></i></a>
+                    </div>
+                    <div class="center">Edit Schedule</div>
+                    <div class="right sliding">
+                        <a href="#" class="link edit-garbage-button icon-only"><i class="fa fa-trash-o"></i></a>
+                    </div>
+                </div>
+            </div>
+            {{/if}}
+
+            <!-- Scrollable page content -->
+            <div class="page-content">
+                <div class="list-block">
+                    <ul>
+                        <li>
+                            <div class="item-content name">
+                                <div class="item-inner">
+                                    <div class="item-title label">Name</div>
+                                    <div class="item-input">
+                                        <input type="text" placeholder="Schedule name" value="{{this.name}}">
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <br>
+                        {{#each groups}}
+                        <li class="item-divider">Group {{js "return groupNumber+1;"}}<a class="icon-only delete-group-button"><i class="fa fa-times fa-lg"></i></a></li>
+                        <br>
+                        <li>
+                            <div class="weekdays-selector">
+                                {{#each days}}
+                                <label>
+                                    <input type="radio" name='{{@global.dayArray[index%7]}}' class='group-{{js "return groupNumber"}}' {{#if this}} checked {{/if}} />
+                                    <span>{{@global.dayArray[index++%7]}}</span>
+                                </label>
+                                {{/each}}
+                                <span class="stretch"></span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="time-temp-container">
+                                {{#each pairs}}
+                                <div class="time-temp"><label><span>{{this.time}} - {{this.temp}}&deg;</span></label><a class='icon-only edit-time-temp-button group-{{js "return groupNumber"}} pair-{{js "pairNumber++"}}'><i class="fa fa-pencil edit-icon"></i></a></div>
+                                {{/each}}
+                                {{js "pairNumber = 0; return''"}}
+                            </div>
+                        </li>
+                        <li class='scroll-{{js "return groupNumber"}}'>
+                            <div class="row" style="width:95%;">
+                                <div class="col-50"></div>
+                                <div class="col-50">
+                                    <button class='button button-fill color-custom-green add-time-temp-button group-{{js "return groupNumber"}}' style="float:right; width:44px; min-width:44px;"><i class="fa fa-plus"></i></button>
+                                </div>
+                            </div>
+                        </li>
+                        {{js "groupNumber++; return''"}}
+                        <br>
+                        {{/each}}
+                    </ul>
+                </div>
+
+                <div class="content-block">
+                    <a href="#" class="button button-raised button-fill color-custom-green add-group-button"><i class="fa fa-plus"></i> Add Group</a>
+                    <br>
+                    <a href="#" class="button button-raised button-fill color-custom-green apply-schedule-button">Apply</a>
+                </div>
+                <br>
+            </div>
+        </div>
+    </script>
+
+    <!-- Zone Settings template -->
+    <script type="text/template7" id="zonesettings">
+        <!-- Dynamic Navbar for iOS theme-->
+        {{#if @global.ios}}
+        <div class="navbar">
+            <div class="navbar-inner">
+                <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
+                <div class="left sliding">
+                    <a href="#" class="link back-to-settings-save-button icon-only"><i class="icon icon-back"></i></a>
+                </div>
+                <div class="center sliding">Zone {{zoneNumber}} Settings</div>
+                <div class="right sliding"></div>
+            </div>
+        </div>
+        {{/if}}
+
+        <!-- Page, "data-page" contains page name -->
+        <div data-page="zonesettings" class="page">
+            <!-- Fixed Navbar for Material theme -->
+            {{#if @global.material}}
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
+                    <div class="left">
+                        <a href="#" class="link back-to-settings-save-button icon-only"><i class="icon icon-back"></i></a>
+                    </div>
+                    <div class="center">Zone {{zoneNumber}} Settings</div>
+                    <div class="right"></div>
+                </div>
+            </div>
+            {{/if}}
+
+            <!-- Scrollable page content -->
+            <div class="page-content">
+                <div class="list-block">
+                    <ul>
+                        <li>
+                            <div class="item-content name">
+                                <div class="item-inner">
+                                    <div class="item-title label">Name</div>
+                                    <div class="item-input">
+                                        <input type="text" placeholder="Zone name" value="{{name}}">
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <!-- Smart Select Item -->
+                        <li>
+                            <!-- Additional "smart-select" class -->
+                            <a href="#" class="item-link smart-select" data-form-theme="gray" data-navbar-theme="red">
+                                <!-- select -->
+                                <select name="mode">
+                                    <option value="regular">Regular</option>
+                                    <option value="schedule">Schedule</option>
+                                    <option value="disabled">Disable Thermostat</option>
+                                </select>
+                                <div class="item-content mode">
+                                    <div class="item-inner">
+                                        <!-- Select label -->
+                                        <div class="item-title">Mode</div>
+                                        <div class="item-after smart-select-value">{{mode}}</div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </script>
 
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="lib/framework7/js/framework7.min.js"></script>
-    <!-- Add styles based on OS -->
+
+    <!-- Add styles based on device -->
     <script>
-      (function () {
+    (function () {
         if (Framework7.prototype.device.android) {
-              Dom7('head').append(
-                  '<link rel="stylesheet" href="lib/framework7/css/framework7.material.min.css">' +
-                  '<link rel="stylesheet" href="lib/framework7/css/framework7.material.colors.min.css">'
-              );
-          }
-          else {
-              Dom7('head').append(
-                  '<link rel="stylesheet" href="lib/framework7/css/framework7.ios.min.css">' +
-                  '<link rel="stylesheet" href="lib/framework7/css/framework7.ios.colors.min.css">'
-              );
-          }
-      })();
+            Dom7('head').append(
+                '<link rel="stylesheet" href="lib/framework7/css/framework7.material.min.css">' +
+                '<link rel="stylesheet" href="lib/framework7/css/framework7.material.colors.min.css">'
+            );
+        }
+        else {
+            Dom7('head').append(
+                '<link rel="stylesheet" href="lib/framework7/css/framework7.ios.min.css">' +
+                '<link rel="stylesheet" href="lib/framework7/css/framework7.ios.colors.min.css">'
+            );
+        }
+    })();
     </script>
+
     <script src="https://cdn.pubnub.com/pubnub-dev.js"></script>
     <script type="text/javascript" src="js/my-pubnub.js"></script>
     <script type="text/javascript" src="js/my-app.js"></script>

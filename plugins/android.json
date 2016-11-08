@@ -7,16 +7,10 @@
         "files": {}
     },
     "installed_plugins": {
-        "cordova-plugin-console": {
-            "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
-        },
-        "cordova-plugin-statusbar": {
-            "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
-        },
-        "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
-        },
         "cordova-plugin-compat": {
+            "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
+        },
+        "cordova-plugin-console": {
             "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
         },
         "cordova-plugin-file": {
@@ -26,6 +20,12 @@
             "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
         },
         "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
+        },
+        "cordova-plugin-statusbar": {
+            "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
+        },
+        "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
         }
     },
