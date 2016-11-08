@@ -137,7 +137,7 @@ function backPage() {
             loadSettingsTemplate(false, true);
             break;
         case "edit":
-            loadManageScheduleTemplate(false,true);
+            loadManageSchedulesTemplate(false,true);
             break;
         default:
             loadMainTemplate(false, true); // TODO: change to something else?

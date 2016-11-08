@@ -30,6 +30,9 @@
         },
         "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
+        },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
         }
     },
     "dependent_plugins": {}

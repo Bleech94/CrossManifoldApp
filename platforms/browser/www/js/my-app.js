@@ -65,10 +65,12 @@ var mainView = myApp.addView('.view-main', {
 
 // TODO: Switch back to 'deviceready' event after testing
 // Handle Cordova Device Ready Event
-/*$$(document).on('deviceready', function() {
-console.log("Device is ready!");
-});*/
-/* TODO: remove after testing */
+$$(document).on('deviceready', function() {
+    console.log("Device is ready!");
+    document.addEventListener("backbutton", backPage, false)
+});
+
+/*
 if (navigator.userAgent.match(/(iPhone|Android)/)) {
     document.addEventListener("deviceready", onDeviceReady, false);
 } else {
@@ -77,7 +79,7 @@ if (navigator.userAgent.match(/(iPhone|Android)/)) {
 function onDeviceReady() {
     console.log("Device is ready!");
 }
-/* remove after testing */
+*/
 
 // Initialize Pubnub
 var pubnub = PUBNUB.init({
@@ -120,6 +122,25 @@ function refreshPage() {
             break;
         default:
             loadMainTemplate(true, false);
+    }
+}
+
+function backPage() {
+    switch(currentPage) {
+        case "main":
+            loadMainTemplate(true, false); // TODO: Close app?
+            break;
+        case "settings":
+            loadMainTemplate(false, true);
+            break;
+        case "manage":
+            loadSettingsTemplate(false, true);
+            break;
+        case "edit":
+            loadManageSchedulesTemplate(false,true);
+            break;
+        default:
+            loadMainTemplate(false, true); // TODO: change to something else?
     }
 }
 
@@ -356,7 +377,7 @@ $$(document).on('click', '.back-to-manage-schedules-button', function() {
                             return;
                         }
 
-                        // Update the nameArray 
+                        // Update the nameArray
                         for(var i = 0; i < scheduleNameArray.length; i ++) {
                             if(scheduleNameArray[i] == tempScheduleArray[currentScheduleNumber].name) {
                                 scheduleNameArray[i] = $$('.name input').val();
