@@ -333,9 +333,67 @@ $$(document).on('click', '.edit-schedule-button', function() {
 
 // Back to Manage Schedules
 $$(document).on('click', '.back-to-manage-schedules-button', function() {
+    parseWeekdaySelectors();
     deleteMode = false;
-    tempScheduleArray = JSON.parse(JSON.stringify(scheduleArray)); // Any changes not applied should be scrapped.
-    loadManageSchedulesTemplate(false, true);
+
+    // If changes were made and not applied ask if they would like to save their changes.
+    if(!isJSONEqual(scheduleArray, tempScheduleArray) || ($$('.name input').val() != scheduleArray[currentScheduleNumber].name)) {
+        myApp.modal({
+            title:  'Unsaved Changes',
+            text: 'Would you like to save your changes?',
+            buttons: [
+                {
+                    text: 'Yes',
+                    onClick: function() { // TODO: cleanup. Same code as apply-schedule-button
+                        myApp.showIndicator();
+                        setTimeout(function () {
+                            myApp.hideIndicator();
+                        }, 1200);
+                        // Prevent duplicate names.
+                        if(!isNameAvailable($$('.name input').val()) &&
+                         $$('.name input').val() != scheduleArray[currentScheduleNumber].name) {
+                            myApp.alert("You cannot have 2 schedules with the same name.", "Changes Not Applied");
+                            return;
+                        }
+
+                        // Update the nameArray
+                        for(var i = 0; i < scheduleNameArray.length; i ++) {
+                            if(scheduleNameArray[i] == tempScheduleArray[currentScheduleNumber].name) {
+                                scheduleNameArray[i] = $$('.name input').val();
+                            }
+                        }
+
+                        // Set the new schedule name.
+                        tempScheduleArray[currentScheduleNumber].name = $$('.name input').val();
+
+                        // NOTE: The time-temp pairs are automatically updated in tempSchedule when they're changed.
+
+                        // Sort all time-temps by time within each group
+                        for(var i = 0; i < tempScheduleArray[currentScheduleNumber].groups.length; i++) {
+                            tempScheduleArray[currentScheduleNumber].groups[i].pairs = sortTimeTemps(tempScheduleArray[currentScheduleNumber].groups[i].pairs);
+                        }
+
+                        // Apply the changes by making the schedule = tempSchedule.
+                        scheduleArray = JSON.parse(JSON.stringify(tempScheduleArray));
+
+                        pubnubPublishUpdate();
+                        loadManageSchedulesTemplate(false, true);
+                    }
+                },
+                {
+                    text: 'No',
+                    onClick: function() {
+                        deleteMode = false;
+                        tempScheduleArray = JSON.parse(JSON.stringify(scheduleArray)); // Any changes not applied should be scrapped.
+                        loadManageSchedulesTemplate(false, true);
+                    }
+                }
+            ]
+        })
+    } else {
+        tempScheduleArray = JSON.parse(JSON.stringify(scheduleArray)); // Any changes not applied should be scrapped.
+        loadManageSchedulesTemplate(false, true);
+    }
 })
 
 // Zone Settings
@@ -505,7 +563,7 @@ $$(document).on('click', '.delete-schedule-button', function(event) {
         pubnubPublishUpdate();
         refreshPage();
     } else {
-        myApp.alert("You must have at least 1 group.", "Cannot Delete"); // TODO add confirm() to delete this schedule?
+        myApp.alert("You must have at least 1 schedule.", "Cannot Delete"); // TODO add confirm() to delete this schedule?
     }
 })
 
@@ -602,6 +660,7 @@ $$(document).on('click', '.add-time-temp-button', function() {
 
     // Add the time-temp to the temp Schedule
     tempScheduleArray[currentScheduleNumber].groups[groupNum].pairs.push(timeTemp);
+    parseWeekdaySelectors();
     refreshPage();
 })
 
@@ -612,6 +671,7 @@ $$(document).on('click','.delete-time-temp-button',function(){
     var groupNum = getGroupNumber($$(this));
 
     if(tempScheduleArray[currentScheduleNumber].groups[groupNum].pairs.length > 2) {
+        parseWeekdaySelectors();
         tempScheduleArray[currentScheduleNumber].groups[groupNum].pairs.splice(pairNum, 1);
         refreshPage();
     } else {
@@ -807,166 +867,9 @@ function calculate_payload_size( channel, message ) {
     ).length + 100;
 }
 // Estimate of final JSON message in order to get an idea of max size. (Pubnub max is 32KB)
-var testMessage ={
-        "name": [
-            "Main Room",
-            "Master Bedroom",
-            "Basement",
-            "Tommy's Bedroom",
-            "Attic",
-            "Kids Room"
-        ],
-        "currentTemp": [
-            70,
-            72,
-            69,
-            71,
-            72,
-            75
-        ],
-        "desiredTemp": [
-            70,
-            77,
-            70,
-            70,
-            74,
-            73
-        ],
-        "mode": [
-            "Disable Thermostat",
-            "Regular",
-            "Schedule",
-            "Schedule",
-            "Regular",
-            "Regular"
-        ],
-        "scheduleName": [
-            "Schedule X",
-            "Schedule X",
-            "Schedule X",
-            "",
-            "Schedule X",
-            ""
-        ],
-        "schedules": [
-            {
-                "name":"Schedule-1",
-                "groups":[
-                    {"days":["monday","tuesday","wednesday","thursday","friday"],
-                    "pairs":[
-                        {"time":"06:00", "temp":75},
-                        {"time":"10:00", "temp":70},
-                        {"time":"16:00", "temp":78},
-                        {"time":"20:00", "temp":70},
-                        {"time":"06:00", "temp":75},
-                        {"time":"10:00", "temp":70},
-                        {"time":"16:00", "temp":78},
-                        {"time":"20:00", "temp":70}
-                    ]
-                },
-                {"days":["saturday","sunday"],
-                "pairs":[
-                    {"time":"06:00", "temp":75},
-                    {"time":"10:00", "temp":70},
-                    {"time":"16:00", "temp":78},
-                    {"time":"20:00", "temp":70},
-                    {"time":"06:00", "temp":75},
-                    {"time":"10:00", "temp":70},
-                    {"time":"16:00", "temp":78},
-                    {"time":"20:00", "temp":70}
-                ]
-            }
-        ]
-    },
-    {
-        "name":"Schedule-2",
-        "groups":[
-            {"days":["monday","tuesday","wednesday","thursday","friday"],
-            "pairs":[
-                {"time":"06:00", "temp":75},
-                {"time":"10:00", "temp":70},
-                {"time":"16:00", "temp":78},
-                {"time":"20:00", "temp":70},
-                {"time":"06:00", "temp":75},
-                {"time":"10:00", "temp":70},
-                {"time":"16:00", "temp":78},
-                {"time":"20:00", "temp":70}
-            ]
-        },
-        {"days":["saturday","sunday"],
-        "pairs":[
-            {"time":"06:00", "temp":75},
-            {"time":"10:00", "temp":70},
-            {"time":"16:00", "temp":78},
-            {"time":"20:00", "temp":70},
-            {"time":"06:00", "temp":75},
-            {"time":"10:00", "temp":70},
-            {"time":"16:00", "temp":78},
-            {"time":"20:00", "temp":70}
-        ]
-    }
-    ]
-    },
-    {
-        "name":"Schedule-3",
-        "groups":[
-            {"days":["monday","tuesday","wednesday","thursday","friday"],
-            "pairs":[
-                {"time":"06:00", "temp":75},
-                {"time":"10:00", "temp":70},
-                {"time":"16:00", "temp":78},
-                {"time":"20:00", "temp":70},
-                {"time":"06:00", "temp":75},
-                {"time":"10:00", "temp":70},
-                {"time":"16:00", "temp":78},
-                {"time":"20:00", "temp":70}
-            ]
-        },
-        {"days":["saturday","sunday"],
-        "pairs":[
-            {"time":"06:00", "temp":75},
-            {"time":"10:00", "temp":70},
-            {"time":"16:00", "temp":78},
-            {"time":"20:00", "temp":70},
-            {"time":"06:00", "temp":75},
-            {"time":"10:00", "temp":70},
-            {"time":"16:00", "temp":78},
-            {"time":"20:00", "temp":70}
-        ]
-    }
-    ]
-    },
-    {
-        "name":"Schedule-4",
-        "groups":[
-            {"days":["monday","tuesday","wednesday","thursday","friday"],
-            "pairs":[
-                {"time":"06:00", "temp":75},
-                {"time":"10:00", "temp":70},
-                {"time":"16:00", "temp":78},
-                {"time":"20:00", "temp":70},
-                {"time":"06:00", "temp":75},
-                {"time":"10:00", "temp":70},
-                {"time":"16:00", "temp":78},
-                {"time":"20:00", "temp":70}
-            ]
-        },
-        {"days":["saturday","sunday"],
-        "pairs":[
-            {"time":"06:00", "temp":75},
-            {"time":"10:00", "temp":70},
-            {"time":"16:00", "temp":78},
-            {"time":"20:00", "temp":70},
-            {"time":"06:00", "temp":75},
-            {"time":"10:00", "temp":70},
-            {"time":"16:00", "temp":78},
-            {"time":"20:00", "temp":70}
-        ]
-    }
-    ]
-    }
-    ]
-}
+var testMessage ={"names":["Living Room","Master Bedroom","Basement","Tommy's Bedroom","Attic","Kids Room","Living Room","Master Bedroom","Basement","Tommy's Bedroom","Attic","Kids Room"],"currentTemps":[75,72,69,71,73,75,75,72,69,71,73,75],"desiredTemps":[68,70,72,70,70,74,75,72,69,71,73,75],"modes":["Regular","Schedule","Disable Thermostat","Schedule","Schedule","Regular","Regular","Schedule","Disable Thermostat","Schedule","Schedule","Regular"],"scheduleNames":["Winter","Winter","Winter","Winter","Winter","Winter","Winter","Winter","Winter","Winter","Winter","Winter"],"schedules":[{"name":"Winter","groups":[{"days":[true,false,false,false,false,false,false],"pairs":[{"time":"02:00","temp":"75"},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,false,false,false,false,false,true],"pairs":[{"time":"05:00","temp":"75"},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,true,false,false,false,false,false],"pairs":[{"time":"06:00","temp":75},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,false,true,false,false,false,false],"pairs":[{"time":"06:00","temp":75},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,false,false,true,false,false,false],"pairs":[{"time":"06:00","temp":75},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,false,false,false,true,false,false],"pairs":[{"time":"06:00","temp":75},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,false,false,false,false,true,false],"pairs":[{"time":"06:00","temp":75},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]}]},{"name":"Winter","groups":[{"days":[true,false,false,false,false,false,false],"pairs":[{"time":"02:00","temp":"75"},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,false,false,false,false,false,true],"pairs":[{"time":"05:00","temp":"75"},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,true,false,false,false,false,false],"pairs":[{"time":"06:00","temp":75},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,false,true,false,false,false,false],"pairs":[{"time":"06:00","temp":75},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,false,false,true,false,false,false],"pairs":[{"time":"06:00","temp":75},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,false,false,false,true,false,false],"pairs":[{"time":"06:00","temp":75},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,false,false,false,false,true,false],"pairs":[{"time":"06:00","temp":75},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]}]},{"name":"Winter","groups":[{"days":[true,false,false,false,false,false,false],"pairs":[{"time":"02:00","temp":"75"},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,false,false,false,false,false,true],"pairs":[{"time":"05:00","temp":"75"},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,true,false,false,false,false,false],"pairs":[{"time":"06:00","temp":75},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,false,true,false,false,false,false],"pairs":[{"time":"06:00","temp":75},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,false,false,true,false,false,false],"pairs":[{"time":"06:00","temp":75},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,false,false,false,true,false,false],"pairs":[{"time":"06:00","temp":75},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,false,false,false,false,true,false],"pairs":[{"time":"06:00","temp":75},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]}]},{"name":"Winter","groups":[{"days":[true,false,false,false,false,false,false],"pairs":[{"time":"02:00","temp":"75"},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,false,false,false,false,false,true],"pairs":[{"time":"05:00","temp":"75"},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,true,false,false,false,false,false],"pairs":[{"time":"06:00","temp":75},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,false,true,false,false,false,false],"pairs":[{"time":"06:00","temp":75},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,false,false,true,false,false,false],"pairs":[{"time":"06:00","temp":75},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,false,false,false,true,false,false],"pairs":[{"time":"06:00","temp":75},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,false,false,false,false,true,false],"pairs":[{"time":"06:00","temp":75},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]}]},{"name":"Winter","groups":[{"days":[true,false,false,false,false,false,false],"pairs":[{"time":"02:00","temp":"75"},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,false,false,false,false,false,true],"pairs":[{"time":"05:00","temp":"75"},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,true,false,false,false,false,false],"pairs":[{"time":"06:00","temp":75},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,false,true,false,false,false,false],"pairs":[{"time":"06:00","temp":75},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,false,false,true,false,false,false],"pairs":[{"time":"06:00","temp":75},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,false,false,false,true,false,false],"pairs":[{"time":"06:00","temp":75},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,false,false,false,false,true,false],"pairs":[{"time":"06:00","temp":75},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]}]},{"name":"Winter","groups":[{"days":[true,false,false,false,false,false,false],"pairs":[{"time":"02:00","temp":"75"},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,false,false,false,false,false,true],"pairs":[{"time":"05:00","temp":"75"},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,true,false,false,false,false,false],"pairs":[{"time":"06:00","temp":75},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,false,true,false,false,false,false],"pairs":[{"time":"06:00","temp":75},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,false,false,true,false,false,false],"pairs":[{"time":"06:00","temp":75},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,false,false,false,true,false,false],"pairs":[{"time":"06:00","temp":75},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]},{"days":[false,false,false,false,false,true,false],"pairs":[{"time":"06:00","temp":75},{"time":"09:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"12:00","temp":70},{"time":"17:00","temp":75},{"time":"22:00","temp":70}]}]}]}
+
+
 console.log(calculate_payload_size(pubnubUpdateChannel, testMessage));
 
 // Ensure that each day has 1 box selected, if not select group 1. Names: ['M', 'T', 'W', 'Th', 'F', 'Sa', 'Su']

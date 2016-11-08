@@ -107,7 +107,7 @@ i.icon.icon-back {
     background: rgba(0,167,207,0.3) !important;
 }
 
-.modal-button.modal-button-bold {
+span.modal-button, .modal-button.modal-button-bold {
     color: #00a7cf;
 }
 /* End default color changes */
