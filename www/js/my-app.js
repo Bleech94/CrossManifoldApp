@@ -320,13 +320,16 @@ function loadZoneSettingsTemplate() {
 $$(document).on('click', '.login-button', function() {
     // Prevent trying to login multiple times at once - this causes weird issues.
     if(loginLocked == false) {
-        console.log("before loginLocked = " + loginLocked);
         loginLocked = true;
         pubnubLogin();
     }
     setTimeout(function() {
         loginLocked = false;
     }, 1000);
+    if(Keyboard.isVisible) {
+        myApp.alert("keyboard active");
+        Keyboard.hide();
+    }
 })
 
 // Settings
