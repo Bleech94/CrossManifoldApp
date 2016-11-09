@@ -7,6 +7,8 @@ var isIos = Framework7.prototype.device.ios === true;
 var CMID = ""; // Cross Manifold ID. TODO: Store locally.
 var pubnubUpdateChannel = "CM_Update_" + CMID; // This channel is for updates from the Pi that will be displayed on the app.
 
+var loginLocked = false; // To ensure the user only tries to login once at a time. // TODO Delete
+
 // Arrays to store thermostat info and settings found within each message.
 var nameArray = []; // Zone names
 var currentTempArray = []; // Current temperature of each thermostat
@@ -316,7 +318,17 @@ function loadZoneSettingsTemplate() {
 
 // Login: Check if the channel is live by checking the update history. If there is a message then the corresponding Pi is active.
 $$(document).on('click', '.login-button', function() {
-    pubnubLogin();
+    cordova.plugins.Keyboard.close();
+
+    // Prevent trying to login multiple times at once - this causes weird issues.
+    if(loginLocked == false) {
+        console.log("before loginLocked = " + loginLocked);
+        loginLocked = true;
+        pubnubLogin();
+    }
+    setTimeout(function() {
+        loginLocked = false;
+    }, 1000);
 })
 
 // Settings
@@ -845,7 +857,7 @@ $$(document).on("keyup", ".CMID-input", function() {
 // Attempt login when enter is pushed. TOOD: Change this for mobile? Does it need to be a form?
 $$(document).on('keydown', '.CMID-input', function (e) {
     if(e.keyCode == 13){
-        pubnubLogin();
+        $$('.login-button').click();
     }
 });
 

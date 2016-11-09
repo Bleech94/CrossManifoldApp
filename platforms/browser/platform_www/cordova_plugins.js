@@ -78,13 +78,12 @@ module.exports = [
         "pluginId": "cordova-plugin-nativestorage"
     },
     {
-        "file": "plugins/ionic-plugin-keyboard/www/browser/keyboard.js",
-        "id": "ionic-plugin-keyboard.keyboard",
-        "pluginId": "ionic-plugin-keyboard",
+        "file": "plugins/cordova-plugin-keyboard/www/keyboard.js",
+        "id": "cordova-plugin-keyboard.keyboard",
+        "pluginId": "cordova-plugin-keyboard",
         "clobbers": [
-            "cordova.plugins.Keyboard"
-        ],
-        "runs": true
+            "window.Keyboard"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -97,7 +96,7 @@ module.exports.metadata =
     "cordova-plugin-device": "1.1.3",
     "cordova-plugin-network-information": "1.3.0",
     "cordova-plugin-nativestorage": "2.0.2",
-    "ionic-plugin-keyboard": "2.2.1"
+    "cordova-plugin-keyboard": "1.1.4"
 }
 // BOTTOM OF METADATA
 });
