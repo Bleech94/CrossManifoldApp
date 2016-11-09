@@ -326,10 +326,7 @@ $$(document).on('click', '.login-button', function() {
     setTimeout(function() {
         loginLocked = false;
     }, 1000);
-    if(Keyboard.isVisible) {
-        myApp.alert("keyboard active");
-        Keyboard.hide();
-    }
+    myApp.alert("keyboard shown: " + Keyboard.isVisible);
 })
 
 // Settings
