@@ -318,8 +318,6 @@ function loadZoneSettingsTemplate() {
 
 // Login: Check if the channel is live by checking the update history. If there is a message then the corresponding Pi is active.
 $$(document).on('click', '.login-button', function() {
-    cordova.plugins.Keyboard.close();
-
     // Prevent trying to login multiple times at once - this causes weird issues.
     if(loginLocked == false) {
         console.log("before loginLocked = " + loginLocked);

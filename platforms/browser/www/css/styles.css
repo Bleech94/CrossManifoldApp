@@ -84,11 +84,6 @@ h4, h5 {
     background-color:#00a7cf;
 }
 
-#footer {
-    position:absolute;
-    bottom:0;
-}
-
 /* Change some of the default colors */
 /* This changes the color of the back arrow on iOS from the default blue */
 i.icon.icon-back {

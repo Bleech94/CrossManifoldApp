@@ -28,7 +28,7 @@
         "cordova-plugin-nativestorage": {
             "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
         },
-        "cordova-plugin-keyboard": {
+        "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
         }
     },

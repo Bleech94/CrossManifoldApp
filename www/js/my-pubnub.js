@@ -74,6 +74,7 @@ function pubnubLogin() {
                 tempScheduleArray = JSON.parse(JSON.stringify(scheduleArray));
                 pubnubSubscribeToUpdates();
                 loadMainTemplate(true, true);
+                cordova.plugins.Keyboard.close(); // TODO delete?
             } else {
                 myApp.alert("The Cross Manifold ID you entered did not match any active Cross Manifolds. Please try again.", "Invalid ID"); // TODO: Add more information.
                 $$('#CMID-input1').val("");
