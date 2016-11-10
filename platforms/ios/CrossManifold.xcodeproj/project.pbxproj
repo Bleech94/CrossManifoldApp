@@ -24,7 +24,7 @@
 		6F6AEEFF76E04BBC9014534A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9764265E7BB4449B1217B39 /* SystemConfiguration.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		E8F80F63B494409E92B5A474 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4DE49BA902E402ABB64DBE6 /* CoreTelephony.framework */; };
 		1BC11113F2F3470AB8BED109 /* NativeStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = AE0B86280EEF4907BE1DFE11 /* NativeStorage.m */; };
-		A8E9181ADFB84870BB680E65 /* IonicKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 915F5ED4C61244469D5DF107 /* IonicKeyboard.m */; };
+		9C3C51FFF19147E18464DE6E /* IonicKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 4011C1FD246940E1B660FC20 /* IonicKeyboard.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,8 +80,8 @@
 		C4DE49BA902E402ABB64DBE6 /* CoreTelephony.framework */ = {isa = PBXFileReference; name = "CoreTelephony.framework"; path = "System/Library/Frameworks/CoreTelephony.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
 		AE0B86280EEF4907BE1DFE11 /* NativeStorage.m */ = {isa = PBXFileReference; name = "NativeStorage.m"; path = "cordova-plugin-nativestorage/NativeStorage.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
 		EAB9055C98734D3CAE7CFCCA /* NativeStorage.h */ = {isa = PBXFileReference; name = "NativeStorage.h"; path = "cordova-plugin-nativestorage/NativeStorage.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
-		915F5ED4C61244469D5DF107 /* IonicKeyboard.m */ = {isa = PBXFileReference; name = "IonicKeyboard.m"; path = "ionic-plugin-keyboard/IonicKeyboard.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
-		F7526DE89CC24F998506B417 /* IonicKeyboard.h */ = {isa = PBXFileReference; name = "IonicKeyboard.h"; path = "ionic-plugin-keyboard/IonicKeyboard.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		4011C1FD246940E1B660FC20 /* IonicKeyboard.m */ = {isa = PBXFileReference; name = "IonicKeyboard.m"; path = "ionic-plugin-keyboard/IonicKeyboard.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		969A105A552D40E8B2C4A95B /* IonicKeyboard.h */ = {isa = PBXFileReference; name = "IonicKeyboard.h"; path = "ionic-plugin-keyboard/IonicKeyboard.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -202,8 +202,8 @@
 				5504929E357F433FA39D2DF5 /* CDVReachability.h */,
 				AE0B86280EEF4907BE1DFE11 /* NativeStorage.m */,
 				EAB9055C98734D3CAE7CFCCA /* NativeStorage.h */,
-				915F5ED4C61244469D5DF107 /* IonicKeyboard.m */,
-				F7526DE89CC24F998506B417 /* IonicKeyboard.h */,
+				4011C1FD246940E1B660FC20 /* IonicKeyboard.m */,
+				969A105A552D40E8B2C4A95B /* IonicKeyboard.h */,
 			);
 			name = Plugins;
 			path = "CrossManifold/Plugins";
@@ -325,7 +325,7 @@
 				8A243746B3454FBDA5400135 /* CDVConnection.m in Sources */,
 				D105D5EC44864B79AC17FE14 /* CDVReachability.m in Sources */,
 				1BC11113F2F3470AB8BED109 /* NativeStorage.m in Sources */,
-				A8E9181ADFB84870BB680E65 /* IonicKeyboard.m in Sources */,
+				9C3C51FFF19147E18464DE6E /* IonicKeyboard.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
