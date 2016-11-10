@@ -60,7 +60,11 @@ function doesNeedRefresh() {
 // Check if a channel has recieved an update by grabbing the last message from history.
 function pubnubLogin() {
     // Get CMID from input fields and set channel names.
-    CMID = $$('#CMID-input1').val() + $$('#CMID-input2').val() + $$('#CMID-input3').val() + $$('#CMID-input4').val();
+    CMID1 = $$('#CMID-input1').val();
+    CMID2 = $$('#CMID-input2').val();
+    CMID3 = $$('#CMID-input3').val();
+    CMID4 = $$('#CMID-input4').val();
+    CMID = CMID1 + CMID2 + CMID3 + CMID4;
     pubnubUpdateChannel = "CM_Update_" + CMID;
 
     // Check if history is empty. If it is, alert() steps to try and fix it, otherwise login to main page.
@@ -74,7 +78,10 @@ function pubnubLogin() {
                 tempScheduleArray = JSON.parse(JSON.stringify(scheduleArray));
                 pubnubSubscribeToUpdates();
                 loadMainTemplate(true, true);
-                cordova.plugins.Keyboard.close(); // TODO delete?
+                cordova.plugins.Keyboard.close();
+                // Clear the DB and save the new ID
+                dbClearCMID();
+                dbSaveCMID(CMID1, CMID2, CMID3, CMID4);
             } else {
                 myApp.alert("The Cross Manifold ID you entered did not match any active Cross Manifolds. Please try again.", "Invalid ID"); // TODO: Add more information.
                 $$('#CMID-input1').val("");
