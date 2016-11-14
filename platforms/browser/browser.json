@@ -27,9 +27,6 @@
         "cordova-plugin-compat": {
             "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
         },
-        "cordova-plugin-splashscreen": {
-            "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
-        },
         "cordova-plugin-device": {
             "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
         },
@@ -40,6 +37,9 @@
             "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
         },
         "cordova-sqlite-storage": {
+            "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
+        },
+        "cordova-plugin-splashscreen": {
             "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
         }
     },
@@ -52,20 +52,6 @@
             "clobbers": [
                 "window.StatusBar"
             ]
-        },
-        {
-            "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
-            "id": "cordova-plugin-splashscreen.SplashScreen",
-            "pluginId": "cordova-plugin-splashscreen",
-            "clobbers": [
-                "navigator.splashscreen"
-            ]
-        },
-        {
-            "file": "plugins/cordova-plugin-splashscreen/src/browser/SplashScreenProxy.js",
-            "id": "cordova-plugin-splashscreen.SplashScreenProxy",
-            "pluginId": "cordova-plugin-splashscreen",
-            "runs": true
         },
         {
             "file": "plugins/cordova-plugin-device/www/device.js",
@@ -119,16 +105,30 @@
             "clobbers": [
                 "SQLitePlugin"
             ]
+        },
+        {
+            "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
+            "id": "cordova-plugin-splashscreen.SplashScreen",
+            "pluginId": "cordova-plugin-splashscreen",
+            "clobbers": [
+                "navigator.splashscreen"
+            ]
+        },
+        {
+            "file": "plugins/cordova-plugin-splashscreen/src/browser/SplashScreenProxy.js",
+            "id": "cordova-plugin-splashscreen.SplashScreenProxy",
+            "pluginId": "cordova-plugin-splashscreen",
+            "runs": true
         }
     ],
     "plugin_metadata": {
         "cordova-plugin-whitelist": "1.2.2",
         "cordova-plugin-statusbar": "1.0.1",
         "cordova-plugin-compat": "1.0.0",
-        "cordova-plugin-splashscreen": "4.0.0",
         "cordova-plugin-device": "1.1.3",
         "cordova-plugin-network-information": "1.3.0",
         "ionic-plugin-keyboard": "2.2.1",
-        "cordova-sqlite-storage": "1.4.8"
+        "cordova-sqlite-storage": "1.4.8",
+        "cordova-plugin-splashscreen": "4.0.0"
     }
 }

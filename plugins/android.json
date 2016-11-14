@@ -10,9 +10,6 @@
         "cordova-plugin-compat": {
             "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
         },
-        "cordova-plugin-splashscreen": {
-            "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
-        },
         "cordova-plugin-statusbar": {
             "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
         },
@@ -29,6 +26,9 @@
             "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
         },
         "cordova-sqlite-storage": {
+            "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
+        },
+        "cordova-plugin-splashscreen": {
             "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
         }
     },
