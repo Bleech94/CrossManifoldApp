@@ -23,7 +23,6 @@
 		D105D5EC44864B79AC17FE14 /* CDVReachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E01D59A41214A119F00CFCC /* CDVReachability.m */; };
 		6F6AEEFF76E04BBC9014534A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9764265E7BB4449B1217B39 /* SystemConfiguration.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		E8F80F63B494409E92B5A474 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4DE49BA902E402ABB64DBE6 /* CoreTelephony.framework */; };
-		1BC11113F2F3470AB8BED109 /* NativeStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = AE0B86280EEF4907BE1DFE11 /* NativeStorage.m */; };
 		9C3C51FFF19147E18464DE6E /* IonicKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 4011C1FD246940E1B660FC20 /* IonicKeyboard.m */; };
 		A4FE836CC58248F7825E9E27 /* SQLitePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = C2FB8128BC21420582D9CF0D /* SQLitePlugin.m */; };
 		C453DE76B1AD4A4385260CC7 /* sqlite3.c in Resources */ = {isa = PBXBuildFile; fileRef = 1DD24AB257CD497BAFF921E2 /* sqlite3.c */; settings = {COMPILER_FLAGS = "-DSQLITE_TEMP_STORE=2 -DSQLITE_THREADSAFE=2 -DSQLITE_ENABLE_FTS3 -DSQLITE_ENABLE_FTS3_PARENTHESIS -DSQLITE_ENABLE_FTS4 -DSQLITE_ENABLE_COLUMN_METADATA -DSQLITE_ENABLE_RTREE -DSQLITE_LOCKING_STYLE=1 -DSQLITE_OMIT_BUILTIN_TEST -DSQLITE_OMIT_LOAD_EXTENSION"; }; };
@@ -80,8 +79,6 @@
 		5504929E357F433FA39D2DF5 /* CDVReachability.h */ = {isa = PBXFileReference; name = "CDVReachability.h"; path = "cordova-plugin-network-information/CDVReachability.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 		D9764265E7BB4449B1217B39 /* SystemConfiguration.framework */ = {isa = PBXFileReference; name = "SystemConfiguration.framework"; path = "System/Library/Frameworks/SystemConfiguration.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
 		C4DE49BA902E402ABB64DBE6 /* CoreTelephony.framework */ = {isa = PBXFileReference; name = "CoreTelephony.framework"; path = "System/Library/Frameworks/CoreTelephony.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
-		AE0B86280EEF4907BE1DFE11 /* NativeStorage.m */ = {isa = PBXFileReference; name = "NativeStorage.m"; path = "cordova-plugin-nativestorage/NativeStorage.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
-		EAB9055C98734D3CAE7CFCCA /* NativeStorage.h */ = {isa = PBXFileReference; name = "NativeStorage.h"; path = "cordova-plugin-nativestorage/NativeStorage.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 		4011C1FD246940E1B660FC20 /* IonicKeyboard.m */ = {isa = PBXFileReference; name = "IonicKeyboard.m"; path = "ionic-plugin-keyboard/IonicKeyboard.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
 		969A105A552D40E8B2C4A95B /* IonicKeyboard.h */ = {isa = PBXFileReference; name = "IonicKeyboard.h"; path = "ionic-plugin-keyboard/IonicKeyboard.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 		C2FB8128BC21420582D9CF0D /* SQLitePlugin.m */ = {isa = PBXFileReference; name = "SQLitePlugin.m"; path = "cordova-sqlite-storage/SQLitePlugin.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
@@ -206,8 +203,6 @@
 				3E01D59A41214A119F00CFCC /* CDVReachability.m */,
 				6D8648A79F94420BB171B5A0 /* CDVConnection.h */,
 				5504929E357F433FA39D2DF5 /* CDVReachability.h */,
-				AE0B86280EEF4907BE1DFE11 /* NativeStorage.m */,
-				EAB9055C98734D3CAE7CFCCA /* NativeStorage.h */,
 				4011C1FD246940E1B660FC20 /* IonicKeyboard.m */,
 				969A105A552D40E8B2C4A95B /* IonicKeyboard.h */,
 				C2FB8128BC21420582D9CF0D /* SQLitePlugin.m */,
@@ -334,7 +329,6 @@
 				1A7E6B1D99D74F05962735AB /* CDVDevice.m in Sources */,
 				8A243746B3454FBDA5400135 /* CDVConnection.m in Sources */,
 				D105D5EC44864B79AC17FE14 /* CDVReachability.m in Sources */,
-				1BC11113F2F3470AB8BED109 /* NativeStorage.m in Sources */,
 				9C3C51FFF19147E18464DE6E /* IonicKeyboard.m in Sources */,
 				A4FE836CC58248F7825E9E27 /* SQLitePlugin.m in Sources */,
 				C453DE76B1AD4A4385260CC7 /* sqlite3.c in Resources */,

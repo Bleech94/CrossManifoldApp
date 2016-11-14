@@ -5,9 +5,10 @@ var isMaterial = Framework7.prototype.device.ios === false;
 var isIos = Framework7.prototype.device.ios === true;
 
 var CMID = ""; // Cross Manifold ID. TODO: Store locally.
+var CMID1 = "", CMID2 = "", CMID3 = "", CMID4 = "";
 var pubnubUpdateChannel = "CM_Update_" + CMID; // This channel is for updates from the Pi that will be displayed on the app.
 
-var loginLocked = false; // To ensure the user only tries to login once at a time. // TODO Delete
+var loginLocked = false; // To ensure the user only tries to login once at a time.
 
 // Arrays to store thermostat info and settings found within each message.
 var nameArray = []; // Zone names
@@ -65,23 +66,13 @@ var mainView = myApp.addView('.view-main', {
     domCache: false
 });
 
-// TODO: Switch back to 'deviceready' event after testing
 // Handle Cordova Device Ready Event
 $$(document).on('deviceready', function() {
     console.log("Device is ready!");
-    document.addEventListener("backbutton", backPage, false)
+    document.addEventListener("backbutton", backPage, false); // Handle backbutton press.
+    db = window.sqlitePlugin.openDatabase({name:'cm.db', location:'default'}); // TODO add preferences table (notifications, other?)
+    db.transaction(dbSetup, errorHandler, dbLoadCMID);
 });
-
-/*
-if (navigator.userAgent.match(/(iPhone|Android)/)) {
-    document.addEventListener("deviceready", onDeviceReady, false);
-} else {
-    onDeviceReady();
-}
-function onDeviceReady() {
-    console.log("Device is ready!");
-}
-*/
 
 // Initialize Pubnub
 var pubnub = PUBNUB.init({
@@ -100,6 +91,10 @@ var pubnub = PUBNUB.init({
 // TODO: Logout is broken unless I use domCache = true (which breaks scrollTop())
 function loadLoginPage() {
     console.log("Loading login page");
+    myApp.showIndicator();
+    setTimeout(function () {
+        myApp.hideIndicator();
+    }, 1000);
     index = 1;
     mainView.router.load({
         template: myApp.templates.login
@@ -465,6 +460,7 @@ $$(document).on('click', '.logout-button', function() {
     pubnubUpdateChannel = "";
 
     loadLoginPage();
+    dbLoadCMID();
 })
 
 

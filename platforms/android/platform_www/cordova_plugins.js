@@ -37,21 +37,6 @@ module.exports = [
         ]
     },
     {
-        "file": "plugins/cordova-plugin-nativestorage/www/mainHandle.js",
-        "id": "cordova-plugin-nativestorage.mainHandle",
-        "clobbers": [
-            "NativeStorage"
-        ]
-    },
-    {
-        "file": "plugins/cordova-plugin-nativestorage/www/LocalStorageHandle.js",
-        "id": "cordova-plugin-nativestorage.LocalStorageHandle"
-    },
-    {
-        "file": "plugins/cordova-plugin-nativestorage/www/NativeStorageError.js",
-        "id": "cordova-plugin-nativestorage.NativeStorageError"
-    },
-    {
         "file": "plugins/ionic-plugin-keyboard/www/android/keyboard.js",
         "id": "ionic-plugin-keyboard.keyboard",
         "clobbers": [
@@ -75,7 +60,6 @@ module.exports.metadata =
     "cordova-plugin-whitelist": "1.2.2",
     "cordova-plugin-device": "1.1.3",
     "cordova-plugin-network-information": "1.3.0",
-    "cordova-plugin-nativestorage": "2.0.2",
     "ionic-plugin-keyboard": "2.2.1",
     "cordova-sqlite-storage": "1.4.8"
 };

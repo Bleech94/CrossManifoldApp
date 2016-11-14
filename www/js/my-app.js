@@ -30,7 +30,7 @@ var arraysUsedObj = {
 
 var deleteMode = false;
 
-var currentPage = "main"; // Options are main, settings, manage, edit. I've implemented my own navigation to have better control of transitions.
+var currentPage = "login"; // Options are main, settings, manage, edit. I've implemented my own navigation to have better control of transitions.
 var currentZoneNumber;
 var currentScheduleNumber = 0;
 var index = 1; // Used in various places for numbering in html templates.
@@ -70,7 +70,7 @@ var mainView = myApp.addView('.view-main', {
 $$(document).on('deviceready', function() {
     console.log("Device is ready!");
     document.addEventListener("backbutton", backPage, false); // Handle backbutton press.
-    db = window.sqlitePlugin.openDatabase({name:'cm.db', location:'default'});
+    db = window.sqlitePlugin.openDatabase({name:'cm.db', location:'default'}); // TODO add preferences table (notifications, other?)
     db.transaction(dbSetup, errorHandler, dbLoadCMID);
 });
 
@@ -95,12 +95,15 @@ function loadLoginPage() {
     mainView.router.load({
         template: myApp.templates.login
     })
-    currentPage = "main";
+    currentPage = "login";
 }
 
 // Reload the current page when an update is recieved. inAnimated should be false (no transition)
 function refreshPage() {
     switch(currentPage) {
+        case "login":
+            loadLoginPage();
+            break;
         case "main":
             loadMainTemplate(true, false);
             break;
@@ -120,8 +123,10 @@ function refreshPage() {
 
 function backPage() {
     switch(currentPage) {
+        case "login":
+            break; // TODO: Close app?
         case "main":
-            loadMainTemplate(true, false); // TODO: Close app?
+            loadMainTemplate(true, false); // TODO: Logout/Close app?
             break;
         case "settings":
             loadMainTemplate(false, true);
@@ -309,6 +314,11 @@ function loadZoneSettingsTemplate() {
 
 // Login: Check if the channel is live by checking the update history. If there is a message then the corresponding Pi is active.
 $$(document).on('click', '.login-button', function() {
+    myApp.showIndicator();
+    setTimeout(function () {
+        myApp.hideIndicator();
+    }, 1000);
+
     // Prevent trying to login multiple times at once - this causes weird issues.
     if(loginLocked == false) {
         console.log("before loginLocked = " + loginLocked);

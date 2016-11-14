@@ -25,9 +25,6 @@
         "cordova-plugin-network-information": {
             "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
         },
-        "cordova-plugin-nativestorage": {
-            "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
-        },
         "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
         },

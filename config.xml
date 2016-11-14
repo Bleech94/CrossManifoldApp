@@ -25,8 +25,7 @@
         <preference name="BackupWebStorage" value="none" />
     </platform>
     <preference name="DisallowOverscroll" value="true" />
-    <plugin name="cordova-plugin-whitelist" spec="~1.2.0" />
-    <plugin name="cordova-plugin-console" spec="~1.0.1" />
+    <plugin name="cordova-plugin-whitelist" spec="~1.2.0" /> <!-- TODO: Change so only pubnub allowed? -->
     <plugin name="cordova-plugin-statusbar" spec="~1.0.1" />
     <plugin name="com.ionic.keyboard" spec="1.0.3" source="pgb" />
     <plugin name="io.litehelpers.cordova.sqlite" spec="0.7.10" source="pgb" />
