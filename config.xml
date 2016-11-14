@@ -18,10 +18,10 @@
     <platform name="android">
         <preference name="android-minSdkVersion" value="14" />
         <allow-intent href="market:*" />
-        <splash src="res/drawable-ldpi/screen.png" density="ldpi"/>
-        <splash src="res/drawable-mdpi/screen.png" density="mdpi"/>
-        <splash src="res/drawable-hdpi/screen.png" density="hdpi"/>
-        <splash src="res/drawable-xhdpi/screen.png" density="xhdpi"/>
+        <splash src="res/drawable-ldpi/splash.png" density="port-ldpi"/>
+        <splash src="res/drawable-mdpi/splash.png" density="port-mdpi"/>
+        <splash src="res/drawable-hdpi/splash.png" density="port-hdpi"/>
+        <splash src="res/drawable-xhdpi/splash.png" density="port-xhdpi"/>
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
@@ -38,6 +38,11 @@
 
     </platform>
     <preference name="DisallowOverscroll" value="true" />
+    <preference name="SplashScreen" value="screen" />
+    <feature name="SplashScreen" >
+        <param name="android-package" value="org.apache.cordova.splashscreen.SplashScreen" />
+        <param name="onload" value="true" />
+    </feature>
     <plugin name="cordova-plugin-whitelist" spec="~1.2.0" /> <!-- TODO: Change so only pubnub allowed? -->
     <plugin name="cordova-plugin-statusbar" spec="~1.0.1" />
     <plugin name="com.ionic.keyboard" spec="1.0.3" source="pgb" />
