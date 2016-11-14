@@ -69,8 +69,8 @@ var mainView = myApp.addView('.view-main', {
 // Handle Cordova Device Ready Event
 $$(document).on('deviceready', function() {
     console.log("Device is ready!");
-    document.addEventListener("backbutton", backPage, false);
-    db = window.openDatabase("cm.db", "1.0", "cm.db", 10000);
+    document.addEventListener("backbutton", backPage, false); // Handle backbutton press.
+    db = window.sqlitePlugin.openDatabase({name:'cm.db', location:'default'});
     db.transaction(dbSetup, errorHandler, dbLoadCMID);
 });
 

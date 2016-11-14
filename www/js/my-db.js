@@ -12,7 +12,7 @@ function errorHandler(e) {
 function dbLoadCMID() {
     db.transaction(function(tx) {
         tx.executeSql("select * from cm_table", [], gotCMID, errorHandler);
-    }, errorHandler, function() {})
+    }, errorHandler, function() {myApp.alert("db load successful!");})
 }
 
 function gotCMID(tx, results) {
@@ -20,17 +20,17 @@ function gotCMID(tx, results) {
         myApp.alert("DB is empty."); // TODO handle this
         return false;
     }
-    // Save the results
+    // Save the results globally
     CMID1 = results.rows.item(0).CMID1;
     CMID2 = results.rows.item(0).CMID2;
     CMID3 = results.rows.item(0).CMID3;
     CMID4 = results.rows.item(0).CMID4;
 
     // Put the results into the CMID entry fields.
-    $('#CMID-input1').val(CMID1);
-    $('#CMID-input2').val(CMID2);
-    $('#CMID-input3').val(CMID3);
-    $('#CMID-input4').val(CMID4);
+    $$('#CMID-input1').val(CMID1);
+    $$('#CMID-input2').val(CMID2);
+    $$('#CMID-input3').val(CMID3);
+    $$('#CMID-input4').val(CMID4);
 }
 
 function dbSaveCMID(ID1, ID2, ID3, ID4) {
