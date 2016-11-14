@@ -456,6 +456,7 @@ $$(document).on('click', '.logout-button', function() {
     pubnubUpdateChannel = "";
 
     loadLoginPage();
+    dbLoadCMID();
 })
 
 

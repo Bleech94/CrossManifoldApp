@@ -12,12 +12,11 @@ function errorHandler(e) {
 function dbLoadCMID() {
     db.transaction(function(tx) {
         tx.executeSql("select * from cm_table", [], gotCMID, errorHandler);
-    }, errorHandler, function() {myApp.alert("db load successful!");})
+    }, errorHandler, function() {})
 }
 
 function gotCMID(tx, results) {
     if(results.rows.length == 0) {
-        myApp.alert("DB is empty."); // TODO handle this
         return false;
     }
     // Save the results globally
@@ -36,11 +35,11 @@ function gotCMID(tx, results) {
 function dbSaveCMID(ID1, ID2, ID3, ID4) {
     db.transaction(function(tx) {
         tx.executeSql("INSERT INTO cm_table(CMID1, CMID2, CMID3, CMID4) VALUES(?,?,?,?)", [ID1, ID2, ID3, ID4])
-    }, errorHandler, function() {myApp.alert("CMID saved into DB.")})
+    }, errorHandler, function() {})
 }
 
 function dbClearCMID() {
     db.transaction(function(tx) {
         tx.executeSql("DELETE FROM cm_table")
-    }, errorHandler, function() {myApp.alert("Table cleared.")})
+    }, errorHandler, function() {})
 }
