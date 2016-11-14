@@ -15,7 +15,6 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
-    <splash src="splash.png" />
     <platform name="android">
         <preference name="android-minSdkVersion" value="14" />
         <allow-intent href="market:*" />
@@ -28,22 +27,14 @@
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
         <preference name="BackupWebStorage" value="none" />
-
-        <!-- TODO: Fix
         <splash src="res/screen/ios/screen-iphone-portrait.png" width="320" height="480"/>
         <splash src="res/screen/ios/screen-iphone-portrait-2x.png" width="640" height="960"/>
         <splash src="res/screen/ios/screen-iphone-portrait-568h-2x~iphone.png" width="640" height="1136"/>
         <splash src="res/screen/ios/screen-iphone-portrait-667h.png" width="750" height="1334"/>
         <splash src="res/screen/ios/screen-iphone-portrait-736h.png" width="1242" height="2208"/>
-        -->
-
+        <!-- TODO: Check -->
     </platform>
     <preference name="DisallowOverscroll" value="true" />
-    <preference name="SplashScreen" value="screen" />
-    <feature name="SplashScreen" >
-        <param name="android-package" value="org.apache.cordova.splashscreen.SplashScreen" />
-        <param name="onload" value="true" />
-    </feature>
     <plugin name="cordova-plugin-whitelist" spec="~1.2.0" /> <!-- TODO: Change so only pubnub allowed? -->
     <plugin name="cordova-plugin-statusbar" spec="~1.0.1" />
     <plugin name="com.ionic.keyboard" spec="1.0.3" source="pgb" />
