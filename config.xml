@@ -39,6 +39,7 @@
 
     </platform>
     <preference name="DisallowOverscroll" value="true" />
+    <preference name="SplashScreen" value="screen" />
     <plugin name="cordova-plugin-whitelist" spec="~1.2.0" /> <!-- TODO: Change so only pubnub allowed? -->
     <plugin name="cordova-plugin-statusbar" spec="~1.0.1" />
     <plugin name="com.ionic.keyboard" spec="1.0.3" source="pgb" />
