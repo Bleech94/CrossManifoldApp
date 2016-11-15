@@ -9,8 +9,9 @@ var CMID1 = "", CMID2 = "", CMID3 = "", CMID4 = "";
 var pubnubUpdateChannel = "CM_Update_" + CMID; // This channel is for updates from the Pi that will be displayed on the app.
 
 var loginLocked = false; // To ensure the user only tries to login once at a time.
+var uuid;
 
-// Arrays to store thermostat info and settings found within each message.
+// Arrays to store thermostat info found within each message.
 var nameArray = []; // Zone names
 var currentTempArray = []; // Current temperature of each thermostat
 var desiredTempArray = []; // Desired temperature of each thermostat

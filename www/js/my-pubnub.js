@@ -79,6 +79,14 @@ function pubnubLogin() {
                 pubnubSubscribeToUpdates();
                 loadMainTemplate(true, true);
                 cordova.plugins.Keyboard.close();
+
+                window.plugins.uniqueDeviceID.get(function(id) {
+                    uuid = id;
+                }, function() {
+                    uuid = "";
+                    myApp.alert("Device ID not found."); // TODO delete this.
+                })
+
                 // Clear the DB and save the new ID
                 dbClearCMID();
                 dbSaveCMID(CMID1, CMID2, CMID3, CMID4);
@@ -121,6 +129,7 @@ function pubnubSubscribeToUpdates() {
 function pubnubPublishUpdate() {
     // Construct message
     var newUpdate = {
+        "uuid": uuid,
         "names":nameArray,
         "currentTemps":currentTempArray,
         "desiredTemps":desiredTempArray,
