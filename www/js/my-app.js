@@ -375,6 +375,9 @@ $$(document).on('click', '.back-to-manage-schedules-button', function() {
                     text: 'Yes',
                     onClick: function() { // TODO: cleanup. Same code as apply-schedule-button
                         myApp.showIndicator();
+                        setTimeout(function () {
+                            myApp.hideIndicator();
+                        }, 1200);
                         // Prevent duplicate names.
                         if(!isNameAvailable($$('.name input').val()) &&
                          $$('.name input').val() != scheduleArray[currentScheduleNumber].name) {
@@ -488,6 +491,9 @@ $$(document).on('click', '.select-schedule-button', function() {
 // Main Page - When apply is clicked send update to all connected devices
 $$(document).on('click', '.apply-button', function() {
     myApp.showIndicator();
+    setTimeout(function () {
+        myApp.hideIndicator();
+    }, 1000);
     // Wipe the array, loop through all desired temps and push the cleaned numbers to an array.
     desiredTempArray  = [];
     $$(".desired-temp").each(function() {
@@ -801,6 +807,9 @@ $$(document).on('click', '.delete-group-button', function(event) {
 // Edit Schedule Page - Apply changes
 $$(document).on('click', '.apply-schedule-button', function() {
     myApp.showIndicator();
+    setTimeout(function () {
+        myApp.hideIndicator();
+    }, 1200);
     // Prevent duplicate names.
     if(!isNameAvailable($$('.name input').val()) &&
      $$('.name input').val() != scheduleArray[currentScheduleNumber].name) {

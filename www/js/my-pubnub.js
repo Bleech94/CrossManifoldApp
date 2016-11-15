@@ -136,5 +136,4 @@ function pubnubPublishUpdate() {
             console.log("Message published.")
         }
     })
-    myApp.hideIndicator();
 }
