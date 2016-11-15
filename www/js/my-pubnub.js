@@ -90,6 +90,7 @@ function pubnubLogin() {
                 $$('#CMID-input4').val("");
                 $$('#CMID-input1').focus();
             }
+            myApp.hideIndicator();
         },
         error: function(e) {
             myApp.alert("Unable to login.", "No Internet Connection") // TODO: Other potential errors?
@@ -135,4 +136,5 @@ function pubnubPublishUpdate() {
             console.log("Message published.")
         }
     })
+    myApp.hideIndicator();
 }
