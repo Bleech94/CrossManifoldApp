@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.crossmanifold.crossmanifold" version="0.9.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+
     <name>CrossManifold</name>
     <description>
         The official Cross Manifold mobile application.
@@ -8,6 +9,7 @@
         Brandon Leech
     </author>
     <content src="index.html" />
+
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -16,6 +18,7 @@
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
     <splash src="splash.png" />
+
     <platform name="android">
         <preference name="android-minSdkVersion" value="14" />
         <allow-intent href="market:*" />
@@ -33,6 +36,7 @@
         <splash src="res/screen/drawable-hdpi/splash.png" qualifier="port-hdpi"/>
         <splash src="res/screen/drawable-xhdpi/splash.png" qualifier="port-xhdpi"/>
     </platform>
+
     <platform name="ios">
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
@@ -45,14 +49,15 @@
         <splash src="res/screen/ios/screen-iphone-portrait-667h.png" width="750" height="1334"/>
         <splash src="res/screen/ios/screen-iphone-portrait-736h.png" width="1242" height="2208"/>
         -->
-
     </platform>
+
     <preference name="DisallowOverscroll" value="true" />
     <preference name="SplashScreen" value="screen" />
     <preference name="ShowSplashScreenSpinner" value="false" />
+
     <plugin name="cordova-plugin-whitelist" spec="~1.2.0" /> <!-- TODO: Change so only pubnub allowed? -->
     <plugin name="cordova-plugin-statusbar" spec="~1.0.1" />
-    <plugin name="com.ionic.keyboard" spec="1.0.3" />
+    <plugin name="com.ionic.keyboard" spec="2.2.1" source="npm" />
     <plugin name="io.litehelpers.cordova.sqlite" spec="0.7.10"/>
     <plugin name="cordova-plugin-splashscreen" spec="~4.0.0" />
 </widget>
