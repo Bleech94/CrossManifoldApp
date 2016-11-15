@@ -25,10 +25,10 @@
         "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
         },
-        "cordova-sqlite-storage": {
+        "cordova-plugin-splashscreen": {
             "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
         },
-        "cordova-plugin-splashscreen": {
+        "cordova-plugin-sqlite-2": {
             "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
         }
     },

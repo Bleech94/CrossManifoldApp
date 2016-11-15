@@ -36,10 +36,10 @@
         "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
         },
-        "cordova-sqlite-storage": {
+        "cordova-plugin-splashscreen": {
             "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
         },
-        "cordova-plugin-splashscreen": {
+        "cordova-plugin-sqlite-2": {
             "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
         }
     },
@@ -99,14 +99,6 @@
             ]
         },
         {
-            "file": "plugins/cordova-sqlite-storage/www/SQLitePlugin.js",
-            "id": "cordova-sqlite-storage.SQLitePlugin",
-            "pluginId": "cordova-sqlite-storage",
-            "clobbers": [
-                "SQLitePlugin"
-            ]
-        },
-        {
             "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
             "id": "cordova-plugin-splashscreen.SplashScreen",
             "pluginId": "cordova-plugin-splashscreen",
@@ -119,6 +111,14 @@
             "id": "cordova-plugin-splashscreen.SplashScreenProxy",
             "pluginId": "cordova-plugin-splashscreen",
             "runs": true
+        },
+        {
+            "file": "plugins/cordova-plugin-sqlite-2/dist/sqlite-plugin.js",
+            "id": "cordova-plugin-sqlite-2.sqlitePlugin",
+            "pluginId": "cordova-plugin-sqlite-2",
+            "clobbers": [
+                "sqlitePlugin"
+            ]
         }
     ],
     "plugin_metadata": {
@@ -128,7 +128,7 @@
         "cordova-plugin-device": "1.1.3",
         "cordova-plugin-network-information": "1.3.0",
         "ionic-plugin-keyboard": "2.2.1",
-        "cordova-sqlite-storage": "1.4.8",
-        "cordova-plugin-splashscreen": "4.0.0"
+        "cordova-plugin-splashscreen": "4.0.0",
+        "cordova-plugin-sqlite-2": "1.0.4"
     }
 }

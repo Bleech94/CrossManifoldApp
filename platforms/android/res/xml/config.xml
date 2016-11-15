@@ -19,15 +19,25 @@
         <param name="android-package" value="io.ionic.keyboard.IonicKeyboard" />
         <param name="onload" value="true" />
     </feature>
-    <feature name="SQLitePlugin">
-        <param name="android-package" value="io.sqlc.SQLitePlugin" />
-    </feature>
     <feature name="SplashScreen">
         <param name="android-package" value="org.apache.cordova.splashscreen.SplashScreen" />
         <param name="onload" value="true" />
     </feature>
+    <feature name="SQLitePlugin">
+        <param name="android-package" value="com.nolanlawson.cordova.sqlite.SQLitePlugin" />
+    </feature>
     <preference name="android-minSdkVersion" value="14" />
     <allow-intent href="market:*" />
+    <icon density="ldpi" src="res/icon/icon-36-ldpi.png" />
+    <icon density="mdpi" src="res/icon/icon-48-mdpi.png" />
+    <icon density="hdpi" src="res/icon/icon-72-hdpi.png" />
+    <icon density="xhdpi" src="res/icon/icon-96-xhdpi.png" />
+    <icon density="xxhdpi" src="res/icon/icon-144-xxhdpi.png" />
+    <icon density="xxxhdpi" src="res/icon/icon-192-xxxhdpi.png" />
+    <splash qualifier="port-ldpi" src="res/screen/drawable-ldpi/splash.png" />
+    <splash qualifier="port-mdpi" src="res/screen/drawable-mdpi/splash.png" />
+    <splash qualifier="port-hdpi" src="res/screen/drawable-hdpi/splash.png" />
+    <splash qualifier="port-xhdpi" src="res/screen/drawable-xhdpi/splash.png" />
     <name>CrossManifold</name>
     <description>
         The official Cross Manifold mobile application.
@@ -43,5 +53,8 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
+    <splash src="splash.png" />
     <preference name="DisallowOverscroll" value="true" />
+    <preference name="SplashScreen" value="screen" />
+    <preference name="ShowSplashScreenSpinner" value="false" />
 </widget>

@@ -58,6 +58,6 @@
     <plugin name="cordova-plugin-whitelist" spec="~1.2.0" /> <!-- TODO: Change so only pubnub allowed? -->
     <plugin name="cordova-plugin-statusbar" spec="~1.0.1" />
     <plugin name="ionic-plugin-keyboard" spec="2.2.1" source="npm" />
-    <plugin name="cordova-sqlite-storage" spec="1.0.3"/>
+    <plugin name="cordova-plugin-sqlite-2" spec="1.0.4" source="npm"/>
     <plugin name="cordova-plugin-splashscreen" spec="~4.0.0" />
 </widget>

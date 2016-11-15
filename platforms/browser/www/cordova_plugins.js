@@ -54,14 +54,6 @@ module.exports = [
         ]
     },
     {
-        "file": "plugins/cordova-sqlite-storage/www/SQLitePlugin.js",
-        "id": "cordova-sqlite-storage.SQLitePlugin",
-        "pluginId": "cordova-sqlite-storage",
-        "clobbers": [
-            "SQLitePlugin"
-        ]
-    },
-    {
         "file": "plugins/cordova-plugin-splashscreen/www/splashscreen.js",
         "id": "cordova-plugin-splashscreen.SplashScreen",
         "pluginId": "cordova-plugin-splashscreen",
@@ -74,6 +66,14 @@ module.exports = [
         "id": "cordova-plugin-splashscreen.SplashScreenProxy",
         "pluginId": "cordova-plugin-splashscreen",
         "runs": true
+    },
+    {
+        "file": "plugins/cordova-plugin-sqlite-2/dist/sqlite-plugin.js",
+        "id": "cordova-plugin-sqlite-2.sqlitePlugin",
+        "pluginId": "cordova-plugin-sqlite-2",
+        "clobbers": [
+            "sqlitePlugin"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -85,8 +85,8 @@ module.exports.metadata =
     "cordova-plugin-device": "1.1.3",
     "cordova-plugin-network-information": "1.3.0",
     "ionic-plugin-keyboard": "2.2.1",
-    "cordova-sqlite-storage": "1.4.8",
-    "cordova-plugin-splashscreen": "4.0.0"
+    "cordova-plugin-splashscreen": "4.0.0",
+    "cordova-plugin-sqlite-2": "1.0.4"
 }
 // BOTTOM OF METADATA
 });
