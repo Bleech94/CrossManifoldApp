@@ -19,10 +19,19 @@
     <platform name="android">
         <preference name="android-minSdkVersion" value="14" />
         <allow-intent href="market:*" />
-        <splash src="res/drawable-ldpi/splash.png" qualifier="port-ldpi"/>
-        <splash src="res/drawable-mdpi/splash.png" qualifier="port-mdpi"/>
-        <splash src="res/drawable-hdpi/splash.png" qualifier="port-hdpi"/>
-        <splash src="res/drawable-xhdpi/splash.png" qualifier="port-xhdpi"/>
+        <!-- TODO: Get final icons -->
+        <icon src="res/icon/icon-36-ldpi.png" density="ldpi" />
+        <icon src="res/icon/icon-48-mdpi.png" density="mdpi" />
+        <icon src="res/icon/icon-72-hdpi.png" density="hdpi" />
+        <icon src="res/icon/icon-96-xhdpi.png" density="xhdpi" />
+        <icon src="res/icon/icon-144-xxhdpi.png" density="xxhdpi" />
+        <icon src="res/icon/icon-192-xxxhdpi.png" density="xxxhdpi" />
+
+        <!-- TODO: Get final splash screens -->
+        <splash src="res/screen/drawable-ldpi/splash.png" qualifier="port-ldpi"/>
+        <splash src="res/screen/drawable-mdpi/splash.png" qualifier="port-mdpi"/>
+        <splash src="res/screen/drawable-hdpi/splash.png" qualifier="port-hdpi"/>
+        <splash src="res/screen/drawable-xhdpi/splash.png" qualifier="port-xhdpi"/>
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
