@@ -70,6 +70,8 @@ var mainView = myApp.addView('.view-main', {
 $$(document).on('deviceready', function() {
     console.log("Device is ready!");
     document.addEventListener("backbutton", backPage, false); // Handle backbutton press.
+
+    // Setup the DB.
     db = window.sqlitePlugin.openDatabase({name:'cm.db', location:'default'}); // TODO add preferences table (notifications, other?)
     db.transaction(dbSetup, errorHandler, dbLoadCMID);
 });
@@ -88,7 +90,6 @@ var pubnub = PUBNUB.init({
 /*
 * PAGE NAVIGATION
 */
-// TODO: Logout is broken unless I use domCache = true (which breaks scrollTop())
 function loadLoginPage() {
     console.log("Loading login page");
     index = 1;
@@ -121,6 +122,7 @@ function refreshPage() {
     }
 }
 
+// Go back to previous page (Used for the hardware back button on Android)
 function backPage() {
     switch(currentPage) {
         case "login":
@@ -174,7 +176,7 @@ function loadMainTemplate(isForward, isAnimated) {
     } else {
         mainView.router.back({ // Back button pressed to reach this page.
             content: html,
-            force:true,
+            force: true,
             animatePages:isAnimated
         });
     }

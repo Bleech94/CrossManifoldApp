@@ -94,7 +94,8 @@ function pubnubLogin() {
             myApp.hideIndicator();
         },
         error: function(e) {
-            myApp.alert("Unable to login.", "No Internet Connection") // TODO: Other potential errors?
+            myApp.alert("Unable to login.", "No Internet Connection"); // TODO: Other potential errors?
+            myApp.hideIndicator();
         }
     });
 }
