@@ -6,7 +6,7 @@ function dbSetup(tx) {
 }
 
 function errorHandler(e) {
-    myApp.alert(e.message); // TODO: Handle the error?
+    myApp.alert(e.message, "Error"); // TODO: Handle the error?
 }
 
 function dbLoadCMID() {
