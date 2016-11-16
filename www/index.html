@@ -43,7 +43,7 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
                 <div class="navbar-inner" data-page="login">
                     <div class="left sliding"></div>
                     <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
-                    <div class="center sliding" style="left:1px">Log In</div>
+                    <div class="center sliding unselectable" style="left:1px">Log In</div>
                     <div class="right sliding"></div>
                 </div>
             </div>
@@ -55,7 +55,7 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
                         <div class="content-block">
                             <center><img src="./img/logoPlain.png" alt="Cross Manifold" width="60%"></center>
                             <div class="" align="center">
-                                <p>Enter your 12-16 character Cross Manifold ID:</p>
+                                <p class="unselectable">Enter your 12-16 character Cross Manifold ID:</p>
                                 <input type="text" id="CMID-input1" placeholder="XXXX" size="1" maxlength="4" class="CMID-input">
                                 - <input type="text" id="CMID-input2" placeholder="XXXX" size="1" maxlength="4" class="CMID-input">
                                 - <input type="text" id="CMID-input3" placeholder="XXXX" size="1" maxlength="4" class="CMID-input">
@@ -80,7 +80,7 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
         <div class="navbar">
             <div class="navbar-inner">
                 <div class="left sliding"></div>
-                <div class="center sliding">Login</div>
+                <div class="center sliding unselectable">Login</div>
                 <div class="right sliding"></div>
             </div>
         </div>
@@ -93,7 +93,7 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
             <div class="navbar">
                 <div class="navbar-inner">
                     <div class="left"></div>
-                    <div class="center">Login</div>
+                    <div class="center unselectable">Login</div>
                     <div class="right"></div>
                 </div>
             </div>
@@ -104,7 +104,7 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
                 <div class="content-block">
                     <center><img src="./img/logoPlain.png" alt="Cross Manifold" width="60%"></center>
                     <div class="" align="center">
-                        <p>Enter your 12-16 character Cross Manifold ID:</p>
+                        <p class="unselectable">Enter your 12-16 character Cross Manifold ID:</p>
                         <input type="text" id="CMID-input1" placeholder="XXXX" size="1" maxlength="4" class="CMID-input">
                         - <input type="text" id="CMID-input2" placeholder="XXXX" size="1" maxlength="4" class="CMID-input">
                         - <input type="text" id="CMID-input3" placeholder="XXXX" size="1" maxlength="4" class="CMID-input">
@@ -124,7 +124,7 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
         <div class="navbar">
             <div class="navbar-inner">
                 <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
-                <div class="center sliding">Cross Manifold</div>
+                <div class="center sliding unselectable">Cross Manifold</div>
                 <div class="right sliding">
                     <a href="#" class="link settings-button"><i class="fa fa-gear"></i><span>Settings</span></a>
                 </div>
@@ -139,7 +139,7 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
             <div class="navbar">
                 <div class="navbar-inner">
                     <!-- We need cool sliding animation on title element, so we have additional "sliding" class -->
-                    <div class="center">Cross Manifold</div>
+                    <div class="center unselectable">Cross Manifold</div>
                     <div class="right">
                         <a href="#" class="link icon-only settings-button"><i class="fa fa-gear"><span> Settings</span></i></a>
                     </div>
@@ -156,10 +156,10 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
                         <div class="col-25">
                         </div>
                         <div class="col-25">
-                            <h5>Current<br>Temperature:</h5>
+                            <h5 class="unselectable">Current<br>Temperature:</h5>
                         </div>
                         <div class="col-50">
-                            <h5>Desired<br>Temperature:</h5>
+                            <h5 class="unselectable">Desired<br>Temperature:</h5>
                         </div>
                     </div>
 
@@ -167,10 +167,10 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
                     {{#each thermostatDetails}}
                     <div {{#js_compare "index%2 === 0"}}class='row' {{else}}class='row odd' {{/js_compare}}>
                         <div class="col-25">
-                            <p style="margin-top: 19px; padding-left:5px;">Zone {{js "index++"}}: {{js "return nameArray[index-2]"}}</p>
+                            <p class="unselectable" style="margin-top: 19px; padding-left:5px;">Zone {{js "index++"}}: {{js "return nameArray[index-2]"}}</p>
                         </div>
                         <div class="col-25">
-                            <h4 class="current-temp" style="margin-top: 26.5px;">{{current}}&deg;</h4>
+                            <h4 class="current-temp unselectable" style="margin-top: 26.5px;">{{current}}&deg;</h4>
                         </div>
                         <div class="col-50 button-parent">
                             {{#js_compare "this.mode != 'Schedule'"}}
@@ -181,7 +181,7 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
                             </p>
                             {{else}}
                             <p style="padding-right:5px;"><a href="#" class='button button-raised button-fill color-custom list-schedules-button zone-{{js "return index-1"}} desired-temp'>Select Schedule</a></p>
-                            <p style="text-align:center;">{{this.schedule}}</p>
+                            <p class="unselectable" style="text-align:center;">{{this.schedule}}</p>
                             {{/js_compare}}
                         </div>
                     </div>
@@ -202,7 +202,7 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
                 <div class="left sliding">
                     <a href="#" class="link back-to-main-button icon-only"><i class="icon icon-back"></i></a>
                 </div>
-                <div class="center sliding">Select Schedule</div>
+                <div class="center sliding unselectable">Select Schedule</div>
                 <div class="right sliding"></div>
             </div>
         </div>
@@ -217,7 +217,7 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
                     <div class="left">
                         <a href="#" class="link back-to-main-button icon-only"><i class="icon icon-back"></i></a>
                     </div>
-                    <div class="center">Select Schedule</div>
+                    <div class="center unselectable">Select Schedule</div>
                     <div class="right"></div>
                 </div>
             </div>
@@ -252,7 +252,7 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
                 <div class="left sliding">
                     <a href="#" class="link back-to-main-button icon-only"><i class="icon icon-back"></i></a>
                 </div>
-                <div class="center sliding">Settings</div>
+                <div class="center sliding unselectable">Settings</div>
                 <div class="right sliding"></div>
             </div>
         </div>
@@ -268,7 +268,7 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
                     <div class="left">
                         <a href="#" class="link back-to-main-button icon-only"><i class="icon icon-back"></i></a>
                     </div>
-                    <div class="center">Settings</div>
+                    <div class="center unselectable">Settings</div>
                 </div>
             </div>
             {{/if}}
@@ -281,7 +281,7 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
                 <div class="list-block">
                     <div class="list-group">
                         <ul>
-                            <li class="list-group-title">Zone Settings</li>
+                            <li class="list-group-title unselectable">Zone Settings</li>
                             <!-- Generate buttons for each zone -->
                             {{#each names}}
                             <li>
@@ -296,11 +296,11 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
                     </div>
                     <div class="list-group">
                         <ul>
-                            <li class="list-group-title">Notifications</li>
+                            <li class="list-group-title unselectable">Notifications</li>
                             <li>
                                 <div class="item-content">
                                     <div class="item-inner">
-                                        <div class="item-title label">Ignore All</div> <!-- TODO: Make this a local setting to ignore push notifications -->
+                                        <div class="item-title label unselectable">Ignore All</div> <!-- TODO: Make this a local setting to ignore push notifications -->
                                         <div class="item-input">
                                             <label class="label-switch">
                                                 <input type="checkbox">
@@ -330,7 +330,7 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
                 <div class="left sliding">
                     <a href="#" class="link back-to-settings-button icon-only"><i class="icon icon-back"></i></a>
                 </div>
-                <div class="center sliding">Manage Schedules</div>
+                <div class="center sliding unselectable">Manage Schedules</div>
                 <div class="right sliding">
                     <a href="#" class="link manage-garbage-button icon-only"><i class="fa fa-trash-o"></i></a>
                 </div>
@@ -348,7 +348,7 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
                     <div class="left">
                         <a href="#" class="link back-to-settings-button icon-only"><i class="icon icon-back"></i></a>
                     </div>
-                    <div class="center">Manage Schedules</div>
+                    <div class="center unselectable">Manage Schedules</div>
                     <div class="right">
                         <a href="#" class="link manage-garbage-button icon-only"><i class="fa fa-trash-o"></i></a>
                     </div>
@@ -368,7 +368,7 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
                 <div class="list-block">
                     <div class="list-group">
                         <ul>
-                            <li class="list-group-title">Schedules</li>
+                            <li class="list-group-title unselectable">Schedules</li>
                             <!-- Generate buttons for each zone -->
                             {{#each schedule}}
                             <li>
@@ -398,7 +398,7 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
                 <div class="left sliding">
                     <a href="#" class="link back-to-manage-schedules-button icon-only"><i class="icon icon-back"></i></a>
                 </div>
-                <div class="center sliding">Edit Schedule</div>
+                <div class="center sliding unselectable">Edit Schedule</div>
                 <div class="right sliding">
                     <a href="#" class="link edit-garbage-button icon-only"><i class="fa fa-trash-o"></i></a>
                 </div>
@@ -416,7 +416,7 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
                     <div class="left">
                         <a href="#" class="link back-to-manage-schedules-button icon-only"><i class="icon icon-back"></i></a>
                     </div>
-                    <div class="center">Edit Schedule</div>
+                    <div class="center unselectable">Edit Schedule</div>
                     <div class="right sliding">
                         <a href="#" class="link edit-garbage-button icon-only"><i class="fa fa-trash-o"></i></a>
                     </div>
@@ -431,7 +431,7 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
                         <li>
                             <div class="item-content name">
                                 <div class="item-inner">
-                                    <div class="item-title label">Name</div>
+                                    <div class="item-title label unselectable">Name</div>
                                     <div class="item-input">
                                         <input type="text" placeholder="Schedule name" value="{{this.name}}">
                                     </div>
@@ -440,13 +440,13 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
                         </li>
                         <br>
                         {{#each groups}}
-                        <li class="item-divider">Group {{js "return groupNumber+1;"}}<a class="icon-only delete-group-button"><i class="fa fa-times fa-lg"></i></a></li>
+                        <li class="item-divider unselectable">Group {{js "return groupNumber+1;"}}<a class="icon-only delete-group-button"><i class="fa fa-times fa-lg"></i></a></li>
                         <br>
                         <li>
                             <div class="weekdays-selector">
                                 {{#each days}}
                                 <label>
-                                    <input type="radio" name='{{@global.dayArray[index%7]}}' class='group-{{js "return groupNumber"}}' {{#if this}} checked {{/if}} />
+                                    <input type="radio" name='{{@global.dayArray[index%7]}}' class='group-{{js "return groupNumber"}} unselectable' {{#if this}} checked {{/if}} />
                                     <span>{{@global.dayArray[index++%7]}}</span>
                                 </label>
                                 {{/each}}
@@ -456,7 +456,7 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
                         <li>
                             <div class="time-temp-container">
                                 {{#each pairs}}
-                                <div class="time-temp"><label><span>{{this.time}} - {{this.temp}}&deg;</span></label><a class='icon-only edit-time-temp-button group-{{js "return groupNumber"}} pair-{{js "pairNumber++"}}'><i class="fa fa-pencil edit-icon"></i></a></div>
+                                <div class="time-temp"><label><span class="unselectable">{{this.time}} - {{this.temp}}&deg;</span></label><a class='icon-only edit-time-temp-button group-{{js "return groupNumber"}} pair-{{js "pairNumber++"}}'><i class="fa fa-pencil edit-icon"></i></a></div>
                                 {{/each}}
                                 {{js "pairNumber = 0; return''"}}
                             </div>
