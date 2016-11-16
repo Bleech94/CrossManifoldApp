@@ -443,10 +443,10 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
                         <li class="item-divider unselectable">Group {{js "return groupNumber+1;"}}<a class="icon-only delete-group-button"><i class="fa fa-times fa-lg"></i></a></li>
                         <br>
                         <li>
-                            <div class="weekdays-selector">
+                            <div class="weekdays-selector unselectable">
                                 {{#each days}}
                                 <label>
-                                    <input type="radio" name='{{@global.dayArray[index%7]}}' class='group-{{js "return groupNumber"}} unselectable' {{#if this}} checked {{/if}} />
+                                    <input type="radio" name='{{@global.dayArray[index%7]}}' class='group-{{js "return groupNumber"}}' {{#if this}} checked {{/if}} />
                                     <span>{{@global.dayArray[index++%7]}}</span>
                                 </label>
                                 {{/each}}
@@ -454,9 +454,9 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
                             </div>
                         </li>
                         <li>
-                            <div class="time-temp-container">
+                            <div class="time-temp-container unselectable">
                                 {{#each pairs}}
-                                <div class="time-temp"><label><span class="unselectable">{{this.time}} - {{this.temp}}&deg;</span></label><a class='icon-only edit-time-temp-button group-{{js "return groupNumber"}} pair-{{js "pairNumber++"}}'><i class="fa fa-pencil edit-icon"></i></a></div>
+                                <div class="time-temp"><label><span>{{this.time}} - {{this.temp}}&deg;</span></label><a class='icon-only edit-time-temp-button group-{{js "return groupNumber"}} pair-{{js "pairNumber++"}}'><i class="fa fa-pencil edit-icon"></i></a></div>
                                 {{/each}}
                                 {{js "pairNumber = 0; return''"}}
                             </div>
