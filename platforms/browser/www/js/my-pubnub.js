@@ -79,6 +79,7 @@ function pubnubLogin() {
                 pubnubSubscribeToUpdates();
                 loadMainTemplate(true, true);
                 cordova.plugins.Keyboard.close();
+
                 // Clear the DB and save the new ID
                 dbClearCMID();
                 dbSaveCMID(CMID1, CMID2, CMID3, CMID4);
@@ -90,9 +91,11 @@ function pubnubLogin() {
                 $$('#CMID-input4').val("");
                 $$('#CMID-input1').focus();
             }
+            myApp.hideIndicator();
         },
         error: function(e) {
-            myApp.alert("Unable to login.", "No Internet Connection") // TODO: Other potential errors?
+            myApp.alert("Unable to login.", "No Internet Connection"); // TODO: Other potential errors?
+            myApp.hideIndicator();
         }
     });
 }
@@ -120,6 +123,7 @@ function pubnubSubscribeToUpdates() {
 function pubnubPublishUpdate() {
     // Construct message
     var newUpdate = {
+        "uuid": device.uuid,
         "names":nameArray,
         "currentTemps":currentTempArray,
         "desiredTemps":desiredTempArray,

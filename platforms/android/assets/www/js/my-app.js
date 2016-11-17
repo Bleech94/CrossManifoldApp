@@ -4,13 +4,13 @@
 var isMaterial = Framework7.prototype.device.ios === false;
 var isIos = Framework7.prototype.device.ios === true;
 
-var CMID = ""; // Cross Manifold ID. TODO: Store locally.
+var CMID = ""; // Cross Manifold ID.
 var CMID1 = "", CMID2 = "", CMID3 = "", CMID4 = "";
 var pubnubUpdateChannel = "CM_Update_" + CMID; // This channel is for updates from the Pi that will be displayed on the app.
 
 var loginLocked = false; // To ensure the user only tries to login once at a time.
 
-// Arrays to store thermostat info and settings found within each message.
+// Arrays to store thermostat info found within each message.
 var nameArray = []; // Zone names
 var currentTempArray = []; // Current temperature of each thermostat
 var desiredTempArray = []; // Desired temperature of each thermostat
@@ -70,6 +70,8 @@ var mainView = myApp.addView('.view-main', {
 $$(document).on('deviceready', function() {
     console.log("Device is ready!");
     document.addEventListener("backbutton", backPage, false); // Handle backbutton press.
+
+    // Setup the DB.
     db = window.sqlitePlugin.openDatabase({name:'cm.db', location:'default'}); // TODO add preferences table (notifications, other?)
     db.transaction(dbSetup, errorHandler, dbLoadCMID);
 });
@@ -88,7 +90,6 @@ var pubnub = PUBNUB.init({
 /*
 * PAGE NAVIGATION
 */
-// TODO: Logout is broken unless I use domCache = true (which breaks scrollTop())
 function loadLoginPage() {
     console.log("Loading login page");
     index = 1;
@@ -121,12 +122,14 @@ function refreshPage() {
     }
 }
 
+// Go back to previous page (Used for the hardware back button on Android)
 function backPage() {
     switch(currentPage) {
         case "login":
-            break; // TODO: Close app?
+            navigator.app.exitApp();
+            break;
         case "main":
-            loadMainTemplate(true, false); // TODO: Logout/Close app?
+            navigator.app.exitApp(); // TODO: Close app or logout?
             break;
         case "settings":
             loadMainTemplate(false, true);
@@ -138,7 +141,7 @@ function backPage() {
             loadManageSchedulesTemplate(false,true);
             break;
         default:
-            loadMainTemplate(false, true); // TODO: change to something else?
+            loadMainTemplate(false, true);
     }
 }
 
@@ -174,7 +177,7 @@ function loadMainTemplate(isForward, isAnimated) {
     } else {
         mainView.router.back({ // Back button pressed to reach this page.
             content: html,
-            force:true,
+            force: true,
             animatePages:isAnimated
         });
     }
@@ -315,9 +318,6 @@ function loadZoneSettingsTemplate() {
 // Login: Check if the channel is live by checking the update history. If there is a message then the corresponding Pi is active.
 $$(document).on('click', '.login-button', function() {
     myApp.showIndicator();
-    setTimeout(function () {
-        myApp.hideIndicator();
-    }, 1000);
 
     // Prevent trying to login multiple times at once - this causes weird issues.
     if(loginLocked == false) {
@@ -801,7 +801,6 @@ $$(document).on('click', '.delete-group-button', function(event) {
         tempScheduleArray[currentScheduleNumber].groups.splice(selectedGroupIndex, 1);
 
         refreshPage();
-        //$$('.edit-garbage-button').click(); // TODO: Find a way to deal with this - even with delay doesn't work consistently.
     } else {
         myApp.alert("You must have at least 1 group.", "Cannot Delete"); // TODO add confirm() to delete this schedule?
     }
@@ -1011,7 +1010,6 @@ function sortTimeTemps(array) {
 }
 
 // Find a name 'Schedule-#' that isn't taken.
-// TODO: Make it so lower numbers are checked before higher?
 function findScheduleName() {
     var newScheduleName;
 

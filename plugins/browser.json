@@ -19,9 +19,6 @@
         "cordova-plugin-device": {
             "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
         },
-        "cordova-plugin-network-information": {
-            "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
-        },
         "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "com.crossmanifold.crossmanifold"
         },
