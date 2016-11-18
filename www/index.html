@@ -440,7 +440,7 @@ http://www.idangero.us/framework7/tutorials/maintain-both-ios-and-material-theme
                         </li>
                         <br>
                         {{#each groups}}
-                        <li class="item-divider unselectable">Group {{js "return groupNumber+1;"}}<a class="icon-only delete-group-button"><i class="fa fa-times fa-lg"></i></a></li>
+                        <li class="item-divider unselectable">Group {{js "return groupNumber+1;"}}<a class="icon-only delete-group-button"><i class="fa fa-times fa-lg" {{#if isMaterial}} style="vertical-align:0%;" {{/if}}></i></a></li>
                         <br>
                         <li>
                             <div class="weekdays-selector unselectable">

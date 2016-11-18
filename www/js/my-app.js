@@ -703,12 +703,12 @@ $$(document).on('click','.delete-time-temp-button',function(){
     var pairNum = parseInt(match[1]);
     var groupNum = getGroupNumber($$(this));
 
-    if(tempScheduleArray[currentScheduleNumber].groups[groupNum].pairs.length > 2) {
+    if(tempScheduleArray[currentScheduleNumber].groups[groupNum].pairs.length > 1) {
         parseWeekdaySelectors();
         tempScheduleArray[currentScheduleNumber].groups[groupNum].pairs.splice(pairNum, 1);
         refreshPage();
     } else {
-        myApp.alert("You must have at least 2 time-temperature pairs per group.", "Cannot Delete Pair")
+        myApp.alert("You must have at least 1 time-temperature pair per group.", "Cannot Delete Pair")
     }
 })
 

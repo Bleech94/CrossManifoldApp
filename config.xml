@@ -31,10 +31,10 @@
         <icon src="res/icon/icon-192-xxxhdpi.png" density="xxxhdpi" />
 
         <!-- TODO: Get final splash screens -->
-        <splash src="res/screen/drawable-ldpi/splash.png" qualifier="port-ldpi"/>
-        <splash src="res/screen/drawable-mdpi/splash.png" qualifier="port-mdpi"/>
-        <splash src="res/screen/drawable-hdpi/splash.png" qualifier="port-hdpi"/>
-        <splash src="res/screen/drawable-xhdpi/splash.png" qualifier="port-xhdpi"/>
+        <splash src="res/screen/android/drawable-ldpi/splash.png" qualifier="port-ldpi"/>
+        <splash src="res/screen/android/drawable-mdpi/splash.png" qualifier="port-mdpi"/>
+        <splash src="res/screen/android/drawable-hdpi/splash.png" qualifier="port-hdpi"/>
+        <splash src="res/screen/android/drawable-xhdpi/splash.png" qualifier="port-xhdpi"/>
     </platform>
 
     <platform name="ios">

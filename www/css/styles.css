@@ -173,7 +173,7 @@ span.modal-button, .modal-button.modal-button-bold {
     border-radius:10px;
     position:absolute;
     text-align:center;
-    z-index:1;
+    margin: auto;
     transition:opacity .5s ease; /* TODO add alternatives for other browsers */
 }
 
