@@ -239,4 +239,5 @@ span.modal-button, .modal-button.modal-button-bold {
     float:right;
     width:44px;
     min-width:44px;
+    max-width: 44px;
 }

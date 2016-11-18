@@ -30,7 +30,7 @@ var arraysUsedObj = {
 
 var deleteMode = false;
 
-var currentPage = "login"; // Options are main, settings, manage, edit. I've implemented my own navigation to have better control of transitions.
+var currentPage = "login"; // Options are main, settings, zonesettings, manage, edit. I've implemented my own navigation to have better control of transitions.
 var currentZoneNumber;
 var currentScheduleNumber = 0;
 var index = 1; // Used in various places for numbering in html templates.
@@ -133,6 +133,9 @@ function backPage() {
             break;
         case "settings":
             loadMainTemplate(false, true);
+            break;
+        case "zonesettings":
+            loadSettingsTemplate(false, true);
             break;
         case "manage":
             loadSettingsTemplate(false, true);
@@ -430,6 +433,7 @@ $$(document).on('click', '.back-to-manage-schedules-button', function() {
 
 // Zone Settings
 $$(document).on('click', '.zone-settings-button', function() {
+    currentPage = "zonesettings";
     currentZoneNumber = parseInt($$(this).text().replace("Zone ", ""));
     loadZoneSettingsTemplate();
 });
