@@ -233,3 +233,10 @@ span.modal-button, .modal-button.modal-button-bold {
     text-align: middle;
     transition: all .5s ease;
 }
+
+.add-time-temp-button {
+    border-radius:6px;
+    float:right;
+    width:44px;
+    min-width:44px;
+}
