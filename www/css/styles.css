@@ -165,6 +165,8 @@ span.modal-button, .modal-button.modal-button-bold {
 .delete-group-button {
     opacity:0;
     pointer-events:none;
+    top:0;
+    bottom:0;
     right:20px;
     color:white;
     background:#cf2800;
